@@ -1,45 +1,53 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-bs-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acompanhamento de Certificação - Ipê Digital</title>
-    
+
     <!-- Bootstrap 5.3 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    
+
     <!-- Estilos personalizados -->
     <style>
         :root {
             /* Tons de Azul atualizados (mais elegante) */
-            --azul-ipe: #343A40;           /* Azul grafite - mais elegante */
-            --azul-destaque: #2d3748;      /* Azul escuro */
-            --azul-secundario: #4a5568;    /* Azul médio */
-            --azul-claro: #3182ce;         /* Azul claro */
-            --azul-suave: #90cdf4;         /* Azul muito claro */
-            
+            --azul-ipe: #343A40;
+            /* Azul grafite - mais elegante */
+            --azul-destaque: #2d3748;
+            /* Azul escuro */
+            --azul-secundario: #4a5568;
+            /* Azul médio */
+            --azul-claro: #3182ce;
+            /* Azul claro */
+            --azul-suave: #90cdf4;
+            /* Azul muito claro */
+
             /* Tons de neutros */
             --cinza-claro: #F8F9FA;
             --cinza-medio: #6C757D;
             --cinza-escuro: #212529;
-            
+
             /* Cores funcionais */
             --verde-sucesso: #38a169;
             --laranja-alerta: #dd6b20;
-            --laranja-ftco2: #ed8936;      /* Laranja específico para FTCO2 */
-            --verde-tco2: #38a169;         /* Verde específico para TCO2 */
+            --laranja-ftco2: #ed8936;
+            /* Laranja específico para FTCO2 */
+            --verde-tco2: #38a169;
+            /* Verde específico para TCO2 */
             --vermelho-erro: #e53e3e;
         }
-        
+
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--cinza-claro);
             min-height: 100vh;
         }
-        
+
         /* Sidebar */
         .sidebar {
             background-color: var(--azul-ipe);
@@ -53,57 +61,57 @@
             z-index: 1030;
             width: 250px;
         }
-        
+
         .sidebar .navbar-brand {
             padding: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .sidebar .navbar-brand img {
             height: 40px;
             width: auto;
         }
-        
+
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
             padding: 12px 20px;
             border-left: 3px solid transparent;
             transition: all 0.3s;
         }
-        
+
         .sidebar .nav-link:hover {
             color: white;
             background-color: rgba(255, 255, 255, 0.1);
         }
-        
+
         .sidebar .nav-link.active {
             color: white;
             background-color: rgba(255, 255, 255, 0.15);
             border-left-color: var(--azul-claro);
         }
-        
+
         .sidebar .nav-link i {
             width: 24px;
             text-align: center;
             margin-right: 10px;
         }
-        
+
         /* Header */
         .main-header {
             background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
             padding: 15px 0;
             position: sticky;
             top: 0;
             z-index: 1020;
         }
-        
+
         .user-info {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
+
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -115,7 +123,7 @@
             color: var(--azul-ipe);
             font-weight: bold;
         }
-        
+
         /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: none;
@@ -125,14 +133,14 @@
             font-size: 1.5rem;
             padding: 5px 10px;
         }
-        
+
         /* Cards */
         .card-ipe {
             border: none;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
-        
+
         .btn-ipe {
             background-color: var(--azul-ipe);
             color: white;
@@ -141,12 +149,12 @@
             border-radius: 8px;
             font-weight: 500;
         }
-        
+
         .btn-ipe:hover {
             background-color: var(--azul-destaque);
             color: white;
         }
-        
+
         .btn-outline-ipe {
             border: 2px solid var(--azul-ipe);
             color: var(--azul-ipe);
@@ -155,24 +163,24 @@
             border-radius: 8px;
             font-weight: 500;
         }
-        
+
         .btn-outline-ipe:hover {
             background-color: var(--azul-ipe);
             color: white;
         }
-        
+
         .text-ipe {
             color: var(--azul-ipe);
         }
-        
+
         .text-ftco2 {
             color: var(--laranja-ftco2);
         }
-        
+
         .text-tco2 {
             color: var(--verde-tco2);
         }
-        
+
         /* Status Badges */
         .status-badge {
             display: inline-block;
@@ -181,37 +189,37 @@
             font-size: 0.85rem;
             font-weight: 500;
         }
-        
+
         .status-pending {
             background-color: rgba(221, 107, 32, 0.1);
             color: var(--laranja-alerta);
             border: 1px solid rgba(221, 107, 32, 0.2);
         }
-        
+
         .status-in-progress {
             background-color: rgba(49, 130, 206, 0.1);
             color: var(--azul-claro);
             border: 1px solid rgba(49, 130, 206, 0.2);
         }
-        
+
         .status-completed {
             background-color: rgba(56, 161, 105, 0.1);
             color: var(--verde-sucesso);
             border: 1px solid rgba(56, 161, 105, 0.2);
         }
-        
+
         .status-rejected {
             background-color: rgba(229, 62, 62, 0.1);
             color: var(--vermelho-erro);
             border: 1px solid rgba(229, 62, 62, 0.2);
         }
-        
+
         /* Certification Timeline */
         .certification-timeline {
             position: relative;
             padding: 20px 0;
         }
-        
+
         .timeline-progress {
             position: absolute;
             left: 40px;
@@ -221,7 +229,7 @@
             background-color: var(--cinza-claro);
             z-index: 1;
         }
-        
+
         .timeline-progress-bar {
             position: absolute;
             left: 40px;
@@ -231,18 +239,18 @@
             z-index: 2;
             transition: height 0.5s ease;
         }
-        
+
         .timeline-item {
             position: relative;
             padding-left: 80px;
             margin-bottom: 40px;
             z-index: 3;
         }
-        
+
         .timeline-item:last-child {
             margin-bottom: 0;
         }
-        
+
         .timeline-icon {
             position: absolute;
             left: 30px;
@@ -257,32 +265,40 @@
             justify-content: center;
             z-index: 4;
         }
-        
+
         .timeline-item.completed .timeline-icon {
             border-color: var(--verde-tco2);
             background-color: var(--verde-tco2);
             color: white;
         }
-        
+
         .timeline-item.current .timeline-icon {
             border-color: var(--azul-claro);
             background-color: var(--azul-claro);
             color: white;
             animation: pulse 2s infinite;
         }
-        
+
         .timeline-item.pending .timeline-icon {
             border-color: var(--cinza-medio);
             background-color: white;
             color: var(--cinza-medio);
         }
-        
+
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(49, 130, 206, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(49, 130, 206, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(49, 130, 206, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(49, 130, 206, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(49, 130, 206, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(49, 130, 206, 0);
+            }
         }
-        
+
         /* Conversion Stats */
         .conversion-stats {
             background: linear-gradient(135deg, var(--laranja-ftco2) 0%, var(--verde-tco2) 100%);
@@ -291,49 +307,49 @@
             padding: 30px;
             margin-bottom: 20px;
         }
-        
+
         .conversion-number {
             font-size: 3rem;
             font-weight: 700;
             line-height: 1;
         }
-        
+
         /* Project Cards */
         .project-card {
             border-left: 4px solid transparent;
             transition: transform 0.3s ease;
         }
-        
+
         .project-card:hover {
             transform: translateY(-5px);
         }
-        
+
         .project-card.pending {
             border-left-color: var(--laranja-alerta);
         }
-        
+
         .project-card.in-progress {
             border-left-color: var(--azul-claro);
         }
-        
+
         .project-card.completed {
             border-left-color: var(--verde-tco2);
         }
-        
+
         /* Progress Bar */
         .progress {
             height: 10px;
             border-radius: 5px;
         }
-        
+
         .progress-bar-ftco2 {
             background-color: var(--laranja-ftco2);
         }
-        
+
         .progress-bar-tco2 {
             background-color: var(--verde-tco2);
         }
-        
+
         /* Stats Cards */
         .stats-card {
             text-align: center;
@@ -341,20 +357,20 @@
             border-radius: 12px;
             background-color: white;
         }
-        
+
         .stats-number {
             font-size: 2rem;
             font-weight: 700;
         }
-        
+
         .stats-number.ftco2 {
             color: var(--laranja-ftco2);
         }
-        
+
         .stats-number.tco2 {
             color: var(--verde-tco2);
         }
-        
+
         /* Filter Bar */
         .filter-bar {
             background-color: white;
@@ -362,26 +378,26 @@
             padding: 20px;
             margin-bottom: 20px;
         }
-        
+
         /* Mobile-first adjustments */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
                 width: 280px;
             }
-            
+
             .sidebar.show {
                 transform: translateX(0);
             }
-            
+
             .mobile-menu-toggle {
                 display: block;
             }
-            
+
             .main-content {
                 margin-left: 0 !important;
             }
-            
+
             .sidebar-overlay {
                 display: none;
                 position: fixed;
@@ -392,49 +408,51 @@
                 background-color: rgba(0, 0, 0, 0.5);
                 z-index: 1029;
             }
-            
+
             .sidebar-overlay.show {
                 display: block;
             }
-            
+
             .timeline-item {
                 padding-left: 60px;
             }
-            
+
             .timeline-icon {
                 left: 20px;
             }
-            
+
             .timeline-progress,
             .timeline-progress-bar {
                 left: 30px;
             }
-            
+
             .conversion-number {
                 font-size: 2rem;
             }
-            
+
             .stats-number {
                 font-size: 1.5rem;
             }
-            
-            .btn-ipe, .btn-outline-ipe {
+
+            .btn-ipe,
+            .btn-outline-ipe {
                 padding: 8px 16px;
                 font-size: 0.9rem;
             }
         }
-        
+
         @media (min-width: 769px) {
             .main-content {
                 margin-left: 250px;
             }
-            
+
             .mobile-menu-toggle {
                 display: none !important;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Overlay para mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -445,7 +463,7 @@
             <img src="logo.png" alt="Ipê Digital" class="d-inline-block">
             <span class="fw-bold ms-2 text-white">Ipê Digital</span>
         </div>
-        
+
         <div class="flex-grow-1">
             <ul class="nav flex-column">
                 <li class="nav-item">
@@ -518,7 +536,7 @@
                 </li>
             </ul>
         </div>
-        
+
         <div class="p-3 border-top border-white-10">
             <div class="text-center small opacity-75">
                 <i class="bi bi-shield-lock"></i> Ambiente Seguro
@@ -545,24 +563,35 @@
                         <div class="d-flex justify-content-end align-items-center gap-3">
                             <!-- Notificações -->
                             <div class="dropdown">
-                                <button class="btn btn-outline-secondary btn-sm position-relative" type="button" data-bs-toggle="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm position-relative" type="button"
+                                    data-bs-toggle="dropdown">
                                     <i class="bi bi-bell"></i>
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    <span
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                         2
                                     </span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><h6 class="dropdown-header">Notificações Certificação</h6></li>
-                                    <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check text-success me-2"></i>Verificação técnica concluída</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="bi bi-clock text-warning me-2"></i>Documentos pendentes para auditoria</a></li>
-                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <h6 class="dropdown-header">Notificações Certificação</h6>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i
+                                                class="bi bi-shield-check text-success me-2"></i>Verificação técnica
+                                            concluída</a></li>
+                                    <li><a class="dropdown-item" href="#"><i
+                                                class="bi bi-clock text-warning me-2"></i>Documentos pendentes para
+                                            auditoria</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
                                     <li><a class="dropdown-item text-center" href="#">Ver todas</a></li>
                                 </ul>
                             </div>
-                            
+
                             <!-- Perfil do Usuário -->
                             <div class="dropdown">
-                                <button class="btn btn-link text-decoration-none text-dark p-0" type="button" data-bs-toggle="dropdown">
+                                <button class="btn btn-link text-decoration-none text-dark p-0" type="button"
+                                    data-bs-toggle="dropdown">
                                     <div class="user-info">
                                         <div class="user-avatar">JS</div>
                                         <div class="d-none d-md-block">
@@ -573,10 +602,15 @@
                                     </div>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="meu-perfil.html"><i class="bi bi-person-circle me-2"></i>Meu Perfil</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="index.html"><i class="bi bi-box-arrow-left me-2"></i>Sair</a></li>
+                                    <li><a class="dropdown-item" href="meu-perfil.html"><i
+                                                class="bi bi-person-circle me-2"></i>Meu Perfil</a></li>
+                                    <li><a class="dropdown-item" href="#"><i
+                                                class="bi bi-gear me-2"></i>Configurações</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-danger" href="index.html"><i
+                                                class="bi bi-box-arrow-left me-2"></i>Sair</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -636,8 +670,10 @@
                                 <div class="col-md-8">
                                     <h4 class="text-white mb-3">Processo de Conversão FTCO2 → TCO2</h4>
                                     <p class="text-white-80 mb-0">
-                                        Acompanhe a conversão dos seus Tokens Forward em créditos de carbono certificados. 
-                                        Cada FTCO2 convertido em TCO2 aumenta o valor e a liquidez do seu ativo ambiental.
+                                        Acompanhe a conversão dos seus Tokens Forward em créditos de carbono
+                                        certificados.
+                                        Cada FTCO2 convertido em TCO2 aumenta o valor e a liquidez do seu ativo
+                                        ambiental.
                                     </p>
                                 </div>
                                 <div class="col-md-4 text-center">
@@ -658,13 +694,14 @@
                         <div class="card card-ipe">
                             <div class="card-header">
                                 <h5 class="mb-0">Etapas do Processo de Certificação</h5>
-                                <p class="text-muted small mb-0">Acompanhe cada etapa necessária para conversão FTCO2 → TCO2</p>
+                                <p class="text-muted small mb-0">Acompanhe cada etapa necessária para conversão FTCO2 →
+                                    TCO2</p>
                             </div>
                             <div class="card-body">
                                 <div class="certification-timeline">
                                     <div class="timeline-progress"></div>
                                     <div class="timeline-progress-bar" id="timelineProgress" style="height: 80%"></div>
-                                    
+
                                     <!-- Etapa 1 -->
                                     <div class="timeline-item completed">
                                         <div class="timeline-icon">
@@ -677,20 +714,22 @@
                                                     <span class="status-badge status-completed">Concluído</span>
                                                 </div>
                                                 <p class="text-muted small mb-2">
-                                                    Projeto aprovado pela plataforma Ipê Digital e elegível para emissão de FTCO2.
+                                                    Projeto aprovado pela plataforma Ipê Digital e elegível para emissão
+                                                    de FTCO2.
                                                 </p>
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <div class="small text-muted">
                                                         <i class="bi bi-calendar me-1"></i>Concluído em: 05/01/2026
                                                     </div>
-                                                    <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal1">
+                                                    <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#detailsModal1">
                                                         <i class="bi bi-eye me-1"></i>Detalhes
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Etapa 2 -->
                                     <div class="timeline-item completed">
                                         <div class="timeline-icon">
@@ -703,11 +742,13 @@
                                                     <span class="status-badge status-completed">Concluído</span>
                                                 </div>
                                                 <p class="text-muted small mb-2">
-                                                    Coleta e verificação de dados ambientais através do sistema de Monitoramento, Relato e Verificação.
+                                                    Coleta e verificação de dados ambientais através do sistema de
+                                                    Monitoramento, Relato e Verificação.
                                                 </p>
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <div class="small text-muted">
-                                                        <i class="bi bi-calendar me-1"></i>Período: 15/01/2026 - 15/02/2026
+                                                        <i class="bi bi-calendar me-1"></i>Período: 15/01/2026 -
+                                                        15/02/2026
                                                     </div>
                                                     <button class="btn btn-outline-ipe btn-sm">
                                                         <i class="bi bi-download me-1"></i>Relatório
@@ -716,7 +757,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Etapa 3 -->
                                     <div class="timeline-item current">
                                         <div class="timeline-icon">
@@ -729,7 +770,8 @@
                                                     <span class="status-badge status-in-progress">Em Andamento</span>
                                                 </div>
                                                 <p class="text-muted small mb-2">
-                                                    Auditoria independente para validação dos dados de redução/remoção de emissões.
+                                                    Auditoria independente para validação dos dados de redução/remoção
+                                                    de emissões.
                                                 </p>
                                                 <div class="mb-3">
                                                     <div class="d-flex justify-content-between small text-muted mb-1">
@@ -737,21 +779,23 @@
                                                         <span>80%</span>
                                                     </div>
                                                     <div class="progress">
-                                                        <div class="progress-bar progress-bar-tco2" style="width: 80%"></div>
+                                                        <div class="progress-bar progress-bar-tco2" style="width: 80%">
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <div class="small text-muted">
                                                         <i class="bi bi-calendar me-1"></i>Previsão: 25/02/2026
                                                     </div>
-                                                    <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal" data-bs-target="#auditoriaModal">
+                                                    <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#auditoriaModal">
                                                         <i class="bi bi-clock me-1"></i>Acompanhar
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Etapa 4 -->
                                     <div class="timeline-item pending">
                                         <div class="timeline-icon">
@@ -764,7 +808,8 @@
                                                     <span class="status-badge status-pending">Pendente</span>
                                                 </div>
                                                 <p class="text-muted small mb-2">
-                                                    Emissão final dos tokens TCO2 certificados e disponibilização para negociação.
+                                                    Emissão final dos tokens TCO2 certificados e disponibilização para
+                                                    negociação.
                                                 </p>
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <div class="small text-muted">
@@ -790,7 +835,8 @@
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0">Projetos em Processo de Certificação</h5>
                                 <div class="dropdown">
-                                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown">
                                         Filtros
                                     </button>
                                     <ul class="dropdown-menu">
@@ -814,7 +860,7 @@
                                                     </div>
                                                     <span class="status-badge status-in-progress">80%</span>
                                                 </div>
-                                                
+
                                                 <div class="row mb-3">
                                                     <div class="col-6">
                                                         <div class="small text-muted">FTCO2 Elegíveis</div>
@@ -825,25 +871,27 @@
                                                         <div class="fw-bold text-tco2">850 TCO2</div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="mb-3">
                                                     <div class="d-flex justify-content-between small text-muted mb-1">
                                                         <span>Progresso da Certificação</span>
                                                         <span>80%</span>
                                                     </div>
                                                     <div class="progress">
-                                                        <div class="progress-bar progress-bar-tco2" style="width: 80%"></div>
+                                                        <div class="progress-bar progress-bar-tco2" style="width: 80%">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="mb-3">
                                                     <div class="small text-muted">Próxima Etapa:</div>
                                                     <div class="fw-medium">Relatório de Auditoria</div>
                                                     <div class="text-muted small">Previsão: 25/02/2026</div>
                                                 </div>
-                                                
+
                                                 <div class="d-flex justify-content-between">
-                                                    <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal" data-bs-target="#projectDetailsModal">
+                                                    <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#projectDetailsModal">
                                                         <i class="bi bi-eye me-1"></i>Detalhes
                                                     </button>
                                                     <div class="text-end">
@@ -853,7 +901,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Projeto 2 -->
                                     <div class="col-md-6 mb-3">
                                         <div class="card project-card pending h-100">
@@ -865,7 +913,7 @@
                                                     </div>
                                                     <span class="status-badge status-pending">40%</span>
                                                 </div>
-                                                
+
                                                 <div class="row mb-3">
                                                     <div class="col-6">
                                                         <div class="small text-muted">FTCO2 Elegíveis</div>
@@ -876,24 +924,25 @@
                                                         <div class="fw-bold text-tco2">450 TCO2</div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="mb-3">
                                                     <div class="d-flex justify-content-between small text-muted mb-1">
                                                         <span>Progresso da Certificação</span>
                                                         <span>40%</span>
                                                     </div>
                                                     <div class="progress">
-                                                        <div class="progress-bar progress-bar-tco2" style="width: 40%"></div>
+                                                        <div class="progress-bar progress-bar-tco2" style="width: 40%">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="mb-3">
                                                     <div class="alert alert-warning small">
                                                         <i class="bi bi-exclamation-triangle me-2"></i>
                                                         Documentação adicional requerida para continuar.
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="d-flex justify-content-between">
                                                     <button class="btn btn-outline-ipe btn-sm">
                                                         <i class="bi bi-upload me-1"></i>Enviar Docs
@@ -905,7 +954,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Projeto 3 (Certificado) -->
                                     <div class="col-md-6 mb-3">
                                         <div class="card project-card completed h-100">
@@ -917,7 +966,7 @@
                                                     </div>
                                                     <span class="status-badge status-completed">Certificado</span>
                                                 </div>
-                                                
+
                                                 <div class="row mb-3">
                                                     <div class="col-6">
                                                         <div class="small text-muted">FTCO2 Convertidos</div>
@@ -928,19 +977,19 @@
                                                         <div class="fw-bold text-tco2">380 TCO2</div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="mb-3">
                                                     <div class="small text-muted">Taxa de Conversão:</div>
                                                     <div class="fw-bold text-success">95%</div>
                                                     <div class="text-muted small">20 FTCO2 não qualificados</div>
                                                 </div>
-                                                
+
                                                 <div class="mb-3">
                                                     <div class="small text-muted">Valorização:</div>
                                                     <div class="fw-bold text-success">+18%</div>
                                                     <div class="text-muted small">R$ 40 → R$ 47,20/TCO2</div>
                                                 </div>
-                                                
+
                                                 <div class="d-flex justify-content-between">
                                                     <a href="painel-tco2.html" class="btn btn-ipe btn-sm">
                                                         <i class="bi bi-currency-exchange me-1"></i>Negociar TCO2
@@ -952,7 +1001,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Projeto 4 (Rejeitado) -->
                                     <div class="col-md-6 mb-3">
                                         <div class="card border-danger h-100">
@@ -964,14 +1013,14 @@
                                                     </div>
                                                     <span class="status-badge status-rejected">Rejeitado</span>
                                                 </div>
-                                                
+
                                                 <div class="mb-3">
                                                     <div class="alert alert-danger small">
                                                         <i class="bi bi-x-circle me-2"></i>
                                                         Processo interrompido: dados de monitoramento insuficientes.
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="row mb-3">
                                                     <div class="col-6">
                                                         <div class="small text-muted">FTCO2 Afetados</div>
@@ -982,7 +1031,7 @@
                                                         <div class="fw-bold text-danger">Não elegível</div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="mb-3">
                                                     <div class="small text-muted">Ações Recomendadas:</div>
                                                     <ul class="small text-muted">
@@ -991,7 +1040,7 @@
                                                         <li>Solicitar nova análise</li>
                                                     </ul>
                                                 </div>
-                                                
+
                                                 <div class="d-flex justify-content-between">
                                                     <button class="btn btn-outline-danger btn-sm">
                                                         <i class="bi bi-arrow-clockwise me-1"></i>Reiniciar
@@ -1015,7 +1064,8 @@
                         <div class="card card-ipe">
                             <div class="card-header">
                                 <h5 class="mb-0">Documentação e Relatórios</h5>
-                                <p class="text-muted small mb-0">Acesse todos os documentos do processo de certificação</p>
+                                <p class="text-muted small mb-0">Acesse todos os documentos do processo de certificação
+                                </p>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -1026,7 +1076,8 @@
                                                     <i class="bi bi-file-text fs-1 text-ipe"></i>
                                                 </div>
                                                 <h6 class="text-center">Relatório de Monitoramento (MRV)</h6>
-                                                <p class="text-muted small text-center">Dados coletados do período de monitoramento ambiental</p>
+                                                <p class="text-muted small text-center">Dados coletados do período de
+                                                    monitoramento ambiental</p>
                                                 <div class="d-flex justify-content-center gap-2">
                                                     <button class="btn btn-outline-ipe btn-sm">
                                                         <i class="bi bi-eye me-1"></i>Visualizar
@@ -1038,7 +1089,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-4 mb-3">
                                         <div class="card border-0 bg-light h-100">
                                             <div class="card-body">
@@ -1046,7 +1097,8 @@
                                                     <i class="bi bi-shield-check fs-1 text-ipe"></i>
                                                 </div>
                                                 <h6 class="text-center">Relatório de Auditoria</h6>
-                                                <p class="text-muted small text-center">Validação independente dos dados ambientais</p>
+                                                <p class="text-muted small text-center">Validação independente dos dados
+                                                    ambientais</p>
                                                 <div class="d-flex justify-content-center gap-2">
                                                     <button class="btn btn-outline-ipe btn-sm">
                                                         <i class="bi bi-eye me-1"></i>Visualizar
@@ -1058,7 +1110,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-4 mb-3">
                                         <div class="card border-0 bg-light h-100">
                                             <div class="card-body">
@@ -1066,7 +1118,8 @@
                                                     <i class="bi bi-file-earmark-check fs-1 text-ipe"></i>
                                                 </div>
                                                 <h6 class="text-center">Certificado TCO2</h6>
-                                                <p class="text-muted small text-center">Documento oficial de certificação dos créditos</p>
+                                                <p class="text-muted small text-center">Documento oficial de
+                                                    certificação dos créditos</p>
                                                 <div class="d-flex justify-content-center gap-2">
                                                     <button class="btn btn-outline-ipe btn-sm">
                                                         <i class="bi bi-eye me-1"></i>Visualizar
@@ -1100,7 +1153,7 @@
                         <i class="bi bi-info-circle me-2"></i>
                         Auditoria sendo realizada pela empresa verificadora <strong>EcoAudit Brasil</strong>.
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card bg-light border-0 mb-3">
@@ -1153,7 +1206,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <h6>Próximos Passos</h6>
                         <ul class="text-muted">
@@ -1173,54 +1226,54 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         // Elementos do DOM
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const timelineProgress = document.getElementById('timelineProgress');
-        
+
         // Alternar menu mobile
         function toggleMobileMenu() {
             sidebar.classList.toggle('show');
             sidebarOverlay.classList.toggle('show');
         }
-        
+
         // Fechar menu mobile
         function closeMobileMenu() {
             sidebar.classList.remove('show');
             sidebarOverlay.classList.remove('show');
         }
-        
+
         // Calcular progresso da timeline
         function calculateTimelineProgress() {
             const completedItems = document.querySelectorAll('.timeline-item.completed').length;
             const currentItems = document.querySelectorAll('.timeline-item.current').length;
             const totalItems = document.querySelectorAll('.timeline-item').length;
-            
+
             // Se há um item atual, considera como parcialmente completo
             let progress = (completedItems / totalItems) * 100;
             if (currentItems > 0) {
                 progress += (0.5 / totalItems) * 100; // Considera 50% do item atual
             }
-            
+
             timelineProgress.style.height = `${progress}%`;
         }
-        
+
         // Simular upload de documentos
         function simulateDocumentUpload(button) {
             const originalText = button.innerHTML;
-            
+
             // Mostrar loading
             button.innerHTML = '<i class="bi bi-arrow-clockwise animate-spin me-1"></i>Enviando...';
             button.disabled = true;
-            
+
             // Simular delay
             setTimeout(() => {
                 button.innerHTML = '<i class="bi bi-check-circle me-1"></i>Enviado';
                 button.className = 'btn btn-success btn-sm';
-                
+
                 // Restaurar após 2 segundos
                 setTimeout(() => {
                     button.innerHTML = originalText;
@@ -1229,45 +1282,45 @@
                 }, 2000);
             }, 1500);
         }
-        
+
         // Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Menu mobile
             mobileMenuToggle.addEventListener('click', toggleMobileMenu);
             sidebarOverlay.addEventListener('click', closeMobileMenu);
-            
+
             // Fechar menu ao redimensionar
-            window.addEventListener('resize', function() {
+            window.addEventListener('resize', function () {
                 if (window.innerWidth > 768) {
                     closeMobileMenu();
                 }
             });
-            
+
             // Fechar menu ao clicar em links
             document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-                link.addEventListener('click', function() {
+                link.addEventListener('click', function () {
                     if (window.innerWidth <= 768) {
                         closeMobileMenu();
                     }
                 });
             });
-            
+
             // Calcular progresso da timeline
             calculateTimelineProgress();
-            
+
             // Botões de upload de documentos
             document.querySelectorAll('.btn-outline-ipe').forEach(button => {
                 if (button.textContent.includes('Enviar Docs')) {
-                    button.addEventListener('click', function() {
+                    button.addEventListener('click', function () {
                         simulateDocumentUpload(this);
                     });
                 }
             });
-            
+
             // Botões de reiniciar processo
             document.querySelectorAll('.btn-outline-danger').forEach(button => {
                 if (button.textContent.includes('Reiniciar')) {
-                    button.addEventListener('click', function() {
+                    button.addEventListener('click', function () {
                         if (confirm('Deseja reiniciar o processo de certificação para este projeto?')) {
                             alert('Processo reiniciado. Você será redirecionado para upload de documentos.');
                             // Em um sistema real, aqui redirecionaria para a tela de documentos
@@ -1277,5 +1330,140 @@
             });
         });
     </script>
+
+    <!-- Modal Detalhes da Homologação -->
+    <div class="modal fade" id="detailsModal1" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalhes da Homologação</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle me-2"></i>
+                        <strong>Projeto Homologado com Sucesso</strong>
+                    </div>
+                    <table class="table table-sm">
+                        <tr>
+                            <td class="text-muted">Data de Homologação:</td>
+                            <td>05/01/2026</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Número do Processo:</td>
+                            <td>PRJ-2024-00123-HOM</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Analista Responsável:</td>
+                            <td>Ana Silva</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Observações:</td>
+                            <td>Projeto atende todos os requisitos técnicos e documentais.</td>
+                        </tr>
+                    </table>
+                    <div class="mt-3">
+                        <h6>Documentos Aprovados:</h6>
+                        <ul class="small">
+                            <li>PDD - Projeto de Documentação Detalhada</li>
+                            <li>Mapas Georreferenciados</li>
+                            <li>Laudo Técnico Ambiental</li>
+                            <li>Comprovante de Propriedade</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-ipe">
+                        <i class="bi bi-download me-1"></i>Certificado de Homologação
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalhes do Projeto -->
+    <div class="modal fade" id="projectDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalhes do Projeto - Floresta Amazônica Sustentável</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card bg-light border-0 mb-3">
+                                <div class="card-body">
+                                    <h6>Informações do Projeto</h6>
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td class="text-muted">ID do Projeto:</td>
+                                            <td><code>PRJ-2024-00123</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Tipo:</td>
+                                            <td>Reflorestamento - Agrofloresta</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Área:</td>
+                                            <td>500 hectares</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Localização:</td>
+                                            <td>Pará, Região Norte</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Data de Início:</td>
+                                            <td>15/01/2026</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light border-0 mb-3">
+                                <div class="card-body">
+                                    <h6>Métricas de Carbono</h6>
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td class="text-muted">FTCO2 Elegíveis:</td>
+                                            <td><strong class="text-warning">1.200 FTCO2</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">TCO2 Estimados:</td>
+                                            <td><strong class="text-success">850 TCO2</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Taxa de Conversão:</td>
+                                            <td>70.8%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Redução Estimada:</td>
+                                            <td>2.100 tCO2e/ano</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Status Atual:</strong> Projeto em fase de verificação por auditoria independente.
+                        Previsão de conclusão: 25/02/2026.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <a href="acompanhamento-projeto.html" class="btn btn-ipe">
+                        <i class="bi bi-clipboard-data me-1"></i>Acompanhar Projeto
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
+
 </html>

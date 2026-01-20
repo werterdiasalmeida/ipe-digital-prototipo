@@ -1204,5 +1204,280 @@
             }
         });
     </script>
+
+<!-- Modal FTCO2 -->
+<div class="modal fade" id="ftco2Modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Gerenciar FTCO2 - Floresta Amazônica Sustentável</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-clock me-2"></i>
+                    <strong>Tokens Forward (FTCO2)</strong> - Representam créditos futuros em processo de certificação
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card bg-light border-0">
+                            <div class="card-body">
+                                <h6>Disponibilidade</h6>
+                                <div class="h4 text-warning mb-2">1.200 FTCO2</div>
+                                <div class="small text-muted">Valor estimado: R$ 50.400,00</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light border-0">
+                            <div class="card-body">
+                                <h6>Negociados</h6>
+                                <div class="h4 text-success mb-2">350 FTCO2</div>
+                                <div class="small text-muted">29% do total disponível</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Ações Disponíveis</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="cadastro-anuncio.html" class="btn btn-warning btn-sm">
+                            <i class="bi bi-megaphone me-1"></i>Criar Anúncio de Venda
+                        </a>
+                        <button class="btn btn-outline-warning btn-sm">
+                            <i class="bi bi-arrow-left-right me-1"></i>Negociar Diretamente
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-eye me-1"></i>Ver Histórico
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <h6>Lotes Disponíveis</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Lote</th>
+                                    <th>Quantidade</th>
+                                    <th>Valor Unitário</th>
+                                    <th>Status</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Lote A</td>
+                                    <td>200 FTCO2</td>
+                                    <td>R$ 42,00</td>
+                                    <td><span class="badge bg-success">Disponível</span></td>
+                                    <td>
+                                        <button class="btn btn-outline-warning btn-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Lote B</td>
+                                    <td>150 FTCO2</td>
+                                    <td>R$ 42,50</td>
+                                    <td><span class="badge bg-success">Disponível</span></td>
+                                    <td>
+                                        <button class="btn btn-outline-warning btn-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+                <a href="painel-ftco2.html" class="btn btn-warning">
+                    <i class="bi bi-arrow-right me-1"></i>Painel Completo FTCO2
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal TCO2 -->
+<div class="modal fade" id="tco2Modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Gerenciar TCO2 - Cerrado Regenerativo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success">
+                    <i class="bi bi-shield-check me-2"></i>
+                    <strong>Tokens de Carbono Certificados (TCO2)</strong> - Créditos certificados e prontos para negociação
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card bg-light border-0">
+                            <div class="card-body">
+                                <h6>Disponibilidade</h6>
+                                <div class="h4 text-success mb-2">850 TCO2</div>
+                                <div class="small text-muted">Valor estimado: R$ 40.635,00</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light border-0">
+                            <div class="card-body">
+                                <h6>Negociados</h6>
+                                <div class="h4 text-success mb-2">420 TCO2</div>
+                                <div class="small text-muted">49% do total disponível</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Ações Disponíveis</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="cadastro-anuncio.html" class="btn btn-success btn-sm">
+                            <i class="bi bi-megaphone me-1"></i>Criar Anúncio de Venda
+                        </a>
+                        <a href="painel-burn.html" class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-fire me-1"></i>Aposentar (Burn)
+                        </a>
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-eye me-1"></i>Ver Histórico
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <h6>Lotes Disponíveis</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Lote</th>
+                                    <th>Quantidade</th>
+                                    <th>Valor Unitário</th>
+                                    <th>Status</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Lote CR-01</td>
+                                    <td>300 TCO2</td>
+                                    <td>R$ 47,50</td>
+                                    <td><span class="badge bg-success">Disponível</span></td>
+                                    <td>
+                                        <button class="btn btn-outline-success btn-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Lote CR-02</td>
+                                    <td>130 TCO2</td>
+                                    <td>R$ 48,00</td>
+                                    <td><span class="badge bg-warning">Reservado</span></td>
+                                    <td>
+                                        <button class="btn btn-outline-success btn-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+                <a href="painel-tco2.html" class="btn btn-success">
+                    <i class="bi bi-arrow-right me-1"></i>Painel Completo TCO2
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Upload de Documentos -->
+<div class="modal fade" id="docsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload de Documentos - Pantanal Conservation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <strong>Documentação Pendente</strong> - Projeto ID: PRJ-2024-00145
+                </div>
+                
+                <div class="mb-4">
+                    <h6>Documentos Requeridos:</h6>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Mapa georreferenciado atualizado
+                            <span class="badge bg-danger">Pendente</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Laudo técnico de conservação
+                            <span class="badge bg-danger">Pendente</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Autorização ambiental
+                            <span class="badge bg-warning">Em análise</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Comprovante de propriedade
+                            <span class="badge bg-success">Aprovado</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Upload de Arquivos</h6>
+                    <div class="mb-3">
+                        <label class="form-label">Selecione o tipo de documento:</label>
+                        <select class="form-select form-select-sm" id="docType">
+                            <option value="mapa">Mapa georreferenciado</option>
+                            <option value="laudo">Laudo técnico</option>
+                            <option value="autorizacao">Autorização ambiental</option>
+                            <option value="outro">Outro documento</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Selecione o arquivo:</label>
+                        <input type="file" class="form-control form-control-sm" id="fileUpload" accept=".pdf,.jpg,.png,.doc,.docx">
+                        <div class="form-text">
+                            Formatos aceitos: PDF, JPG, PNG, DOC, DOCX (Máx: 10MB)
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Observações (opcional):</label>
+                        <textarea class="form-control form-control-sm" rows="2" placeholder="Adicione observações sobre o documento..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-ipe" id="uploadDocsBtn">
+                    <i class="bi bi-upload me-1"></i>Enviar Documentos
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
