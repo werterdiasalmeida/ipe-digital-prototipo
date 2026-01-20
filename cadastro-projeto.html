@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Projeto - Ipê Digital</title>
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Estilos personalizados -->
+    <style>
+        :root {
+            /* Tons de Azul (baseado na logomarca) */
+            --azul-ipe: #343A40;
+            --azul-destaque: #2d3748;
+            --azul-secundario: #4a5568;
+            --azul-claro: #3182ce;
+            --azul-suave: #90cdf4;
+            
+            /* Tons de neutros */
+            --cinza-claro: #F8F9FA;
+            --cinza-medio: #6C757D;
+            --cinza-escuro: #343A40;
+            
+            /* Cores funcionais */
+            --verde-sucesso: #38a169;
+            --laranja-alerta: #dd6b20;
+            --vermelho-erro: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--cinza-claro);
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--azul-ipe);
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+            transition: all 0.3s;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1030;
+            width: 250px;
+        }
+        
+        .sidebar .navbar-brand {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .navbar-brand img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left-color: var(--azul-claro);
+        }
+        
+        .sidebar .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        
+        /* Header */
+        .main-header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--azul-suave);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--azul-ipe);
+            font-weight: bold;
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--azul-ipe);
+            font-size: 1.5rem;
+            padding: 5px 10px;
+        }
+        
+        /* Cards */
+        .card-ipe {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .btn-ipe {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-ipe:hover {
+            background-color: var(--azul-destaque);
+            color: white;
+        }
+        
+        .btn-outline-ipe {
+            border: 2px solid var(--azul-ipe);
+            color: var(--azul-ipe);
+            background-color: transparent;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-outline-ipe:hover {
+            background-color: var(--azul-ipe);
+            color: white;
+        }
+        
+        .text-ipe {
+            color: var(--azul-ipe);
+        }
+        
+        /* Form Steps */
+        .form-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .form-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+            background-color: var(--cinza-medio);
+            z-index: 1;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            width: 120px;
+            text-align: center;
+        }
+        
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid var(--cinza-medio);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--cinza-medio);
+            margin-bottom: 8px;
+        }
+        
+        .step.active .step-circle {
+            background-color: var(--azul-ipe);
+            border-color: var(--azul-ipe);
+            color: white;
+        }
+        
+        .step.completed .step-circle {
+            background-color: var(--verde-sucesso);
+            border-color: var(--verde-sucesso);
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--cinza-medio);
+        }
+        
+        .step.active .step-label {
+            color: var(--azul-ipe);
+        }
+        
+        /* Form Sections */
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Form Controls */
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--azul-claro);
+            box-shadow: 0 0 0 0.25rem rgba(49, 130, 206, 0.25);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--cinza-escuro);
+        }
+        
+        .form-label .required {
+            color: var(--vermelho-erro);
+        }
+        
+        /* Project Type Cards */
+        .project-type-card {
+            border: 2px solid var(--cinza-claro);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 100%;
+            text-align: center;
+        }
+        
+        .project-type-card:hover {
+            border-color: var(--azul-suave);
+            transform: translateY(-2px);
+        }
+        
+        .project-type-card.selected {
+            border-color: var(--azul-ipe);
+            background-color: rgba(26, 54, 93, 0.05);
+        }
+        
+        .project-type-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(26, 54, 93, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+        
+        .project-type-icon i {
+            font-size: 24px;
+            color: var(--azul-ipe);
+        }
+        
+        /* File Upload */
+        .file-upload-area {
+            border: 2px dashed var(--cinza-medio);
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-area:hover {
+            border-color: var(--azul-ipe);
+            background-color: rgba(26, 54, 93, 0.05);
+        }
+        
+        .file-upload-icon {
+            font-size: 48px;
+            color: var(--cinza-medio);
+            margin-bottom: 15px;
+        }
+        
+        /* Progress Bar */
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        .progress-bar-ipe {
+            background-color: var(--azul-ipe);
+        }
+        
+        /* Mobile-first adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1029;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+            }
+            
+            .form-steps {
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .step {
+                min-width: 100px;
+            }
+            
+            .step-circle {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+            
+            .step-label {
+                font-size: 0.75rem;
+            }
+            
+            .btn-ipe, .btn-outline-ipe {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .main-content {
+                margin-left: 250px;
+            }
+            
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar d-flex flex-column" id="sidebar">
+        <div class="navbar-brand">
+            <img src="logo.png" alt="Ipê Digital" class="d-inline-block">
+            <span class="fw-bold ms-2 text-white">Ipê Digital</span>
+        </div>
+        
+        <div class="flex-grow-1">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-proprietario.html">
+                        <i class="bi bi-house-door"></i>
+                        <span class="nav-text">Painel Principal</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="cadastro-projeto.html">
+                        <i class="bi bi-folder-plus"></i>
+                        <span class="nav-text">Cadastrar Projeto</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="acompanhamento-projeto.html">
+                        <i class="bi bi-clipboard-data"></i>
+                        <span class="nav-text">Acompanhar Projetos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-ftco2.html">
+                        <i class="bi bi-tags"></i>
+                        <span class="nav-text">FTCO2 Disponíveis</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="acompanhamento-certificacao.html">
+                        <i class="bi bi-shield-check"></i>
+                        <span class="nav-text">Certificação TCO2</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-tco2.html">
+                        <i class="bi bi-currency-exchange"></i>
+                        <span class="nav-text">TCO2 Disponíveis</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="mesa-negociacao.html">
+                        <i class="bi bi-arrow-left-right"></i>
+                        <span class="nav-text">Mesa de Negociação</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cadastro-anuncio.html">
+                        <i class="bi bi-megaphone"></i>
+                        <span class="nav-text">Criar Anúncio</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-burn.html">
+                        <i class="bi bi-fire"></i>
+                        <span class="nav-text">Aposentar Créditos</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="meu-perfil.html">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="nav-text">Meu Perfil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span class="nav-text">Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="p-3 border-top border-white-10">
+            <div class="text-center small opacity-75">
+                <i class="bi bi-shield-lock"></i> Ambiente Seguro
+                <br>
+                <small>Conectado via Blockchain</small>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-8 col-md-6">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <h1 class="h4 mb-0 d-inline-block ms-2">Cadastrar Novo Projeto</h1>
+                    </div>
+                    <div class="col-4 col-md-6">
+                        <div class="d-flex justify-content-end align-items-center gap-3">
+                            <!-- Perfil do Usuário -->
+                            <div class="dropdown">
+                                <button class="btn btn-link text-decoration-none text-dark p-0" type="button" data-bs-toggle="dropdown">
+                                    <div class="user-info">
+                                        <div class="user-avatar">JS</div>
+                                        <div class="d-none d-md-block">
+                                            <div class="fw-medium">João Silva</div>
+                                            <div class="small text-muted">Proprietário</div>
+                                        </div>
+                                        <i class="bi bi-chevron-down"></i>
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="meu-perfil.html"><i class="bi bi-person-circle me-2"></i>Meu Perfil</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="index.html"><i class="bi bi-box-arrow-left me-2"></i>Sair</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="py-4">
+            <div class="container-fluid">
+                <!-- Progresso do Formulário -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="mb-0">Registro de Projeto Ambiental</h4>
+                            <div class="text-end">
+                                <div class="progress" style="width: 150px; height: 8px;">
+                                    <div class="progress-bar progress-bar-ipe" id="formProgress" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <small class="text-muted" id="progressText">Passo 1 de 4</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passos do Formulário -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="form-steps">
+                            <div class="step active" data-step="1">
+                                <div class="step-circle">1</div>
+                                <div class="step-label">Informações Básicas</div>
+                            </div>
+                            <div class="step" data-step="2">
+                                <div class="step-circle">2</div>
+                                <div class="step-label">Detalhes do Projeto</div>
+                            </div>
+                            <div class="step" data-step="3">
+                                <div class="step-circle">3</div>
+                                <div class="step-label">Documentação</div>
+                            </div>
+                            <div class="step" data-step="4">
+                                <div class="step-circle">4</div>
+                                <div class="step-label">Revisão</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulário em Múltiplas Etapas -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-ipe">
+                            <div class="card-body p-4">
+                                <!-- Passo 1: Informações Básicas -->
+                                <div class="form-section active" id="step1">
+                                    <h5 class="mb-4">Informações Básicas do Projeto</h5>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="projectName" class="form-label">
+                                                Nome do Projeto <span class="required">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="projectName" placeholder="Ex: Floresta Amazônica Sustentável" required>
+                                        </div>
+                                        
+                                        <div class="col-md-6 mb-3">
+                                            <label for="projectType" class="form-label">
+                                                Tipo de Projeto <span class="required">*</span>
+                                            </label>
+                                            <select class="form-select" id="projectType" required>
+                                                <option value="" selected disabled>Selecione o tipo</option>
+                                                <option value="reflorestamento">Reflorestamento</option>
+                                                <option value="agrofloresta">Agrofloresta</option>
+                                                <option value="conservacao">Conservação Florestal</option>
+                                                <option value="manejo">Manejo Sustentável</option>
+                                                <option value="energia">Energia Renovável</option>
+                                                <option value="outro">Outro</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="projectArea" class="form-label">
+                                                Área Total (hectares) <span class="required">*</span>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="projectArea" min="1" step="0.01" required>
+                                                <span class="input-group-text">ha</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6 mb-3">
+                                            <label for="expectedCredits" class="form-label">
+                                                Créditos Estimados (FTCO2) <span class="required">*</span>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="expectedCredits" min="1" required>
+                                                <span class="input-group-text">FTCO2</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="projectDescription" class="form-label">
+                                            Descrição do Projeto <span class="required">*</span>
+                                        </label>
+                                        <textarea class="form-control" id="projectDescription" rows="4" placeholder="Descreva detalhadamente o projeto, objetivos, metodologia, etc." required></textarea>
+                                        <div class="form-text">Mínimo de 200 caracteres</div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <button class="btn btn-outline-secondary" disabled>
+                                            <i class="bi bi-arrow-left me-2"></i>Anterior
+                                        </button>
+                                        <button class="btn btn-ipe" id="nextStep1">
+                                            Próximo <i class="bi bi-arrow-right ms-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Passo 2: Detalhes do Projeto -->
+                                <div class="form-section" id="step2">
+                                    <h5 class="mb-4">Detalhes do Projeto</h5>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="projectLocation" class="form-label">
+                                                Localização <span class="required">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="projectLocation" placeholder="Ex: Município, Estado" required>
+                                        </div>
+                                        
+                                        <div class="col-md-6 mb-3">
+                                            <label for="projectCoordinates" class="form-label">
+                                                Coordenadas Geográficas
+                                            </label>
+                                            <input type="text" class="form-control" id="projectCoordinates" placeholder="Ex: -3.4653, -62.2159">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="startDate" class="form-label">
+                                                Data de Início <span class="required">*</span>
+                                            </label>
+                                            <input type="date" class="form-control" id="startDate" required>
+                                        </div>
+                                        
+                                        <div class="col-md-4 mb-3">
+                                            <label for="duration" class="form-label">
+                                                Duração (anos) <span class="required">*</span>
+                                            </label>
+                                            <input type="number" class="form-control" id="duration" min="1" max="50" required>
+                                        </div>
+                                        
+                                        <div class="col-md-4 mb-3">
+                                            <label for="verificationStandard" class="form-label">
+                                                Padrão de Verificação
+                                            </label>
+                                            <select class="form-select" id="verificationStandard">
+                                                <option value="" selected>Selecione</option>
+                                                <option value="vcs">VCS (Verified Carbon Standard)</option>
+                                                <option value="gold">Gold Standard</option>
+                                                <option value="acr">ACR (American Carbon Registry)</option>
+                                                <option value="art">ART (Architecture for REDD+ Transactions)</option>
+                                                <option value="outro">Outro</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label mb-3">
+                                            Metodologia de Projeto <span class="required">*</span>
+                                        </label>
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <div class="project-type-card" data-method="floresta">
+                                                    <div class="project-type-icon">
+                                                        <i class="bi bi-tree"></i>
+                                                    </div>
+                                                    <h6>Florestal</h6>
+                                                    <p class="small text-muted">AR-ACM0001, AR-ACM0002</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="project-type-card" data-method="agricola">
+                                                    <div class="project-type-icon">
+                                                        <i class="bi bi-flower1"></i>
+                                                    </div>
+                                                    <h6>Agrícola</h6>
+                                                    <p class="small text-muted">AMS-III.AU, AMS-III.B</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="project-type-card" data-method="energia">
+                                                    <div class="project-type-icon">
+                                                        <i class="bi bi-lightning-charge"></i>
+                                                    </div>
+                                                    <h6>Energia</h6>
+                                                    <p class="small text-muted">ACM0002, AMS-I.D</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="selectedMethodology">
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <button class="btn btn-outline-ipe" id="prevStep2">
+                                            <i class="bi bi-arrow-left me-2"></i>Anterior
+                                        </button>
+                                        <button class="btn btn-ipe" id="nextStep2">
+                                            Próximo <i class="bi bi-arrow-right ms-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Passo 3: Documentação -->
+                                <div class="form-section" id="step3">
+                                    <h5 class="mb-4">Documentação do Projeto</h5>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label mb-3">
+                                            Documentos Necessários <span class="required">*</span>
+                                        </label>
+                                        
+                                        <!-- Projeto de Documento (PDD) -->
+                                        <div class="card mb-3 border-0 bg-light">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-1">Projeto de Documento (PDD)</h6>
+                                                        <p class="small text-muted mb-0">Documento completo do projeto conforme padrão selecionado</p>
+                                                    </div>
+                                                    <div>
+                                                        <input type="file" class="form-control d-none" id="pddFile" accept=".pdf,.doc,.docx">
+                                                        <button type="button" class="btn btn-outline-ipe btn-sm" id="uploadPdd">
+                                                            <i class="bi bi-upload me-2"></i>Selecionar
+                                                        </button>
+                                                        <span class="ms-2 small" id="pddFileName">Nenhum arquivo</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Estudo de Viabilidade -->
+                                        <div class="card mb-3 border-0 bg-light">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-1">Estudo de Viabilidade</h6>
+                                                        <p class="small text-muted mb-0">Análise técnica e econômica do projeto</p>
+                                                    </div>
+                                                    <div>
+                                                        <input type="file" class="form-control d-none" id="feasibilityFile" accept=".pdf,.doc,.docx">
+                                                        <button type="button" class="btn btn-outline-ipe btn-sm" id="uploadFeasibility">
+                                                            <i class="bi bi-upload me-2"></i>Selecionar
+                                                        </button>
+                                                        <span class="ms-2 small" id="feasibilityFileName">Nenhum arquivo</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Mapa da Área -->
+                                        <div class="card mb-3 border-0 bg-light">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-1">Mapa da Área do Projeto</h6>
+                                                        <p class="small text-muted mb-0">Mapa georreferenciado (PDF ou imagem)</p>
+                                                    </div>
+                                                    <div>
+                                                        <input type="file" class="form-control d-none" id="mapFile" accept=".pdf,.jpg,.jpeg,.png,.tiff">
+                                                        <button type="button" class="btn btn-outline-ipe btn-sm" id="uploadMap">
+                                                            <i class="bi bi-upload me-2"></i>Selecionar
+                                                        </button>
+                                                        <span class="ms-2 small" id="mapFileName">Nenhum arquivo</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Documentos Legais -->
+                                        <div class="card mb-3 border-0 bg-light">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-1">Documentos Legais</h6>
+                                                        <p class="small text-muted mb-0">Registro de propriedade, autorizações ambientais, etc.</p>
+                                                    </div>
+                                                    <div>
+                                                        <input type="file" class="form-control d-none" id="legalFile" accept=".pdf,.jpg,.jpeg,.png" multiple>
+                                                        <button type="button" class="btn btn-outline-ipe btn-sm" id="uploadLegal">
+                                                            <i class="bi bi-upload me-2"></i>Selecionar
+                                                        </button>
+                                                        <span class="ms-2 small" id="legalFileCount">0 arquivos</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label for="additionalInfo" class="form-label">
+                                            Informações Adicionais
+                                        </label>
+                                        <textarea class="form-control" id="additionalInfo" rows="3" placeholder="Observações, considerações importantes, etc."></textarea>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <button class="btn btn-outline-ipe" id="prevStep3">
+                                            <i class="bi bi-arrow-left me-2"></i>Anterior
+                                        </button>
+                                        <button class="btn btn-ipe" id="nextStep3">
+                                            Próximo <i class="bi bi-arrow-right ms-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Passo 4: Revisão -->
+                                <div class="form-section" id="step4">
+                                    <h5 class="mb-4">Revisão e Submissão</h5>
+                                    
+                                    <div class="alert alert-info">
+                                        <i class="bi bi-info-circle-fill me-2"></i>
+                                        Revise todas as informações antes de submeter o projeto para análise.
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0">Informações Básicas</h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <table class="table table-sm">
+                                                        <tr>
+                                                            <td class="text-muted">Nome:</td>
+                                                            <td id="reviewName">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-muted">Tipo:</td>
+                                                            <td id="reviewType">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-muted">Área:</td>
+                                                            <td id="reviewArea">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-muted">Créditos Estimados:</td>
+                                                            <td id="reviewCredits">-</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0">Detalhes do Projeto</h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <table class="table table-sm">
+                                                        <tr>
+                                                            <td class="text-muted">Localização:</td>
+                                                            <td id="reviewLocation">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-muted">Data de Início:</td>
+                                                            <td id="reviewStartDate">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-muted">Duração:</td>
+                                                            <td id="reviewDuration">-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-muted">Metodologia:</td>
+                                                            <td id="reviewMethodology">-</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card mb-4">
+                                        <div class="card-header bg-light">
+                                            <h6 class="mb-0">Documentação</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled mb-0" id="reviewDocuments">
+                                                <li><i class="bi bi-file-text text-muted me-2"></i>Projeto de Documento (PDD): <span class="text-muted">Não enviado</span></li>
+                                                <li><i class="bi bi-file-text text-muted me-2"></i>Estudo de Viabilidade: <span class="text-muted">Não enviado</span></li>
+                                                <li><i class="bi bi-map text-muted me-2"></i>Mapa da Área: <span class="text-muted">Não enviado</span></li>
+                                                <li><i class="bi bi-files text-muted me-2"></i>Documentos Legais: <span class="text-muted">0 arquivos</span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label for="termsAgreement" class="form-check-label">
+                                            <input type="checkbox" class="form-check-input me-2" id="termsAgreement" required>
+                                            Declaro que todas as informações fornecidas são verdadeiras e que possuo os direitos sobre o projeto cadastrado. Concordo com os <a href="#" class="text-ipe">Termos de Uso</a> da plataforma Ipê Digital.
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between mt-4">
+                                        <button class="btn btn-outline-ipe" id="prevStep4">
+                                            <i class="bi bi-arrow-left me-2"></i>Anterior
+                                        </button>
+                                        <button class="btn btn-ipe" id="submitProject">
+                                            <i class="bi bi-send me-2"></i>Submeter Projeto
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Informações Adicionais -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                                        <i class="bi bi-shield-check fs-1 text-ipe mb-2"></i>
+                                        <h6>Segurança Garantida</h6>
+                                        <p class="small text-muted mb-0">Todos os dados são protegidos por criptografia blockchain</p>
+                                    </div>
+                                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                                        <i class="bi bi-clock-history fs-1 text-ipe mb-2"></i>
+                                        <h6>Análise Rápida</h6>
+                                        <p class="small text-muted mb-0">Processo de análise entre 7-14 dias úteis</p>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <i class="bi bi-headset fs-1 text-ipe mb-2"></i>
+                                        <h6>Suporte Especializado</h6>
+                                        <p class="small text-muted mb-0">Nossa equipe está disponível para ajudar</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Elementos do DOM
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        
+        // Elementos do formulário
+        const formSections = document.querySelectorAll('.form-section');
+        const steps = document.querySelectorAll('.step');
+        const formProgress = document.getElementById('formProgress');
+        const progressText = document.getElementById('progressText');
+        
+        // Estado do formulário
+        let currentStep = 1;
+        const totalSteps = 4;
+        
+        // Alternar menu mobile
+        function toggleMobileMenu() {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.classList.toggle('show');
+        }
+        
+        // Fechar menu mobile
+        function closeMobileMenu() {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+        }
+        
+        // Atualizar progresso do formulário
+        function updateProgress() {
+            const progress = (currentStep / totalSteps) * 100;
+            formProgress.style.width = `${progress}%`;
+            formProgress.setAttribute('aria-valuenow', progress);
+            progressText.textContent = `Passo ${currentStep} de ${totalSteps}`;
+            
+            // Atualizar steps visuais
+            steps.forEach((step, index) => {
+                const stepNumber = parseInt(step.dataset.step);
+                
+                step.classList.remove('active', 'completed');
+                
+                if (stepNumber < currentStep) {
+                    step.classList.add('completed');
+                } else if (stepNumber === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+        }
+        
+        // Mostrar passo específico
+        function showStep(stepNumber) {
+            // Esconder todas as seções
+            formSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostrar seção atual
+            const currentSection = document.getElementById(`step${stepNumber}`);
+            if (currentSection) {
+                currentSection.classList.add('active');
+            }
+            
+            // Atualizar estado
+            currentStep = stepNumber;
+            updateProgress();
+        }
+        
+        // Validar passo 1
+        function validateStep1() {
+            const projectName = document.getElementById('projectName').value.trim();
+            const projectType = document.getElementById('projectType').value;
+            const projectArea = document.getElementById('projectArea').value;
+            const expectedCredits = document.getElementById('expectedCredits').value;
+            const projectDescription = document.getElementById('projectDescription').value.trim();
+            
+            if (!projectName || !projectType || !projectArea || !expectedCredits || !projectDescription) {
+                alert('Por favor, preencha todos os campos obrigatórios do passo 1.');
+                return false;
+            }
+            
+            if (projectDescription.length < 200) {
+                alert('A descrição do projeto deve ter pelo menos 200 caracteres.');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Validar passo 2
+        function validateStep2() {
+            const projectLocation = document.getElementById('projectLocation').value.trim();
+            const startDate = document.getElementById('startDate').value;
+            const duration = document.getElementById('duration').value;
+            const selectedMethodology = document.getElementById('selectedMethodology').value;
+            
+            if (!projectLocation || !startDate || !duration || !selectedMethodology) {
+                alert('Por favor, preencha todos os campos obrigatórios do passo 2.');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Coletar dados para revisão
+        function updateReviewData() {
+            // Informações básicas
+            document.getElementById('reviewName').textContent = document.getElementById('projectName').value || '-';
+            document.getElementById('reviewType').textContent = document.getElementById('projectType').options[document.getElementById('projectType').selectedIndex]?.text || '-';
+            document.getElementById('reviewArea').textContent = document.getElementById('projectArea').value ? `${document.getElementById('projectArea').value} ha` : '-';
+            document.getElementById('reviewCredits').textContent = document.getElementById('expectedCredits').value ? `${document.getElementById('expectedCredits').value} FTCO2` : '-';
+            
+            // Detalhes do projeto
+            document.getElementById('reviewLocation').textContent = document.getElementById('projectLocation').value || '-';
+            document.getElementById('reviewStartDate').textContent = document.getElementById('startDate').value || '-';
+            document.getElementById('reviewDuration').textContent = document.getElementById('duration').value ? `${document.getElementById('duration').value} anos` : '-';
+            document.getElementById('reviewMethodology').textContent = document.getElementById('selectedMethodology').value || '-';
+            
+            // Documentos
+            const pddFile = document.getElementById('pddFileName').textContent;
+            const feasibilityFile = document.getElementById('feasibilityFileName').textContent;
+            const mapFile = document.getElementById('mapFileName').textContent;
+            const legalFiles = document.getElementById('legalFileCount').textContent;
+            
+            document.getElementById('reviewDocuments').innerHTML = `
+                <li><i class="bi bi-file-text ${pddFile !== 'Nenhum arquivo' ? 'text-success' : 'text-muted'} me-2"></i>Projeto de Documento (PDD): <span>${pddFile}</span></li>
+                <li><i class="bi bi-file-text ${feasibilityFile !== 'Nenhum arquivo' ? 'text-success' : 'text-muted'} me-2"></i>Estudo de Viabilidade: <span>${feasibilityFile}</span></li>
+                <li><i class="bi bi-map ${mapFile !== 'Nenhum arquivo' ? 'text-success' : 'text-muted'} me-2"></i>Mapa da Área: <span>${mapFile}</span></li>
+                <li><i class="bi bi-files ${legalFiles !== '0 arquivos' ? 'text-success' : 'text-muted'} me-2"></i>Documentos Legais: <span>${legalFiles}</span></li>
+            `;
+        }
+        
+        // Submeter projeto
+        function submitProject() {
+            const termsAgreement = document.getElementById('termsAgreement').checked;
+            
+            if (!termsAgreement) {
+                alert('Você precisa concordar com os termos para submeter o projeto.');
+                return;
+            }
+            
+            // Simular envio
+            alert('Projeto submetido com sucesso! Você será redirecionado para acompanhamento.');
+            
+            // Redirecionar para acompanhamento
+            setTimeout(() => {
+                window.location.href = 'acompanhamento-projeto.html';
+            }, 2000);
+        }
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menu mobile
+            mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            sidebarOverlay.addEventListener('click', closeMobileMenu);
+            
+            // Fechar menu ao redimensionar
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Fechar menu ao clicar em links
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+            
+            // Navegação entre passos
+            document.getElementById('nextStep1').addEventListener('click', function() {
+                if (validateStep1()) {
+                    showStep(2);
+                }
+            });
+            
+            document.getElementById('prevStep2').addEventListener('click', function() {
+                showStep(1);
+            });
+            
+            document.getElementById('nextStep2').addEventListener('click', function() {
+                if (validateStep2()) {
+                    showStep(3);
+                }
+            });
+            
+            document.getElementById('prevStep3').addEventListener('click', function() {
+                showStep(2);
+            });
+            
+            document.getElementById('nextStep3').addEventListener('click', function() {
+                showStep(4);
+                updateReviewData();
+            });
+            
+            document.getElementById('prevStep4').addEventListener('click', function() {
+                showStep(3);
+            });
+            
+            document.getElementById('submitProject').addEventListener('click', submitProject);
+            
+            // Seleção de metodologia
+            document.querySelectorAll('.project-type-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remover seleção anterior
+                    document.querySelectorAll('.project-type-card').forEach(c => {
+                        c.classList.remove('selected');
+                    });
+                    
+                    // Selecionar atual
+                    this.classList.add('selected');
+                    document.getElementById('selectedMethodology').value = this.dataset.method;
+                });
+            });
+            
+            // Upload de arquivos
+            document.getElementById('uploadPdd').addEventListener('click', function() {
+                document.getElementById('pddFile').click();
+            });
+            
+            document.getElementById('uploadFeasibility').addEventListener('click', function() {
+                document.getElementById('feasibilityFile').click();
+            });
+            
+            document.getElementById('uploadMap').addEventListener('click', function() {
+                document.getElementById('mapFile').click();
+            });
+            
+            document.getElementById('uploadLegal').addEventListener('click', function() {
+                document.getElementById('legalFile').click();
+            });
+            
+            // Atualizar nomes de arquivos
+            document.getElementById('pddFile').addEventListener('change', function(e) {
+                const fileName = e.target.files[0]?.name || 'Nenhum arquivo';
+                document.getElementById('pddFileName').textContent = fileName;
+            });
+            
+            document.getElementById('feasibilityFile').addEventListener('change', function(e) {
+                const fileName = e.target.files[0]?.name || 'Nenhum arquivo';
+                document.getElementById('feasibilityFileName').textContent = fileName;
+            });
+            
+            document.getElementById('mapFile').addEventListener('change', function(e) {
+                const fileName = e.target.files[0]?.name || 'Nenhum arquivo';
+                document.getElementById('mapFileName').textContent = fileName;
+            });
+            
+            document.getElementById('legalFile').addEventListener('change', function(e) {
+                const fileCount = e.target.files.length;
+                document.getElementById('legalFileCount').textContent = `${fileCount} arquivo${fileCount !== 1 ? 's' : ''}`;
+            });
+            
+            // Data mínima para hoje
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').min = today;
+        });
+    </script>
+</body>
+</html>

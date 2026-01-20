@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ipê Digital - Plataforma de Créditos de Carbono</title>
+
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Estilos personalizados -->
+    <style>
+        :root {
+            /* Tons de Azul (baseado na logomarca) */
+            --azul-ipe: #1a365d;
+            --azul-destaque: #2d3748;
+            --azul-secundario: #4a5568;
+            --azul-claro: #3182ce;
+            --azul-suave: #90cdf4;
+
+            /* Tons de neutros */
+            --cinza-claro: #F8F9FA;
+            --cinza-medio: #6C757D;
+            --cinza-escuro: #343A40;
+
+            /* Cores funcionais */
+            --verde-sucesso: #38a169;
+            --laranja-alerta: #dd6b20;
+            --vermelho-erro: #e53e3e;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--cinza-escuro);
+            background-color: var(--cinza-claro);
+        }
+
+        .navbar-brand img {
+            height: 40px;
+            width: auto;
+        }
+
+        .btn-ipe {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-ipe:hover {
+            background-color: var(--azul-destaque);
+            color: white;
+        }
+
+        .btn-outline-ipe {
+            border: 2px solid var(--azul-ipe);
+            color: var(--azul-ipe);
+            background-color: transparent;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-outline-ipe:hover {
+            background-color: var(--azul-ipe);
+            color: white;
+        }
+
+        .card-ipe {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .card-ipe:hover {
+            transform: translateY(-5px);
+        }
+
+        .bg-ipe {
+            background-color: var(--azul-ipe);
+            color: white;
+        }
+
+        .text-ipe {
+            color: var(--azul-ipe);
+        }
+
+        .border-ipe {
+            border-color: var(--azul-ipe) !important;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, rgba(26, 54, 93, 0.1) 0%, rgba(45, 55, 72, 0.05) 100%);
+            padding: 60px 0;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--azul-claro);
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: var(--azul-ipe);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(26, 54, 93, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon i {
+            font-size: 24px;
+            color: var(--azul-ipe);
+        }
+
+        footer {
+            background-color: var(--cinza-escuro);
+            color: white;
+        }
+
+        /* Cores para badges e status */
+        .badge-ftco2 {
+            background-color: rgba(221, 107, 32, 0.1);
+            color: var(--laranja-alerta);
+            border: 1px solid var(--laranja-alerta);
+        }
+
+        .badge-tco2 {
+            background-color: rgba(56, 161, 105, 0.1);
+            color: var(--verde-sucesso);
+            border: 1px solid var(--verde-sucesso);
+        }
+
+        .badge-certified {
+            background-color: rgba(49, 130, 206, 0.1);
+            color: var(--azul-claro);
+            border: 1px solid var(--azul-claro);
+        }
+
+        /* Mobile-first adjustments */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 40px 0;
+            }
+
+            .display-4 {
+                font-size: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .btn-ipe,
+            .btn-outline-ipe {
+                padding: 8px 20px;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .hero-section {
+                padding: 80px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 0) Página Principal da Plataforma -->
+    <header>
+        <nav class="navbar navbar-expand-lg bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="logo.png" alt="Ipê Digital" class="d-inline-block align-text-top">
+                    <span class="fw-bold ms-2">Ipê Digital</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#inicio">Início</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sobre">Sobre</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#projetos">Projetos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#como-funciona">Como Funciona</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="painel-publico.html">Painel Público</a>
+                        </li>
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <a class="btn btn-outline-ipe" href="cadastro-usuario.html">Entrar / Cadastrar</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Seção Hero -->
+        <section class="hero-section" id="inicio">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 mb-5 mb-lg-0">
+                        <h1 class="display-4 fw-bold mb-4">
+                            Mercado de carbono com <span class="text-ipe">transparência</span> e <span
+                                class="text-ipe">tecnologia</span>
+                        </h1>
+                        <p class="lead mb-4">
+                            Plataforma blockchain para registro, tokenização e negociação de créditos de carbono,
+                            alinhada com o Sistema Brasileiro de Comércio de Emissões (SBCE).
+                        </p>
+                        <div class="d-flex flex-column flex-sm-row gap-3">
+                            <a href="painel-proprietario.html" class="btn btn-ipe">
+                                <i class="bi bi-tree me-2"></i>Cadastrar Projeto
+                            </a>
+                            <a href="painel-negociador.html" class="btn btn-outline-ipe">
+                                <i class="bi bi-arrow-left-right me-2"></i>Começar a Negociar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row text-center">
+                            <div class="col-6 mb-4">
+                                <div class="stat-card">
+                                    <div class="stat-number">2.5M+</div>
+                                    <div class="text-muted">TCO2 Tokenizados</div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-4">
+                                <div class="stat-card">
+                                    <div class="stat-number">150+</div>
+                                    <div class="text-muted">Projetos Ativos</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-card">
+                                    <div class="stat-number">85+</div>
+                                    <div class="text-muted">Negociadores</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-card">
+                                    <div class="stat-number">1.2M+</div>
+                                    <div class="text-muted">TCO2 Aposentados</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Sobre -->
+        <section class="py-5" id="sobre">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h2 class="fw-bold mb-3">Tecnologia para a Governança Climática</h2>
+                        <p class="text-muted">
+                            A Ipê Digital é uma infraestrutura blockchain dedicada ao ciclo completo de ativos
+                            ambientais,
+                            garantindo transparência, rastreabilidade e conformidade com a Lei 15.042/2024 (SBCE).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="feature-icon mx-auto">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Rastreabilidade Total</h4>
+                        <p class="text-center text-muted">
+                            Cada crédito de carbono é tokenizado e rastreado desde sua origem até a aposentadoria
+                            definitiva,
+                            eliminando riscos de dupla contagem.
+                        </p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="feature-icon mx-auto">
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Liquidez Antecipada</h4>
+                        <p class="text-center text-muted">
+                            FTCO2 (Tokens Forward) permitem o financiamento antecipado de projetos,
+                            viabilizando iniciativas sustentáveis antes da certificação final.
+                        </p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="feature-icon mx-auto">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Conformidade Regulatória</h4>
+                        <p class="text-center text-muted">
+                            Solução alinhada com o SBCE, atendendo às exigências de MRV e conciliação
+                            de emissões para empresas reguladas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Como Funciona -->
+        <section class="py-5 bg-light" id="como-funciona">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h2 class="fw-bold mb-3">Como a Plataforma Funciona</h2>
+                        <p class="text-muted">
+                            Do registro do projeto à negociação e aposentadoria dos créditos
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-10 mx-auto">
+                        <div class="card card-ipe border-0">
+                            <div class="card-body p-4">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 text-center mb-4 mb-md-0">
+                                        <div class="bg-ipe rounded-circle d-inline-flex align-items-center justify-content-center"
+                                            style="width: 80px; height: 80px;">
+                                            <i class="bi bi-pencil-square fs-3"></i>
+                                        </div>
+                                        <h5 class="mt-3 mb-0">1. Cadastro</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="d-flex align-items-start">
+                                            <div class="flex-shrink-0">
+                                                <span class="badge bg-ipe rounded-pill">Proprietários</span>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <p class="mb-1">
+                                                    <a href="painel-proprietario.html"
+                                                        class="text-decoration-none">Cadastre-se como Proprietário</a>
+                                                    e registre seu projeto ambiental na plataforma.
+                                                </p>
+                                                <small class="text-muted">
+                                                    Após análise e homologação, seu projeto poderá emitir FTCO2 para
+                                                    financiamento antecipado.
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                        <hr class="my-3">
+
+                                        <div class="d-flex align-items-start">
+                                            <div class="flex-shrink-0">
+                                                <span class="badge bg-ipe rounded-pill">Negociadores</span>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <p class="mb-1">
+                                                    <a href="painel-negociador.html"
+                                                        class="text-decoration-none">Cadastre-se como Negociador</a>
+                                                    para comprar, vender ou aposentar créditos de carbono.
+                                                </p>
+                                                <small class="text-muted">
+                                                    Acesse a mesa de negociação e gerencie seu portfólio de FTCO2 e
+                                                    TCO2.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="my-4">
+
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 text-center mb-4 mb-md-0">
+                                        <div class="bg-ipe rounded-circle d-inline-flex align-items-center justify-content-center"
+                                            style="width: 80px; height: 80px;">
+                                            <i class="bi bi-arrow-left-right fs-3"></i>
+                                        </div>
+                                        <h5 class="mt-3 mb-0">2. Negociação</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <p>
+                                            Negocie FTCO2 (futuros de créditos) ou TCO2 (créditos certificados) em nossa
+                                            <a href="mesa-negociacao.html" class="text-decoration-none">mesa de
+                                                negociação</a>.
+                                            Todas as transações são registradas em blockchain para total transparência.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <hr class="my-4">
+
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 text-center mb-4 mb-md-0">
+                                        <div class="bg-ipe rounded-circle d-inline-flex align-items-center justify-content-center"
+                                            style="width: 80px; height: 80px;">
+                                            <i class="bi bi-check-circle fs-3"></i>
+                                        </div>
+                                        <h5 class="mt-3 mb-0">3. Certificação</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <p>
+                                            Após verificação, os FTCO2 são convertidos em TCO2 (créditos certificados).
+                                            Todo o processo é auditável através do
+                                            <a href="acompanhamento-certificacao.html"
+                                                class="text-decoration-none">painel de certificação</a>.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <hr class="my-4">
+
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 text-center mb-4 mb-md-0">
+                                        <div class="bg-ipe rounded-circle d-inline-flex align-items-center justify-content-center"
+                                            style="width: 80px; height: 80px;">
+                                            <i class="bi bi-fire fs-3"></i>
+                                        </div>
+                                        <h5 class="mt-3 mb-0">4. Aposentadoria (Burn)</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <p>
+                                            Aposente definitivamente seus TCO2 para compensação de emissões através do
+                                            <a href="painel-burn.html" class="text-decoration-none">mecanismo de
+                                                burn</a>.
+                                            Cada crédito aposentado é removido permanentemente do mercado, garantindo
+                                            integridade ambiental.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção CTA -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <h2 class="fw-bold mb-4">Participe do Mercado de Carbono do Futuro</h2>
+                        <p class="lead mb-4">
+                            Junte-se a dezenas de empresas e projetos que já utilizam a Ipê Digital para
+                            gerenciar seus ativos ambientais com segurança e transparência.
+                        </p>
+                        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                            <a href="cadastro-usuario.html" class="btn btn-ipe btn-lg">
+                                <i class="bi bi-person-plus me-2"></i>Criar Conta
+                            </a>
+                            <a href="painel-publico.html" class="btn btn-outline-ipe btn-lg">
+                                <i class="bi bi-eye me-2"></i>Ver Painel Público
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="pt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <center>
+                    <a class="navbar-brand mb-3" href="#">
+                        <img src="logo.png" alt="Ipê Digital" 
+                            style="width: 150px; height: 150px;">                        
+                    </a>
+                    </center>
+                    <p class="text-light">
+                        Infraestrutura blockchain para o mercado de carbono brasileiro.
+                        Transparência, rastreabilidade e conformidade com o SBCE.
+                    </p>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="text-white mb-3">Para Proprietários</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="painel-proprietario.html" class="text-light text-decoration-none">Cadastrar
+                                Projeto</a></li>
+                        <li><a href="acompanhamento-projeto.html"
+                                class="text-light text-decoration-none">Acompanhamento</a></li>
+                        <li><a href="painel-ftco2.html" class="text-light text-decoration-none">Painel FTCO2</a></li>
+                        <li><a href="acompanhamento-certificacao.html"
+                                class="text-light text-decoration-none">Certificação</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="text-white mb-3">Para Negociadores</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="painel-negociador.html" class="text-light text-decoration-none">Cadastro</a></li>
+                        <li><a href="cadastro-anuncio.html" class="text-light text-decoration-none">Criar Anúncio</a>
+                        </li>
+                        <li><a href="mesa-negociacao.html" class="text-light text-decoration-none">Mesa de
+                                Negociação</a></li>
+                        <li><a href="painel-burn.html" class="text-light text-decoration-none">Aposentar Créditos</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                    <h5 class="text-white mb-3">Painel Público</h5>
+                    <p class="text-light">
+                        Acesse dados transparentes sobre todos os projetos, créditos negociados e aposentados.
+                    </p>
+                    <a href="painel-publico.html" class="btn btn-outline-light">
+                        <i class="bi bi-bar-chart me-2"></i>Acessar Painel
+                    </a>
+                </div>
+            </div>
+
+            <hr class="border-light">
+
+            <div class="row py-4">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="text-light mb-0">
+                        &copy; 2026 Ipê Digital. Todos os direitos reservados.
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="text-light mb-0">
+                        Alinhado com a Lei 15.042/2024 (SBCE)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Ativar tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+        // Smooth scroll para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Proprietário - Ipê Digital</title>
+
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Estilos personalizados -->
+    <style>
+        :root {
+            /* Tons de Azul (baseado na logomarca) */
+            --azul-ipe: #343A40;
+            --azul-destaque: #2d3748;
+            --azul-secundario: #4a5568;
+            --azul-claro: #3182ce;
+            --azul-suave: #90cdf4;
+
+            /* Tons de neutros */
+            --cinza-claro: #F8F9FA;
+            --cinza-medio: #6C757D;
+            --cinza-escuro: #343A40;
+
+            /* Cores funcionais */
+            --verde-sucesso: #38a169;
+            --laranja-alerta: #dd6b20;
+            --vermelho-erro: #e53e3e;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--cinza-claro);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--azul-ipe);
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+            transition: all 0.3s;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1030;
+            width: 250px;
+        }
+
+        .sidebar .navbar-brand {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .navbar-brand img {
+            height: 40px;
+            width: auto;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left-color: var(--azul-claro);
+        }
+
+        .sidebar .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        /* Header */
+        .main-header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--azul-suave);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--azul-ipe);
+            font-weight: bold;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--azul-ipe);
+            font-size: 1.5rem;
+            padding: 5px 10px;
+        }
+
+        /* Cards */
+        .card-ipe {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .card-ipe:hover {
+            transform: translateY(-5px);
+        }
+
+        .btn-ipe {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-ipe:hover {
+            background-color: var(--azul-destaque);
+            color: white;
+        }
+
+        .btn-outline-ipe {
+            border: 2px solid var(--azul-ipe);
+            color: var(--azul-ipe);
+            background-color: transparent;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-outline-ipe:hover {
+            background-color: var(--azul-ipe);
+            color: white;
+        }
+
+        .text-ipe {
+            color: var(--azul-ipe);
+        }
+
+        /* Stats Cards */
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--azul-claro);
+        }
+
+        /* Progress Bars */
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+        }
+
+        .progress-bar-ipe {
+            background-color: var(--azul-ipe);
+        }
+
+        /* Project Cards */
+        .project-card {
+            border-left: 4px solid var(--azul-ipe);
+        }
+
+        .project-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: rgba(221, 107, 32, 0.1);
+            color: var(--laranja-alerta);
+        }
+
+        .status-approved {
+            background-color: rgba(56, 161, 105, 0.1);
+            color: var(--verde-sucesso);
+        }
+
+        .status-certified {
+            background-color: rgba(49, 130, 206, 0.1);
+            color: var(--azul-claro);
+        }
+
+        /* Quick Actions */
+        .quick-action-card {
+            text-align: center;
+            padding: 25px 15px;
+            border-radius: 12px;
+            border: 2px dashed rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .quick-action-card:hover {
+            border-color: var(--azul-ipe);
+            background-color: rgba(26, 54, 93, 0.05);
+        }
+
+        .quick-action-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(26, 54, 93, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+
+        .quick-action-icon i {
+            font-size: 24px;
+            color: var(--azul-ipe);
+        }
+
+        /* Mobile-first adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1029;
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .user-info .d-none.d-md-block {
+                display: none !important;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            /* Melhorias para mobile */
+            .main-header {
+                padding: 10px 0;
+            }
+
+            .btn-ipe,
+            .btn-outline-ipe {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .main-content {
+                margin-left: 250px;
+            }
+
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+        }
+
+        .timeline .flex-shrink-0>div {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar d-flex flex-column" id="sidebar">
+        <div class="navbar-brand">
+            <img src="logo.png" alt="Ipê Digital" class="d-inline-block">
+            <span class="fw-bold ms-2">Ipê Digital</span>
+        </div>
+
+        <div class="flex-grow-1">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="painel-proprietario.html">
+                        <i class="bi bi-house-door"></i>
+                        <span class="nav-text">Painel Principal</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cadastro-projeto.html">
+                        <i class="bi bi-folder-plus"></i>
+                        <span class="nav-text">Cadastrar Projeto</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="acompanhamento-projeto.html">
+                        <i class="bi bi-clipboard-data"></i>
+                        <span class="nav-text">Acompanhar Projetos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-ftco2.html">
+                        <i class="bi bi-tags"></i>
+                        <span class="nav-text">FTCO2 Disponíveis</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="acompanhamento-certificacao.html">
+                        <i class="bi bi-shield-check"></i>
+                        <span class="nav-text">Certificação TCO2</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-tco2.html">
+                        <i class="bi bi-currency-exchange"></i>
+                        <span class="nav-text">TCO2 Disponíveis</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="mesa-negociacao.html">
+                        <i class="bi bi-arrow-left-right"></i>
+                        <span class="nav-text">Mesa de Negociação</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cadastro-anuncio.html">
+                        <i class="bi bi-megaphone"></i>
+                        <span class="nav-text">Criar Anúncio</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-burn.html">
+                        <i class="bi bi-fire"></i>
+                        <span class="nav-text">Aposentar Créditos</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="meu-perfil.html">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="nav-text">Meu Perfil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span class="nav-text">Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="p-3 border-top border-white-10">
+            <div class="text-center small opacity-75">
+                <i class="bi bi-shield-lock"></i> Ambiente Seguro
+                <br>
+                <small>Conectado via Blockchain</small>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-8 col-md-6">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <h1 class="h4 mb-0 d-inline-block ms-2">Painel do Proprietário</h1>
+                    </div>
+                    <div class="col-4 col-md-6">
+                        <div class="d-flex justify-content-end align-items-center gap-3">
+                            <!-- Notificações -->
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm position-relative" type="button"
+                                    data-bs-toggle="dropdown">
+                                    <i class="bi bi-bell"></i>
+                                    <span
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        3
+                                    </span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <h6 class="dropdown-header">Notificações</h6>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i
+                                                class="bi bi-check-circle text-success me-2"></i>Projeto "Floresta
+                                            Amazônica" aprovado</a></li>
+                                    <li><a class="dropdown-item" href="#"><i
+                                                class="bi bi-currency-exchange text-primary me-2"></i>10 FTCO2 vendidos
+                                            com sucesso</a></li>
+                                    <li><a class="dropdown-item" href="#"><i
+                                                class="bi bi-clock text-warning me-2"></i>Certificação pendente para
+                                            "Cerrado Sustentável"</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-center" href="#">Ver todas</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Perfil do Usuário -->
+                            <div class="dropdown">
+                                <button class="btn btn-link text-decoration-none text-dark p-0" type="button"
+                                    data-bs-toggle="dropdown">
+                                    <div class="user-info">
+                                        <div class="user-avatar">JS</div>
+                                        <div class="d-none d-md-block">
+                                            <div class="fw-medium">João Silva</div>
+                                            <div class="small text-muted">Proprietário</div>
+                                        </div>
+                                        <i class="bi bi-chevron-down"></i>
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="meu-perfil.html"><i
+                                                class="bi bi-person-circle me-2"></i>Meu Perfil</a></li>
+                                    <li><a class="dropdown-item" href="#"><i
+                                                class="bi bi-gear me-2"></i>Configurações</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-danger" href="index.html"><i
+                                                class="bi bi-box-arrow-left me-2"></i>Sair</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="py-4">
+            <div class="container-fluid">
+                <!-- Seção de Status Completo -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="alert alert-info d-flex align-items-center">
+                            <i class="bi bi-info-circle-fill me-3 fs-4"></i>
+                            <div>
+                                <h6 class="alert-heading mb-1">Status do Proprietário</h6>
+                                <p class="mb-0">Seu perfil está <strong>80% completo</strong>. Complete suas informações
+                                    para habilitar todas as funcionalidades.</p>
+                            </div>
+                            <div class="ms-auto d-none d-md-block">
+                                <div class="progress" style="width: 200px; height: 10px;">
+                                    <div class="progress-bar progress-bar-ipe" role="progressbar" style="width: 80%"
+                                        aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="text-end small mt-1">80% completo</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações Rápidas -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h4 class="mb-3">Ações Rápidas</h4>
+                        <div class="row g-3">
+                            <div class="col-md-3 col-sm-6">
+                                <a href="cadastro-projeto.html" class="text-decoration-none">
+                                    <div class="quick-action-card">
+                                        <div class="quick-action-icon">
+                                            <i class="bi bi-folder-plus"></i>
+                                        </div>
+                                        <h6>Cadastrar Novo Projeto</h6>
+                                        <p class="small text-muted">Registre um novo projeto ambiental</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <a href="meu-perfil.html" class="text-decoration-none">
+                                    <div class="quick-action-card">
+                                        <div class="quick-action-icon">
+                                            <i class="bi bi-person-plus"></i>
+                                        </div>
+                                        <h6>Completar Perfil</h6>
+                                        <p class="small text-muted">Adicione informações de contato</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <a href="cadastro-anuncio.html" class="text-decoration-none">
+                                    <div class="quick-action-card">
+                                        <div class="quick-action-icon">
+                                            <i class="bi bi-megaphone"></i>
+                                        </div>
+                                        <h6>Criar Anúncio</h6>
+                                        <p class="small text-muted">Anuncie FTCO2 ou TCO2 para venda</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <a href="mesa-negociacao.html" class="text-decoration-none">
+                                    <div class="quick-action-card">
+                                        <div class="quick-action-icon">
+                                            <i class="bi bi-arrow-left-right"></i>
+                                        </div>
+                                        <h6>Ir para Negociação</h6>
+                                        <p class="small text-muted">Acessar mesa de negociação</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estatísticas -->
+                <div class="row mb-4">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card card-ipe">
+                            <div class="card-body text-center">
+                                <div class="stat-number">5</div>
+                                <div class="text-muted">Projetos Ativos</div>
+                                <div class="small mt-2">
+                                    <span class="badge bg-success">3 homologados</span>
+                                    <span class="badge bg-warning">2 em análise</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card card-ipe">
+                            <div class="card-body text-center">
+                                <div class="stat-number">2.1K</div>
+                                <div class="text-muted">FTCO2 Disponíveis</div>
+                                <div class="small mt-2">
+                                    <span class="badge bg-info">Valor estimado: R$ 84.000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card card-ipe">
+                            <div class="card-body text-center">
+                                <div class="stat-number">850</div>
+                                <div class="text-muted">TCO2 Certificados</div>
+                                <div class="small mt-2">
+                                    <span class="badge bg-info">Valor estimado: R$ 34.000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card card-ipe">
+                            <div class="card-body text-center">
+                                <div class="stat-number">R$ 42.5K</div>
+                                <div class="text-muted">Volume Negociado</div>
+                                <div class="small mt-2">
+                                    <span class="badge bg-success">+15% este mês</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meus Projetos Recentes -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card card-ipe h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Meus Projetos Recentes</h5>
+                                <a href="acompanhamento-projeto.html" class="btn btn-outline-ipe btn-sm">
+                                    Ver todos <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group list-group-flush">
+                                    <!-- Projeto 1 -->
+                                    <div class="list-group-item px-0 py-3">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-1">Floresta Amazônica Sustentável</h6>
+                                                <p class="text-muted small mb-2">Reflorestamento de 500 hectares na
+                                                    região norte</p>
+                                                <div class="d-flex gap-2">
+                                                    <span class="project-status status-approved">Homologado</span>
+                                                    <span class="badge bg-light text-dark">
+                                                        <i class="bi bi-tree me-1"></i>Agrofloresta
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <div class="fw-bold text-ipe">1.2K FTCO2</div>
+                                                <div class="small text-muted">Disponíveis para negociação</div>
+                                                <div class="mt-2">
+                                                    <a href="#" class="btn btn-ipe btn-sm">Gerenciar</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Projeto 2 -->
+                                    <div class="list-group-item px-0 py-3">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-1">Cerrado Regenerativo</h6>
+                                                <p class="text-muted small mb-2">Recuperação de pastagens degradadas</p>
+                                                <div class="d-flex gap-2">
+                                                    <span class="project-status status-certified">Certificado</span>
+                                                    <span class="badge bg-light text-dark">
+                                                        <i class="bi bi-recycle me-1"></i>Regeneração
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <div class="fw-bold text-ipe">850 TCO2</div>
+                                                <div class="small text-muted">Certificados e disponíveis</div>
+                                                <div class="mt-2">
+                                                    <a href="#" class="btn btn-ipe btn-sm">Gerenciar</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Projeto 3 -->
+                                    <div class="list-group-item px-0 py-3">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-1">Mata Atlântica Preservation</h6>
+                                                <p class="text-muted small mb-2">Proteção de área de preservação
+                                                    permanente</p>
+                                                <div class="d-flex gap-2">
+                                                    <span class="project-status status-pending">Em Análise</span>
+                                                    <span class="badge bg-light text-dark">
+                                                        <i class="bi bi-shield-check me-1"></i>Preservação
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <div class="fw-bold text-muted">0 FTCO2</div>
+                                                <div class="small text-muted">Aguardando homologação</div>
+                                                <div class="mt-2">
+                                                    <a href="#" class="btn btn-outline-ipe btn-sm">Acompanhar</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Atividades Recentes -->
+                    <div class="col-md-4">
+                        <div class="card card-ipe h-100">
+                            <div class="card-header">
+                                <h5 class="mb-0">Atividades Recentes</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="timeline">
+                                    <!-- Atividade 1 -->
+                                    <div class="d-flex mb-3">
+                                        <div class="flex-shrink-0">
+                                            <div class="bg-success rounded-circle p-2">
+                                                <i class="bi bi-check-lg text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-0">Venda realizada</h6>
+                                            <p class="small text-muted mb-0">50 FTCO2 vendidos por R$ 2.100</p>
+                                            <span class="small text-muted">Hoje, 10:30</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Atividade 2 -->
+                                    <div class="d-flex mb-3">
+                                        <div class="flex-shrink-0">
+                                            <div class="bg-primary rounded-circle p-2">
+                                                <i class="bi bi-arrow-up-right text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-0">Novo anúncio criado</h6>
+                                            <p class="small text-muted mb-0">200 FTCO2 disponíveis para negociação</p>
+                                            <span class="small text-muted">Ontem, 15:45</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Atividade 3 -->
+                                    <div class="d-flex mb-3">
+                                        <div class="flex-shrink-0">
+                                            <div class="bg-warning rounded-circle p-2">
+                                                <i class="bi bi-clock text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-0">Certificação em andamento</h6>
+                                            <p class="small text-muted mb-0">Projeto "Cerrado Regenerativo" em fase
+                                                final</p>
+                                            <span class="small text-muted">2 dias atrás</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Atividade 4 -->
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <div class="bg-info rounded-circle p-2">
+                                                <i class="bi bi-info-circle text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-0">Perfil atualizado</h6>
+                                            <p class="small text-muted mb-0">Informações de contato completadas</p>
+                                            <span class="small text-muted">3 dias atrás</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações do Perfil (para completar) -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-ipe">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Informações do Perfil - Complete para liberar todas as funcionalidades
+                                </h5>
+                                <span class="badge bg-warning">80% completo</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="mb-3">
+                                            <label class="form-label">Nome Completo</label>
+                                            <input type="text" class="form-control" value="João Silva" readonly>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label">E-mail</label>
+                                                <input type="email" class="form-control" value="joao.silva@email.com"
+                                                    readonly>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Telefone</label>
+                                                <div class="input-group">
+                                                    <input type="tel" class="form-control" value="(11) 99999-9999">
+                                                    <button class="btn btn-outline-success" type="button">
+                                                        <i class="bi bi-check-lg"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Endereço Completo</label>
+                                            <textarea class="form-control" rows="2"
+                                                placeholder="Digite seu endereço completo..."></textarea>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label">CPF/CNPJ</label>
+                                                <input type="text" class="form-control" value="123.456.789-00" readonly>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Tipo de Pessoa</label>
+                                                <select class="form-select">
+                                                    <option selected>Pessoa Física</option>
+                                                    <option>Pessoa Jurídica</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="card bg-light border-0 h-100">
+                                            <div class="card-body d-flex flex-column justify-content-center">
+                                                <h6 class="text-center mb-3">Informações Pendentes</h6>
+                                                <ul class="list-unstyled">
+                                                    <li class="mb-2">
+                                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                        Dados básicos completos
+                                                    </li>
+                                                    <li class="mb-2">
+                                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                        CPF/CNPJ verificado
+                                                    </li>
+                                                    <li class="mb-2">
+                                                        <i class="bi bi-clock text-warning me-2"></i>
+                                                        Endereço completo pendente
+                                                    </li>
+                                                    <li class="mb-2">
+                                                        <i class="bi bi-clock text-warning me-2"></i>
+                                                        Documentos comprobatórios
+                                                    </li>
+                                                    <li class="mb-2">
+                                                        <i class="bi bi-x-circle text-danger me-2"></i>
+                                                        Conta bancária não vinculada
+                                                    </li>
+                                                </ul>
+                                                <button class="btn btn-ipe mt-3">
+                                                    <i class="bi bi-arrow-up-circle me-2"></i>Enviar Documentos
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-end mt-3">
+                                    <button class="btn btn-outline-ipe me-2">Cancelar</button>
+                                    <button class="btn btn-ipe" id="saveProfileBtn">
+                                        <i class="bi bi-save me-2"></i>Salvar Alterações
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Elementos do DOM
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+
+        // Alternar menu mobile
+        function toggleMobileMenu() {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.classList.toggle('show');
+        }
+
+        // Fechar menu ao clicar no overlay
+        function closeMobileMenu() {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+        }
+
+        // Event Listeners
+        mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+        sidebarOverlay.addEventListener('click', closeMobileMenu);
+
+        // Fechar menu ao redimensionar para desktop
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('show');
+                sidebarOverlay.classList.remove('show');
+            }
+        });
+
+        // Fechar menu ao clicar em um link (mobile)
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function () {
+                if (window.innerWidth <= 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
+
+        // Função para atualizar progresso do perfil
+        function updateProfileProgress() {
+            const progressBar = document.querySelector('.progress-bar');
+            const profileFields = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea, select');
+            let completedFields = 0;
+
+            profileFields.forEach(field => {
+                if (field.value && field.value.trim() !== '') {
+                    completedFields++;
+                }
+            });
+
+            const progress = Math.round((completedFields / profileFields.length) * 100);
+            progressBar.style.width = `${progress}%`;
+            progressBar.setAttribute('aria-valuenow', progress);
+
+            // Atualizar badge
+            const badge = document.querySelector('.badge.bg-warning');
+            if (badge) {
+                badge.textContent = `${progress}% completo`;
+            }
+
+            // Atualizar texto do alerta
+            const alertText = document.querySelector('.alert p');
+            if (alertText) {
+                alertText.innerHTML = `Seu perfil está <strong>${progress}% completo</strong>. Complete suas informações para habilitar todas as funcionalidades.`;
+            }
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function () {
+            updateProfileProgress();
+
+            // Atualizar progresso quando os campos forem alterados
+            const inputs = document.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                input.addEventListener('change', updateProfileProgress);
+                input.addEventListener('input', updateProfileProgress);
+            });
+
+            // Salvar alterações do perfil
+            if (saveProfileBtn) {
+                saveProfileBtn.addEventListener('click', function () {
+                    alert('Alterações salvas com sucesso!');
+                    updateProfileProgress();
+                });
+            }
+
+            // Botão de enviar documentos
+            const sendDocsBtn = document.querySelector('.btn-ipe.mt-3');
+            if (sendDocsBtn) {
+                sendDocsBtn.addEventListener('click', function () {
+                    alert('Redirecionando para envio de documentos...');
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
