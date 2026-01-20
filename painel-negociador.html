@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Negociador - Ipê Digital</title>
+    <title>Dashboard de Mercado - Ipê Digital</title>
     
     <!-- Bootstrap 5.3 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -504,58 +504,34 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="painel-negociador.html">
                         <i class="bi bi-house-door"></i>
-                        <span class="nav-text">Trading Desk</span>
+                        <span class="nav-text">Dashboard de Mercado</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="mesa-negociacao.html">
                         <i class="bi bi-graph-up"></i>
-                        <span class="nav-text">Mercado Spot</span>
+                        <span class="nav-text">Mesa de Negociação</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="cadastro-anuncio.html">
                         <i class="bi bi-megaphone"></i>
-                        <span class="nav-text">Criar Oferta</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="painel-ftco2-negociador.html">
-                        <i class="bi bi-tags"></i>
-                        <span class="nav-text">Meus FTCO2</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="painel-tco2-negociador.html">
-                        <i class="bi bi-currency-exchange"></i>
-                        <span class="nav-text">Meus TCO2</span>
+                        <span class="nav-text">Criar Anúncio</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="painel-burn.html">
                         <i class="bi bi-fire"></i>
-                        <span class="nav-text">Burn</span>
+                        <span class="nav-text">Aposentar (burn)</span>
                     </a>
                 </li>
                 <hr class="text-white-50 mx-3 my-2">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="carteira.html">
                         <i class="bi bi-wallet2"></i>
                         <span class="nav-text">Carteira</span>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-clock-history"></i>
-                        <span class="nav-text">Histórico</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-graph-up-arrow"></i>
-                        <span class="nav-text">Analytics</span>
-                    </a>
-                </li>
+                </li>                
                 <hr class="text-white-50 mx-3 my-2">
                 <li class="nav-item">
                     <a class="nav-link" href="meu-perfil.html">
@@ -652,8 +628,8 @@
                         <button class="mobile-menu-toggle" id="mobileMenuToggle">
                             <i class="bi bi-list"></i>
                         </button>
-                        <h1 class="h4 mb-0 d-inline-block ms-2">Trading Desk</h1>
-                        <span class="badge bg-purple ms-2" style="background-color: var(--roxo-negociador);">Pro Trader</span>
+                        <h1 class="h4 mb-0 d-inline-block ms-2">Dashboard de Mercado</h1>
+                        
                     </div>
                     <div class="col-4 col-md-6">
                         <div class="d-flex justify-content-end align-items-center gap-3">
@@ -679,7 +655,7 @@
                                         <div class="user-avatar">MA</div>
                                         <div class="d-none d-md-block">
                                             <div class="fw-medium">Maria Andrade</div>
-                                            <div class="small text-muted">Tier 3 Trader</div>
+                                            <div class="small text-muted">Negociador e Proprietário de Projetos</div>
                                         </div>
                                         <i class="bi bi-chevron-down"></i>
                                     </div>
@@ -811,81 +787,7 @@
                     </div>
                     
                     <div class="col-lg-4">
-                        <!-- Order Book -->
-                        <div class="card card-ipe mb-4">
-                            <div class="card-header">
-                                <h5 class="mb-0">Livro de Ofertas - TCO2/BRL</h5>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="order-book">
-                                    <div class="order-book-header">
-                                        <span>Preço (BRL)</span>
-                                        <span>Quantidade</span>
-                                        <span>Total</span>
-                                    </div>
-                                    
-                                    <!-- Vendas (Ask) -->
-                                    <div class="order-row ask">
-                                        <span class="text-danger">R$ 48,15</span>
-                                        <span>12.5</span>
-                                        <span>R$ 601,88</span>
-                                    </div>
-                                    <div class="order-row ask">
-                                        <span class="text-danger">R$ 48,05</span>
-                                        <span>8.2</span>
-                                        <span>R$ 394,01</span>
-                                    </div>
-                                    <div class="order-row ask">
-                                        <span class="text-danger">R$ 47,95</span>
-                                        <span>15.0</span>
-                                        <span>R$ 719,25</span>
-                                    </div>
-                                    <div class="order-row ask">
-                                        <span class="text-danger">R$ 47,90</span>
-                                        <span>22.4</span>
-                                        <span>R$ 1.072,96</span>
-                                    </div>
-                                    <div class="order-row ask">
-                                        <span class="text-danger">R$ 47,85</span>
-                                        <span>18.7</span>
-                                        <span>R$ 894,80</span>
-                                    </div>
-                                    
-                                    <!-- Preço Atual -->
-                                    <div class="text-center my-3">
-                                        <div class="h4 text-tco2">R$ 47,82</div>
-                                        <div class="small text-muted">Preço de Mercado</div>
-                                    </div>
-                                    
-                                    <!-- Compras (Bid) -->
-                                    <div class="order-row bid">
-                                        <span class="text-success">R$ 47,80</span>
-                                        <span>14.3</span>
-                                        <span>R$ 683,54</span>
-                                    </div>
-                                    <div class="order-row bid">
-                                        <span class="text-success">R$ 47,75</span>
-                                        <span>9.8</span>
-                                        <span>R$ 467,95</span>
-                                    </div>
-                                    <div class="order-row bid">
-                                        <span class="text-success">R$ 47,70</span>
-                                        <span>21.5</span>
-                                        <span>R$ 1.025,55</span>
-                                    </div>
-                                    <div class="order-row bid">
-                                        <span class="text-success">R$ 47,65</span>
-                                        <span>7.2</span>
-                                        <span>R$ 343,08</span>
-                                    </div>
-                                    <div class="order-row bid">
-                                        <span class="text-success">R$ 47,60</span>
-                                        <span>16.4</span>
-                                        <span>R$ 780,64</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                       
                         
                         <!-- Quick Trade -->
                         <div class="card card-ipe">

@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Ipê Digital</title>
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Estilos personalizados -->
+    <style>
+        :root {
+            /* Tons de Azul (baseado na logomarca) */
+            --azul-ipe: #343A40;
+            --azul-destaque: #2d3748;
+            --azul-secundario: #4a5568;
+            --azul-claro: #3182ce;
+            --azul-suave: #90cdf4;
+
+            /* Tons de neutros */
+            --cinza-claro: #F8F9FA;
+            --cinza-medio: #6C757D;
+            --cinza-escuro: #343A40;
+
+            /* Cores funcionais */
+            --verde-sucesso: #38a169;
+            --laranja-alerta: #dd6b20;
+            --vermelho-erro: #e53e3e;
+            --roxo-negociador: #805ad5;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--cinza-claro);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--azul-ipe);
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+            transition: all 0.3s;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1030;
+            width: 250px;
+        }
+
+        .sidebar .navbar-brand {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .navbar-brand img {
+            height: 40px;
+            width: auto;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left-color: var(--roxo-negociador);
+        }
+
+        .sidebar .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        /* Header */
+        .main-header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--azul-suave);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--azul-ipe);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: block;
+            background: none;
+            border: none;
+            color: var(--azul-ipe);
+            font-size: 1.5rem;
+            padding: 5px 10px;
+        }
+
+        /* Cards */
+        .card-ipe {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-ipe {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .btn-ipe:hover {
+            background-color: var(--azul-destaque);
+            color: white;
+        }
+
+        .btn-negociador {
+            background-color: var(--roxo-negociador);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .btn-negociador:hover {
+            background-color: #6b46c1;
+            color: white;
+        }
+
+        /* Mobile-first adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                padding: 0 10px;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1029;
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .main-header {
+                padding: 10px 0;
+            }
+
+            .user-info .d-none.d-md-block {
+                display: none !important;
+            }
+
+            h1.h4 {
+                font-size: 1.1rem;
+            }
+
+            .btn-ipe, .btn-negociador {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+
+            .card-ipe {
+                margin: 0 -10px;
+                border-radius: 0;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .main-content {
+                margin-left: 250px;
+            }
+
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+
+            .container-fluid {
+                padding: 0 20px;
+            }
+        }
+
+        /* Profile specific styles */
+        .profile-header {
+            background: linear-gradient(135deg, var(--azul-ipe) 0%, var(--azul-destaque) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--azul-suave);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--azul-ipe);
+            font-weight: bold;
+            font-size: 2rem;
+            border: 4px solid white;
+        }
+
+        .profile-stats {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .verification-badge.verified {
+            background-color: rgba(56, 161, 105, 0.2);
+            color: var(--verde-sucesso);
+        }
+
+        .verification-badge.pending {
+            background-color: rgba(221, 107, 32, 0.2);
+            color: var(--laranja-alerta);
+        }
+
+        .verification-badge.unverified {
+            background-color: rgba(229, 62, 62, 0.2);
+            color: var(--vermelho-erro);
+        }
+
+        .settings-item {
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 15px 0;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .progress-thin {
+            height: 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar d-flex flex-column" id="sidebar">
+        <div class="navbar-brand">
+            <img src="logo.png" alt="Ipê Digital" class="d-inline-block">
+            <span class="fw-bold ms-2">Ipê Digital</span>
+        </div>
+
+        <div class="flex-grow-1">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-negociador.html">
+                        <i class="bi bi-house-door"></i>
+                        <span class="nav-text">Dashboard de Mercado</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="mesa-negociacao.html">
+                        <i class="bi bi-graph-up"></i>
+                        <span class="nav-text">Mesa de Negociação</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cadastro-anuncio.html">
+                        <i class="bi bi-megaphone"></i>
+                        <span class="nav-text">Criar Anúncio</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-burn.html">
+                        <i class="bi bi-fire"></i>
+                        <span class="nav-text">Aposentar (burn)</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="carteira.html">
+                        <i class="bi bi-wallet2"></i>
+                        <span class="nav-text">Carteira</span>
+                    </a>
+                </li>                
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link active" href="meu-perfil.html">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="nav-text">Perfil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span class="nav-text">Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="p-3 border-top border-white-10">
+            <div class="text-center small opacity-75">
+                <i class="bi bi-shield-lock"></i> Ambiente Seguro
+                <br>
+                <small>Conectado via Blockchain</small>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <h1 class="h4 mb-0 d-inline-block ms-2">Meu Perfil</h1>
+                    </div>
+                    <div class="col-4">
+                        <div class="d-flex justify-content-end align-items-center">
+                            <!-- Perfil do Usuário -->
+                            <div class="dropdown">
+                                <button class="btn btn-link text-decoration-none text-dark p-0" type="button" data-bs-toggle="dropdown">
+                                    <div class="user-info">
+                                        <div class="user-avatar">MA</div>
+                                        <div class="d-none d-md-block">
+                                            <div class="fw-medium">Maria Andrade</div>
+                                            <div class="small text-muted">Negociador e Proprietário de Projetos</div>
+                                        </div>
+                                        <i class="bi bi-chevron-down"></i>
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="meu-perfil.html"><i class="bi bi-person-circle me-2"></i>Meu Perfil</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check me-2"></i>Segurança</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="index.html"><i class="bi bi-box-arrow-left me-2"></i>Sair</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="py-3">
+            <div class="container-fluid">
+                <!-- Cabeçalho do Perfil -->
+                <div class="profile-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-3 text-center text-md-start mb-3 mb-md-0">
+                            <div class="profile-avatar mx-auto mx-md-0">MA</div>
+                        </div>
+                        <div class="col-md-6">
+                            <h3 class="mb-1">Maria Andrade</h3>
+                            <p class="mb-2 text-white-80">Negociadora • Proprietária de Projetos</p>
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                <span class="verification-badge verified">
+                                    <i class="bi bi-check-circle me-1"></i>Email Verificado
+                                </span>
+                                <span class="verification-badge verified">
+                                    <i class="bi bi-shield-check me-1"></i>KYC Nível 2
+                                </span>
+                                <span class="verification-badge pending">
+                                    <i class="bi bi-clock me-1"></i>Documentos Pendentes
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="profile-stats">
+                                <div class="text-center">
+                                    <div class="h4 mb-0">85%</div>
+                                    <div class="small">Perfil Completo</div>
+                                    <div class="progress progress-thin mt-2">
+                                        <div class="progress-bar bg-success" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações Pessoais -->
+                <div class="row mb-4">
+                    <div class="col-lg-8">
+                        <div class="card card-ipe mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Informações Pessoais</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="profileForm">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Nome Completo</label>
+                                            <input type="text" class="form-control" value="Maria Andrade">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">E-mail</label>
+                                            <input type="email" class="form-control" value="maria.andrade@email.com">
+                                            <div class="form-text">
+                                                <i class="bi bi-check-circle text-success me-1"></i>E-mail verificado
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Telefone</label>
+                                            <div class="input-group">
+                                                <input type="tel" class="form-control" value="(11) 99999-9999">
+                                                <button class="btn btn-outline-success" type="button">
+                                                    <i class="bi bi-check-lg"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Data de Nascimento</label>
+                                            <input type="date" class="form-control" value="1985-03-15">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Endereço</label>
+                                        <textarea class="form-control" rows="2">Av. Paulista, 1000 - São Paulo/SP</textarea>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">CPF</label>
+                                            <input type="text" class="form-control" value="123.456.789-00">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Tipo de Pessoa</label>
+                                            <select class="form-select">
+                                                <option selected>Pessoa Física</option>
+                                                <option>Pessoa Jurídica</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-negociador">
+                                            <i class="bi bi-save me-2"></i>Salvar Alterações
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="card card-ipe mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Verificações</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">E-mail</div>
+                                            <small class="text-muted">maria.andrade@email.com</small>
+                                        </div>
+                                        <span class="verification-badge verified">Verificado</span>
+                                    </div>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">Telefone</div>
+                                            <small class="text-muted">(11) 99999-9999</small>
+                                        </div>
+                                        <span class="verification-badge pending">Pendente</span>
+                                    </div>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">Documentos</div>
+                                            <small class="text-muted">CPF, RG, Comprovante</small>
+                                        </div>
+                                        <span class="verification-badge pending">Em análise</span>
+                                    </div>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">KYC Nível</div>
+                                            <small class="text-muted">Verificação de identidade</small>
+                                        </div>
+                                        <span class="verification-badge verified">Nível 2</span>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <button class="btn btn-outline-ipe btn-sm w-100">
+                                        <i class="bi bi-upload me-2"></i>Enviar Documentos
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configurações e Segurança -->
+                <div class="row mb-4">
+                    <div class="col-lg-6">
+                        <div class="card card-ipe mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Segurança</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">Senha</div>
+                                            <small class="text-muted">Última alteração: 15/02/2024</small>
+                                        </div>
+                                        <button class="btn btn-outline-secondary btn-sm">
+                                            Alterar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">Autenticação em Duas Etapas</div>
+                                            <small class="text-muted">Proteção adicional da conta</small>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="twoFactorSwitch" checked>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">Sessões Ativas</div>
+                                            <small class="text-muted">2 dispositivos conectados</small>
+                                        </div>
+                                        <button class="btn btn-outline-secondary btn-sm">
+                                            Gerenciar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">Notificações de Segurança</div>
+                                            <small class="text-muted">Alertas de login e transações</small>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="securityNotifications" checked>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card card-ipe mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Preferências</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">Idioma</div>
+                                            <small class="text-muted">Idioma da plataforma</small>
+                                        </div>
+                                        <select class="form-select form-select-sm" style="width: auto;">
+                                            <option selected>Português (Brasil)</option>
+                                            <option>English</option>
+                                            <option>Español</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">Moeda Padrão</div>
+                                            <small class="text-muted">Exibição de valores</small>
+                                        </div>
+                                        <select class="form-select form-select-sm" style="width: auto;">
+                                            <option selected>Real Brasileiro (BRL)</option>
+                                            <option>Dólar Americano (USD)</option>
+                                            <option>Euro (EUR)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">Notificações por E-mail</div>
+                                            <small class="text-muted">Alertas e atualizações</small>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">Notificações por Push</div>
+                                            <small class="text-muted">Alertas no navegador</small>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="pushNotifications" checked>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="fw-bold">Modo Escuro</div>
+                                            <small class="text-muted">Tema da interface</small>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="darkModeSwitch">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estatísticas e Atividade -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-ipe">
+                            <div class="card-header">
+                                <h5 class="mb-0">Minha Atividade na Plataforma</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-6 mb-3">
+                                        <div class="text-center">
+                                            <div class="h3 text-success">6</div>
+                                            <div class="text-muted">Projetos Ativos</div>
+                                            <small>2 certificados, 3 homologados</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 mb-3">
+                                        <div class="text-center">
+                                            <div class="h3" style="color: var(--laranja-alerta);">24</div>
+                                            <div class="text-muted">Anúncios Criados</div>
+                                            <small>18 concluídos, 6 ativos</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 mb-3">
+                                        <div class="text-center">
+                                            <div class="h3" style="color: var(--roxo-negociador);">142</div>
+                                            <div class="text-muted">Transações Realizadas</div>
+                                            <small>Volume: R$ 248.500,00</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 mb-3">
+                                        <div class="text-center">
+                                            <div class="h3 text-warning">150</div>
+                                            <div class="text-muted">TCO2 Aposentados</div>
+                                            <small>Impacto: 150 tCO₂</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <h6>Membro desde</h6>
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <div class="rounded-circle bg-light p-2">
+                                                <i class="bi bi-calendar-check text-primary"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">15 de Outubro de 2023</div>
+                                            <small class="text-muted">5 meses na plataforma</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações Importantes -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card card-ipe">
+                            <div class="card-body">
+                                <h5 class="mb-3">Ações Importantes</h5>
+                                <div class="row g-3">
+                                    <div class="col-md-3 col-sm-6">
+                                        <button class="btn btn-outline-warning w-100">
+                                            <i class="bi bi-download me-2"></i>Exportar Dados
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <button class="btn btn-outline-info w-100">
+                                            <i class="bi bi-file-earmark-text me-2"></i>Termos de Uso
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <button class="btn btn-outline-secondary w-100">
+                                            <i class="bi bi-question-circle me-2"></i>Ajuda e Suporte
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <button class="btn btn-outline-danger w-100" id="deleteAccountBtn">
+                                            <i class="bi bi-trash me-2"></i>Excluir Conta
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Elementos do DOM
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        
+        // Alternar menu mobile
+        function toggleMobileMenu() {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.classList.toggle('show');
+        }
+        
+        // Fechar menu mobile
+        function closeMobileMenu() {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+        }
+
+        // Atualizar progresso do perfil
+        function updateProfileProgress() {
+            const formFields = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
+            let completedFields = 0;
+            
+            formFields.forEach(field => {
+                if (field.value && field.value.trim() !== '') {
+                    completedFields++;
+                }
+            });
+            
+            const progress = Math.round((completedFields / formFields.length) * 100);
+            const progressBar = document.querySelector('.profile-stats .progress-bar');
+            const progressText = document.querySelector('.profile-stats .h4');
+            
+            if (progressBar) {
+                progressBar.style.width = `${progress}%`;
+            }
+            if (progressText) {
+                progressText.textContent = `${progress}%`;
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menu mobile
+            mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            sidebarOverlay.addEventListener('click', closeMobileMenu);
+            
+            // Fechar menu ao redimensionar
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Fechar menu ao clicar em links
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+            
+            // Atualizar progresso do perfil
+            updateProfileProgress();
+            
+            // Atualizar progresso quando campos mudarem
+            document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select').forEach(field => {
+                field.addEventListener('input', updateProfileProgress);
+                field.addEventListener('change', updateProfileProgress);
+            });
+            
+            // Form submission
+            document.getElementById('profileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Perfil atualizado com sucesso!');
+                updateProfileProgress();
+            });
+            
+            // Botão de verificar telefone
+            document.querySelector('.btn-outline-success').addEventListener('click', function() {
+                alert('Código de verificação enviado para o telefone.');
+            });
+            
+            // Botão de enviar documentos
+            document.querySelector('.btn-outline-ipe.btn-sm').addEventListener('click', function() {
+                alert('Redirecionando para envio de documentos...');
+            });
+            
+            // Modo escuro
+            document.getElementById('darkModeSwitch').addEventListener('change', function() {
+                if (this.checked) {
+                    document.documentElement.setAttribute('data-bs-theme', 'dark');
+                } else {
+                    document.documentElement.setAttribute('data-bs-theme', 'light');
+                }
+            });
+            
+            // Botão excluir conta
+            document.getElementById('deleteAccountBtn').addEventListener('click', function() {
+                if (confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível e todos os dados serão perdidos.')) {
+                    alert('Sua solicitação de exclusão de conta foi registrada. Entraremos em contato para confirmação.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

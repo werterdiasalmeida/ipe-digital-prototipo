@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aposentar TCO2 - Ipê Digital</title>
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Estilos personalizados -->
+    <style>
+        :root {
+            /* Tons de Azul (baseado na logomarca) */
+            --azul-ipe: #343A40;
+            --azul-destaque: #2d3748;
+            --azul-secundario: #4a5568;
+            --azul-claro: #3182ce;
+            --azul-suave: #90cdf4;
+
+            /* Tons de neutros */
+            --cinza-claro: #F8F9FA;
+            --cinza-medio: #6C757D;
+            --cinza-escuro: #343A40;
+
+            /* Cores funcionais */
+            --verde-sucesso: #38a169;
+            --laranja-alerta: #dd6b20;
+            --vermelho-erro: #e53e3e;
+            --roxo-negociador: #805ad5;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--cinza-claro);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--azul-ipe);
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+            transition: all 0.3s;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1030;
+            width: 250px;
+        }
+
+        .sidebar .navbar-brand {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .navbar-brand img {
+            height: 40px;
+            width: auto;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left-color: var(--roxo-negociador);
+        }
+
+        .sidebar .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        /* Header */
+        .main-header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--azul-suave);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--azul-ipe);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: block;
+            background: none;
+            border: none;
+            color: var(--azul-ipe);
+            font-size: 1.5rem;
+            padding: 5px 10px;
+        }
+
+        /* Cards */
+        .card-ipe {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-ipe {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .btn-ipe:hover {
+            background-color: var(--azul-destaque);
+            color: white;
+        }
+
+        .btn-negociador {
+            background-color: var(--roxo-negociador);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .btn-negociador:hover {
+            background-color: #6b46c1;
+            color: white;
+        }
+
+        .btn-burn {
+            background-color: var(--laranja-alerta);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .btn-burn:hover {
+            background-color: #c05621;
+            color: white;
+        }
+
+        /* Mobile-first adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                padding: 0 10px;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1029;
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .main-header {
+                padding: 10px 0;
+            }
+
+            .user-info .d-none.d-md-block {
+                display: none !important;
+            }
+
+            h1.h4 {
+                font-size: 1.1rem;
+            }
+
+            .btn-ipe, .btn-negociador, .btn-burn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+
+            .card-ipe {
+                margin: 0 -10px;
+                border-radius: 0;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .main-content {
+                margin-left: 250px;
+            }
+
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+
+            .container-fluid {
+                padding: 0 20px;
+            }
+        }
+
+        /* Burn specific styles */
+        .burn-info {
+            background-color: rgba(221, 107, 32, 0.1);
+            border-left: 3px solid var(--laranja-alerta);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .project-card {
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover {
+            border-color: var(--laranja-alerta);
+            background-color: rgba(221, 107, 32, 0.05);
+        }
+
+        .project-card.selected {
+            border-color: var(--laranja-alerta);
+            background-color: rgba(221, 107, 32, 0.1);
+        }
+
+        .tco2-item {
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: rgba(56, 161, 105, 0.05);
+        }
+
+        .impact-stats {
+            background-color: rgba(56, 161, 105, 0.1);
+            border-left: 3px solid var(--verde-sucesso);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-item {
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item.selected {
+            border-color: var(--laranja-alerta);
+            background-color: rgba(221, 107, 32, 0.1);
+        }
+
+        .step-indicator {
+            font-size: 0.9rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background-color: rgba(221, 107, 32, 0.1);
+            color: var(--laranja-alerta);
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar d-flex flex-column" id="sidebar">
+        <div class="navbar-brand">
+            <img src="logo.png" alt="Ipê Digital" class="d-inline-block">
+            <span class="fw-bold ms-2">Ipê Digital</span>
+        </div>
+
+        <div class="flex-grow-1">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-negociador.html">
+                        <i class="bi bi-house-door"></i>
+                        <span class="nav-text">Dashboard de Mercado</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="mesa-negociacao.html">
+                        <i class="bi bi-graph-up"></i>
+                        <span class="nav-text">Mesa de Negociação</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cadastro-anuncio.html">
+                        <i class="bi bi-megaphone"></i>
+                        <span class="nav-text">Criar Anúncio</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="painel-burn.html">
+                        <i class="bi bi-fire"></i>
+                        <span class="nav-text">Aposentar (burn)</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="carteira.html">
+                        <i class="bi bi-wallet2"></i>
+                        <span class="nav-text">Carteira</span>
+                    </a>
+                </li>                
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="meu-perfil.html">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="nav-text">Perfil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span class="nav-text">Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="p-3 border-top border-white-10">
+            <div class="text-center small opacity-75">
+                <i class="bi bi-shield-lock"></i> Ambiente Seguro
+                <br>
+                <small>Conectado via Blockchain</small>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <h1 class="h4 mb-0 d-inline-block ms-2">Aposentar TCO2</h1>
+                    </div>
+                    <div class="col-4">
+                        <div class="d-flex justify-content-end align-items-center">
+                            <!-- Perfil do Usuário -->
+                            <div class="dropdown">
+                                <button class="btn btn-link text-decoration-none text-dark p-0" type="button" data-bs-toggle="dropdown">
+                                    <div class="user-info">
+                                        <div class="user-avatar">MA</div>
+                                        <div class="d-none d-md-block">
+                                            <div class="fw-medium">Maria Andrade</div>
+                                            <div class="small text-muted">Negociador e Proprietário de Projetos</div>
+                                        </div>
+                                        <i class="bi bi-chevron-down"></i>
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="meu-perfil.html"><i class="bi bi-person-circle me-2"></i>Meu Perfil</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check me-2"></i>Segurança</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="index.html"><i class="bi bi-box-arrow-left me-2"></i>Sair</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="py-3">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-ipe">
+                            <div class="card-header">
+                                <h4 class="mb-0">
+                                    <i class="bi bi-fire text-warning me-2"></i>
+                                    Aposentar TCO2 (Burn)
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <!-- Informações sobre Burn -->
+                                <div class="burn-info mb-3">
+                                    <h6 class="mb-2">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        O que é aposentar (burn) TCO2?
+                                    </h6>
+                                    <p class="small mb-0">
+                                        Ao aposentar (burn) seus TCO2, você remove permanentemente esses créditos de carbono do mercado, 
+                                        contribuindo efetivamente para a compensação de emissões e impedindo qualquer reutilização. 
+                                        Este processo é irreversível e gera um certificado de aposentadoria.
+                                    </p>
+                                </div>
+
+                                <!-- Passo 1: Selecionar TCO2 -->
+                                <div id="step1">
+                                    <div class="step-indicator">Passo 1: Selecione os TCO2 para aposentar</div>
+                                    
+                                    <!-- Resumo da Carteira -->
+                                    <div class="impact-stats mb-3">
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <small class="text-muted">Total TCO2 na Carteira</small>
+                                                <div class="fw-bold text-success">850 TCO2</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <small class="text-muted">Equivalente CO₂</small>
+                                                <div class="fw-bold">850 toneladas</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Seleção por Projeto -->
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold mb-2">Selecione pelo projeto de origem:</label>
+                                        
+                                        <!-- Projeto 1 -->
+                                        <div class="project-card selected" data-project-id="1">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1">Floresta Amazônica Sustentável</h6>
+                                                    <p class="small text-muted mb-2">
+                                                        Reflorestamento de 500 hectares
+                                                    </p>
+                                                    <div class="d-flex flex-wrap gap-1 mb-2">
+                                                        <span class="badge bg-primary">Certificado</span>
+                                                        <span class="badge bg-info">Agrofloresta</span>
+                                                    </div>
+                                                    <div class="row g-2">
+                                                        <div class="col-12">
+                                                            <small class="text-muted d-block">TCO2 disponíveis</small>
+                                                            <div class="text-success">350 TCO2</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <button class="btn btn-outline-warning btn-sm" data-project="1">
+                                                        Selecionar Todos
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Projeto 2 -->
+                                        <div class="project-card" data-project-id="2">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1">Cerrado Regenerativo</h6>
+                                                    <p class="small text-muted mb-2">
+                                                        Recuperação de pastagens degradadas
+                                                    </p>
+                                                    <div class="d-flex flex-wrap gap-1 mb-2">
+                                                        <span class="badge bg-primary">Certificado</span>
+                                                        <span class="badge bg-info">Regeneração</span>
+                                                    </div>
+                                                    <div class="row g-2">
+                                                        <div class="col-12">
+                                                            <small class="text-muted d-block">TCO2 disponíveis</small>
+                                                            <div class="text-primary">500 TCO2</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <button class="btn btn-outline-warning btn-sm" data-project="2">
+                                                        Selecionar Todos
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- TCO2 do Projeto Selecionado -->
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold mb-2">TCO2 disponíveis no projeto:</label>
+                                        
+                                        <div id="tco2List">
+                                            <!-- TCO2 1 -->
+                                            <div class="checkbox-item selected">
+                                                <div class="form-check d-flex align-items-center">
+                                                    <input class="form-check-input me-3" type="checkbox" id="tco2-1" value="50" checked>
+                                                    <div class="flex-grow-1">
+                                                        <label class="form-check-label" for="tco2-1">
+                                                            <div class="fw-bold">Lote #AMZ-2023-001</div>
+                                                            <div class="small text-muted">
+                                                                <span>Vintage: 2023</span> • 
+                                                                <span>Metodologia: AR-ACM0003</span> • 
+                                                                <span>Verificador: DNV GL</span>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <div class="fw-bold text-success">50 TCO2</div>
+                                                        <small class="text-muted">Valor: R$ 2.391,00</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- TCO2 2 -->
+                                            <div class="checkbox-item">
+                                                <div class="form-check d-flex align-items-center">
+                                                    <input class="form-check-input me-3" type="checkbox" id="tco2-2" value="100">
+                                                    <div class="flex-grow-1">
+                                                        <label class="form-check-label" for="tco2-2">
+                                                            <div class="fw-bold">Lote #AMZ-2023-002</div>
+                                                            <div class="small text-muted">
+                                                                <span>Vintage: 2023</span> • 
+                                                                <span>Metodologia: AR-ACM0003</span> • 
+                                                                <span>Verificador: DNV GL</span>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <div class="fw-bold text-success">100 TCO2</div>
+                                                        <small class="text-muted">Valor: R$ 4.782,00</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- TCO2 3 -->
+                                            <div class="checkbox-item">
+                                                <div class="form-check d-flex align-items-center">
+                                                    <input class="form-check-input me-3" type="checkbox" id="tco2-3" value="200">
+                                                    <div class="flex-grow-1">
+                                                        <label class="form-check-label" for="tco2-3">
+                                                            <div class="fw-bold">Lote #AMZ-2023-003</div>
+                                                            <div class="small text-muted">
+                                                                <span>Vintage: 2023</span> • 
+                                                                <span>Metodologia: AR-ACM0003</span> • 
+                                                                <span>Verificador: DNV GL</span>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <div class="fw-bold text-success">200 TCO2</div>
+                                                        <small class="text-muted">Valor: R$ 9.564,00</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Controles de seleção -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="selectAll">
+                                            <label class="form-check-label small" for="selectAll">
+                                                Selecionar todos os TCO2 do projeto
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted">Selecionados:</small>
+                                            <span class="fw-bold text-warning ms-1" id="selectedCount">50</span>
+                                            <small class="text-muted"> TCO2</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-end mt-4">
+                                        <button type="button" class="btn btn-burn" id="nextToStep2">
+                                            Continuar <i class="bi bi-arrow-right ms-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Passo 2: Confirmar e Aposentar -->
+                                <div id="step2" style="display: none;">
+                                    <div class="step-indicator">Passo 2: Confirmar aposentadoria</div>
+
+                                    <!-- Resumo do Burn -->
+                                    <div class="card border mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Resumo da Aposentadoria</h6>
+                                            <div class="row g-2 mb-2">
+                                                <div class="col-6">
+                                                    <small class="text-muted">Total TCO2</small>
+                                                    <div class="h4 text-warning" id="burnTotal">50</div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <small class="text-muted">Equivalente CO₂</small>
+                                                    <div class="h4">50 toneladas</div>
+                                                </div>
+                                            </div>
+                                            <div class="row g-2 mb-2">
+                                                <div class="col-12">
+                                                    <small class="text-muted">Impacto Ambiental</small>
+                                                    <div class="fw-bold text-success">
+                                                        Equivale a retirar 11 carros das ruas por um ano
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr class="my-2">
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <small class="text-muted">Valor de Mercado</small>
+                                                    <div class="fw-bold" id="burnValue">R$ 2.391,00</div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <small class="text-muted">Taxa de Burn</small>
+                                                    <div class="text-success">Isento</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Impacto Ambiental -->
+                                    <div class="impact-stats mb-3">
+                                        <h6 class="mb-2">
+                                            <i class="bi bi-tree me-2"></i>
+                                            Seu impacto ambiental
+                                        </h6>
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <small class="text-muted">Área de floresta preservada</small>
+                                                <div class="fw-bold">≈ 5 hectares</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <small class="text-muted">Emissões evitadas</small>
+                                                <div class="fw-bold">50 tCO₂e</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Certificado de Aposentadoria -->
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold mb-2">Certificado de Aposentadoria</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Título do certificado (opcional)" id="certificateTitle">
+                                        </div>
+                                        <div class="form-text small">
+                                            Você receberá um certificado digital com hash blockchain para comprovar a aposentadoria.
+                                        </div>
+                                    </div>
+
+                                    <!-- Finalidade -->
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold mb-2">Finalidade da aposentadoria (opcional)</label>
+                                        <select class="form-select" id="burnPurpose">
+                                            <option value="" selected>Selecione uma finalidade...</option>
+                                            <option value="compensacao">Compensação de emissões próprias</option>
+                                            <option value="esg">Compromisso ESG corporativo</option>
+                                            <option value="neutralidade">Caminho para neutralidade de carbono</option>
+                                            <option value="evento">Compensação de evento ou produto</option>
+                                            <option value="outro">Outro</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Termos e Condições -->
+                                    <div class="mb-4">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="irreversibleConfirm">
+                                            <label class="form-check-label small" for="irreversibleConfirm">
+                                                Entendo que esta operação é <strong>irreversível</strong> e os TCO2 serão permanentemente removidos do mercado.
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="certificateConfirm">
+                                            <label class="form-check-label small" for="certificateConfirm">
+                                                Autorizo a emissão do certificado de aposentadoria com hash blockchain.
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-secondary" id="backToStep1">
+                                            <i class="bi bi-arrow-left me-1"></i>Voltar
+                                        </button>
+                                        <button type="button" class="btn btn-burn" id="confirmBurn">
+                                            <i class="bi bi-fire me-1"></i>Confirmar Aposentadoria
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Passo 3: Confirmação -->
+                                <div id="step3" style="display: none;">
+                                    <div class="text-center py-4">
+                                        <div class="mb-4">
+                                            <div class="rounded-circle bg-success d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                                <i class="bi bi-check-lg text-white" style="font-size: 2rem;"></i>
+                                            </div>
+                                        </div>
+                                        <h4 class="text-success mb-3">Aposentadoria Confirmada!</h4>
+                                        <p class="mb-3">
+                                            <strong id="confirmedAmount">50 TCO2</strong> foram permanentemente aposentados (burn) da sua carteira.
+                                        </p>
+                                        <div class="card border mb-4 mx-auto" style="max-width: 400px;">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Certificado de Aposentadoria</h6>
+                                                <div class="mb-2">
+                                                    <small class="text-muted">Hash Blockchain</small>
+                                                    <div class="small font-monospace">0x8a7f3b...e9c2d4</div>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <small class="text-muted">Data e Hora</small>
+                                                    <div id="burnTimestamp">20/03/2024 14:30:25</div>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <small class="text-muted">Transação ID</small>
+                                                    <div class="small">TX-2024-03-20-143025</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center gap-3">
+                                            <button type="button" class="btn btn-outline-secondary" id="downloadCert">
+                                                <i class="bi bi-download me-1"></i>Baixar Certificado
+                                            </button>
+                                            <button type="button" class="btn btn-negociador" id="backToDashboard">
+                                                <i class="bi bi-house-door me-1"></i>Voltar para minha Carteira
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Elementos do DOM
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        
+        // Elementos dos passos
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        
+        // Dados do burn
+        let selectedTCO2 = [
+            { id: 'tco2-1', quantity: 50, value: 2391.00, selected: true }
+        ];
+        
+        // Preço atual do TCO2
+        const tco2Price = 47.82;
+        
+        // Alternar menu mobile
+        function toggleMobileMenu() {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.classList.toggle('show');
+        }
+        
+        // Fechar menu mobile
+        function closeMobileMenu() {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+        }
+        
+        // Atualizar contagem selecionada
+        function updateSelectedCount() {
+            const checkboxes = document.querySelectorAll('#tco2List input[type="checkbox"]:checked');
+            let totalQuantity = 0;
+            let totalValue = 0;
+            
+            checkboxes.forEach(checkbox => {
+                const quantity = parseInt(checkbox.value);
+                totalQuantity += quantity;
+                totalValue += quantity * tco2Price;
+            });
+            
+            // Atualizar contador
+            document.getElementById('selectedCount').textContent = totalQuantity;
+            
+            // Atualizar resumo no passo 2
+            document.getElementById('burnTotal').textContent = totalQuantity;
+            document.getElementById('burnValue').textContent = `R$ ${totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            
+            return { quantity: totalQuantity, value: totalValue };
+        }
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menu mobile
+            mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            sidebarOverlay.addEventListener('click', closeMobileMenu);
+            
+            // Fechar menu ao redimensionar
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Fechar menu ao clicar em links
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+            
+            // Selecionar projeto
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.project-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    // Aqui poderia carregar os TCO2 do projeto selecionado
+                    // Por enquanto, apenas atualiza a visualização
+                });
+            });
+            
+            // Botão "Selecionar Todos" por projeto
+            document.querySelectorAll('button[data-project]').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const projectId = this.dataset.project;
+                    
+                    // Selecionar todos os TCO2 do projeto atual
+                    const checkboxes = document.querySelectorAll('#tco2List input[type="checkbox"]');
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = true;
+                        const item = checkbox.closest('.checkbox-item');
+                        if (item) item.classList.add('selected');
+                    });
+                    
+                    updateSelectedCount();
+                });
+            });
+            
+            // Selecionar/deselecionar TCO2 individualmente
+            document.querySelectorAll('#tco2List input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const item = this.closest('.checkbox-item');
+                    if (item) {
+                        if (this.checked) {
+                            item.classList.add('selected');
+                        } else {
+                            item.classList.remove('selected');
+                        }
+                    }
+                    updateSelectedCount();
+                });
+            });
+            
+            // Selecionar todos os TCO2
+            document.getElementById('selectAll').addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('#tco2List input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                    const item = checkbox.closest('.checkbox-item');
+                    if (item) {
+                        if (this.checked) {
+                            item.classList.add('selected');
+                        } else {
+                            item.classList.remove('selected');
+                        }
+                    }
+                });
+                updateSelectedCount();
+            });
+            
+            // Navegação entre passos
+            document.getElementById('nextToStep2').addEventListener('click', function() {
+                const selection = updateSelectedCount();
+                
+                if (selection.quantity <= 0) {
+                    alert('Selecione pelo menos um TCO2 para aposentar.');
+                    return;
+                }
+                
+                step1.style.display = 'none';
+                step2.style.display = 'block';
+            });
+            
+            document.getElementById('backToStep1').addEventListener('click', function() {
+                step2.style.display = 'none';
+                step1.style.display = 'block';
+            });
+            
+            // Confirmar burn
+            document.getElementById('confirmBurn').addEventListener('click', function() {
+                if (!document.getElementById('irreversibleConfirm').checked) {
+                    alert('Você precisa confirmar que entende que a operação é irreversível.');
+                    return;
+                }
+                
+                if (!document.getElementById('certificateConfirm').checked) {
+                    alert('Você precisa autorizar a emissão do certificado.');
+                    return;
+                }
+                
+                const selection = updateSelectedCount();
+                const certificateTitle = document.getElementById('certificateTitle').value || 'Aposentadoria de TCO2';
+                
+                if (confirm(`Confirmar aposentadoria permanente de ${selection.quantity} TCO2 (valor de mercado: R$ ${selection.value.toFixed(2)})?`)) {
+                    // Atualizar dados de confirmação
+                    document.getElementById('confirmedAmount').textContent = `${selection.quantity} TCO2`;
+                    
+                    // Atualizar timestamp
+                    const now = new Date();
+                    document.getElementById('burnTimestamp').textContent = 
+                        now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR');
+                    
+                    step2.style.display = 'none';
+                    step3.style.display = 'block';
+                }
+            });
+            
+            // Download do certificado
+            document.getElementById('downloadCert').addEventListener('click', function() {
+                alert('Certificado baixado com sucesso!');
+                // Aqui iria a lógica real de download do certificado
+            });
+            
+            // Voltar ao dashboard
+            document.getElementById('backToDashboard').addEventListener('click', function() {
+                 window.location.href = 'carteira.html';
+            });
+            
+            // Inicializar
+            updateSelectedCount();
+        });
+    </script>
+</body>
+</html>
