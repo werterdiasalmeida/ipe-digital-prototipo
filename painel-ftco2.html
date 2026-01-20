@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel FTCO2 - Ipê Digital</title>
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Estilos personalizados -->
+    <style>
+        :root {
+            /* Tons de Azul atualizados (mais elegante) */
+            --azul-ipe: #343A40;           /* Azul grafite - mais elegante */
+            --azul-destaque: #2d3748;      /* Azul escuro */
+            --azul-secundario: #4a5568;    /* Azul médio */
+            --azul-claro: #3182ce;         /* Azul claro */
+            --azul-suave: #90cdf4;         /* Azul muito claro */
+            
+            /* Tons de neutros */
+            --cinza-claro: #F8F9FA;
+            --cinza-medio: #6C757D;
+            --cinza-escuro: #212529;
+            
+            /* Cores funcionais */
+            --verde-sucesso: #38a169;
+            --laranja-alerta: #dd6b20;
+            --laranja-ftco2: #ed8936;      /* Laranja específico para FTCO2 */
+            --vermelho-erro: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--cinza-claro);
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--azul-ipe);
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+            transition: all 0.3s;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1030;
+            width: 250px;
+        }
+        
+        .sidebar .navbar-brand {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .navbar-brand img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left-color: var(--azul-claro);
+        }
+        
+        .sidebar .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        
+        /* Header */
+        .main-header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--azul-suave);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--azul-ipe);
+            font-weight: bold;
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--azul-ipe);
+            font-size: 1.5rem;
+            padding: 5px 10px;
+        }
+        
+        /* Cards */
+        .card-ipe {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .btn-ipe {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-ipe:hover {
+            background-color: var(--azul-destaque);
+            color: white;
+        }
+        
+        .btn-outline-ipe {
+            border: 2px solid var(--azul-ipe);
+            color: var(--azul-ipe);
+            background-color: transparent;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-outline-ipe:hover {
+            background-color: var(--azul-ipe);
+            color: white;
+        }
+        
+        .btn-ftco2 {
+            background-color: var(--laranja-ftco2);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-ftco2:hover {
+            background-color: #d69e2e;
+            color: white;
+        }
+        
+        .text-ipe {
+            color: var(--azul-ipe);
+        }
+        
+        .text-ftco2 {
+            color: var(--laranja-ftco2);
+        }
+        
+        .border-ipe {
+            border-color: var(--azul-ipe) !important;
+        }
+        
+        /* FTCO2 Badge */
+        .badge-ftco2 {
+            background-color: rgba(237, 137, 54, 0.1);
+            color: var(--laranja-ftco2);
+            border: 1px solid rgba(237, 137, 54, 0.2);
+        }
+        
+        /* Stats Cards */
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: white;
+            transition: transform 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--laranja-ftco2);
+        }
+        
+        /* FTCO2 Cards */
+        .ftco2-card {
+            border-left: 4px solid var(--laranja-ftco2);
+            transition: transform 0.3s ease;
+        }
+        
+        .ftco2-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Progress Bar */
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        .progress-bar-ipe {
+            background-color: var(--azul-ipe);
+        }
+        
+        .progress-bar-ftco2 {
+            background-color: var(--laranja-ftco2);
+        }
+        
+        /* Price Tag */
+        .price-tag {
+            display: inline-block;
+            background-color: rgba(56, 161, 105, 0.1);
+            color: var(--verde-sucesso);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        /* Table Styles */
+        .table-ipe {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .table-ipe thead th {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+            font-weight: 500;
+        }
+        
+        .table-ipe tbody tr:hover {
+            background-color: rgba(52, 58, 64, 0.05);
+        }
+        
+        /* Filter Bar */
+        .filter-bar {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        /* Mobile-first adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1029;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+            }
+            
+            .user-info .d-none.d-md-block {
+                display: none !important;
+            }
+            
+            .stats-number {
+                font-size: 1.5rem;
+            }
+            
+            .btn-ipe, .btn-outline-ipe, .btn-ftco2 {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .main-content {
+                margin-left: 250px;
+            }
+            
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar d-flex flex-column" id="sidebar">
+        <div class="navbar-brand">
+            <img src="logo.png" alt="Ipê Digital" class="d-inline-block">
+            <span class="fw-bold ms-2 text-white">Ipê Digital</span>
+        </div>
+        
+        <div class="flex-grow-1">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-proprietario.html">
+                        <i class="bi bi-house-door"></i>
+                        <span class="nav-text">Painel Principal</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cadastro-projeto.html">
+                        <i class="bi bi-folder-plus"></i>
+                        <span class="nav-text">Cadastrar Projeto</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="acompanhamento-projeto.html">
+                        <i class="bi bi-clipboard-data"></i>
+                        <span class="nav-text">Acompanhar Projetos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="painel-ftco2.html">
+                        <i class="bi bi-tags"></i>
+                        <span class="nav-text">FTCO2 Disponíveis</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="acompanhamento-certificacao.html">
+                        <i class="bi bi-shield-check"></i>
+                        <span class="nav-text">Certificação TCO2</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-tco2.html">
+                        <i class="bi bi-currency-exchange"></i>
+                        <span class="nav-text">TCO2 Disponíveis</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="mesa-negociacao.html">
+                        <i class="bi bi-arrow-left-right"></i>
+                        <span class="nav-text">Mesa de Negociação</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cadastro-anuncio.html">
+                        <i class="bi bi-megaphone"></i>
+                        <span class="nav-text">Criar Anúncio</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-burn.html">
+                        <i class="bi bi-fire"></i>
+                        <span class="nav-text">Aposentar Créditos</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="meu-perfil.html">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="nav-text">Meu Perfil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span class="nav-text">Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="p-3 border-top border-white-10">
+            <div class="text-center small opacity-75">
+                <i class="bi bi-shield-lock"></i> Ambiente Seguro
+                <br>
+                <small>Conectado via Blockchain</small>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-8 col-md-6">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <h1 class="h4 mb-0 d-inline-block ms-2">Painel FTCO2</h1>
+                        <span class="badge badge-ftco2 ms-2">Tokens Forward</span>
+                    </div>
+                    <div class="col-4 col-md-6">
+                        <div class="d-flex justify-content-end align-items-center gap-3">
+                            <!-- Notificações -->
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm position-relative" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-bell"></i>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        3
+                                    </span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><h6 class="dropdown-header">Notificações FTCO2</h6></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-cash-coin text-success me-2"></i>Venda de 50 FTCO2 realizada</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-clock text-warning me-2"></i>Oferta de compra recebida</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-up-right text-primary me-2"></i>Preço de mercado atualizado</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-center" href="#">Ver todas</a></li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Perfil do Usuário -->
+                            <div class="dropdown">
+                                <button class="btn btn-link text-decoration-none text-dark p-0" type="button" data-bs-toggle="dropdown">
+                                    <div class="user-info">
+                                        <div class="user-avatar">JS</div>
+                                        <div class="d-none d-md-block">
+                                            <div class="fw-medium">João Silva</div>
+                                            <div class="small text-muted">Proprietário</div>
+                                        </div>
+                                        <i class="bi bi-chevron-down"></i>
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="meu-perfil.html"><i class="bi bi-person-circle me-2"></i>Meu Perfil</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="index.html"><i class="bi bi-box-arrow-left me-2"></i>Sair</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="py-4">
+            <div class="container-fluid">
+                <!-- Estatísticas FTCO2 -->
+                <div class="row mb-4">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-number">2.1K</div>
+                            <div class="text-muted">FTCO2 Totais</div>
+                            <div class="small mt-2">
+                                <span class="badge bg-info">R$ 84K estimado</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-number">350</div>
+                            <div class="text-muted">FTCO2 Vendidos</div>
+                            <div class="small mt-2">
+                                <span class="badge bg-success">+15% este mês</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-number">R$ 14K</div>
+                            <div class="text-muted">Receita Total</div>
+                            <div class="small mt-2">
+                                <span class="badge bg-success">R$ 3.5K este mês</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-number">R$ 40</div>
+                            <div class="text-muted">Preço Médio/FTCO2</div>
+                            <div class="small mt-2">
+                                <span class="badge bg-success">+8% variação</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de Ações e Filtros -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="filter-bar card-ipe">
+                            <div class="row align-items-center">
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <h5 class="mb-0">Meus FTCO2 Disponíveis</h5>
+                                    <p class="text-muted small mb-0">Gerencie e negocie seus Tokens Forward</p>
+                                </div>
+                                <div class="col-md-5 mb-3 mb-md-0">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <select class="form-select form-select-sm" id="projectFilter">
+                                            <option value="">Todos os Projetos</option>
+                                            <option value="floresta">Floresta Amazônica</option>
+                                            <option value="cerrado">Cerrado Regenerativo</option>
+                                            <option value="mata">Mata Atlântica</option>
+                                        </select>
+                                        <select class="form-select form-select-sm" id="statusFilter">
+                                            <option value="">Todos os Status</option>
+                                            <option value="available">Disponíveis</option>
+                                            <option value="reserved">Reservados</option>
+                                            <option value="sold">Vendidos</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <button class="btn btn-ftco2 btn-sm" data-bs-toggle="modal" data-bs-target="#createOfferModal">
+                                            <i class="bi bi-plus-circle me-1"></i>Criar Oferta
+                                        </button>
+                                        <button class="btn btn-outline-ipe btn-sm" id="refreshData">
+                                            <i class="bi bi-arrow-clockwise"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Distribuição -->
+                <div class="row mb-4">
+                    <div class="col-lg-8">
+                        <div class="card card-ipe">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Distribuição de FTCO2 por Projeto</h5>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        Este Mês
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Esta Semana</a></li>
+                                        <li><a class="dropdown-item" href="#">Este Mês</a></li>
+                                        <li><a class="dropdown-item" href="#">Este Ano</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <!-- Gráfico Simulado -->
+                                    <div class="d-flex align-items-end justify-content-around h-100">
+                                        <div class="text-center">
+                                            <div class="bg-warning rounded-top mb-2 mx-auto" style="width: 60px; height: 180px;"></div>
+                                            <div class="small">Floresta Amazônica</div>
+                                            <div class="fw-bold">1.2K FTCO2</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="bg-success rounded-top mb-2 mx-auto" style="width: 60px; height: 120px;"></div>
+                                            <div class="small">Cerrado Regenerativo</div>
+                                            <div class="fw-bold">600 FTCO2</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="bg-info rounded-top mb-2 mx-auto" style="width: 60px; height: 90px;"></div>
+                                            <div class="small">Mata Atlântica</div>
+                                            <div class="fw-bold">300 FTCO2</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card card-ipe h-100">
+                            <div class="card-header">
+                                <h5 class="mb-0">Conversão para TCO2</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center mb-4">
+                                    <div class="display-6 text-ftco2 mb-2">850</div>
+                                    <div class="text-muted">FTCO2 elegíveis para conversão</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                        <span>Progresso da Certificação</span>
+                                        <span>75%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-ftco2" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline small">
+                                    <div class="d-flex mb-2">
+                                        <div class="flex-shrink-0">
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <div class="fw-medium">Projeto Homologado</div>
+                                            <div class="text-muted">05/01/2026</div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-2">
+                                        <div class="flex-shrink-0">
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <div class="fw-medium">Monitoramento Iniciado</div>
+                                            <div class="text-muted">15/01/2026</div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-2">
+                                        <div class="flex-shrink-0">
+                                            <i class="bi bi-clock text-warning"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <div class="fw-medium">Verificação em Andamento</div>
+                                            <div class="text-muted">Previsto: 15/02/2026</div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="bi bi-circle text-muted"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <div class="fw-medium">Certificação TCO2</div>
+                                            <div class="text-muted">Previsto: 15/03/2026</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-outline-ipe w-100 mt-3">
+                                    <i class="bi bi-shield-check me-2"></i>Acompanhar Certificação
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de FTCO2 -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card card-ipe">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Meus FTCO2</h5>
+                                <div class="small text-muted">
+                                    Total: <span class="fw-bold text-ftco2">1.750 FTCO2</span> disponíveis
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-ipe table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Projeto</th>
+                                                <th>FTCO2</th>
+                                                <th>Status</th>
+                                                <th>Preço Unitário</th>
+                                                <th>Valor Total</th>
+                                                <th>Data de Vencimento</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- FTCO2 1 -->
+                                            <tr>
+                                                <td>
+                                                    <div class="fw-medium">Floresta Amazônica</div>
+                                                    <div class="small text-muted">Reflorestamento - 500ha</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold text-ftco2">850</div>
+                                                    <div class="small text-muted">Disponíveis: 500</div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-success">Disponível</span>
+                                                    <div class="small text-muted">350 vendidos</div>
+                                                </td>
+                                                <td>
+                                                    <div class="price-tag">R$ 42,00</div>
+                                                    <div class="small text-muted">Mercado: R$ 40-45</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold">R$ 35.700,00</div>
+                                                    <div class="small text-success">R$ 14.700,00 vendido</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-medium">15/03/2026</div>
+                                                    <div class="small text-muted">Conversão TCO2</div>
+                                                </td>
+                                                <td>
+                                                    <div class="action-buttons">
+                                                        <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal" data-bs-target="#sellModal">
+                                                            <i class="bi bi-cash-coin"></i> Vender
+                                                        </button>
+                                                        <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal">
+                                                            <i class="bi bi-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            
+                                            <!-- FTCO2 2 -->
+                                            <tr>
+                                                <td>
+                                                    <div class="fw-medium">Cerrado Regenerativo</div>
+                                                    <div class="small text-muted">Recuperação - 300ha</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold text-ftco2">600</div>
+                                                    <div class="small text-muted">Disponíveis: 600</div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-success">Disponível</span>
+                                                    <div class="small text-muted">0 vendidos</div>
+                                                </td>
+                                                <td>
+                                                    <div class="price-tag">R$ 38,50</div>
+                                                    <div class="small text-muted">Mercado: R$ 37-40</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold">R$ 23.100,00</div>
+                                                    <div class="small text-muted">Ainda não vendido</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-medium">15/02/2026</div>
+                                                    <div class="small text-muted">Em certificação</div>
+                                                </td>
+                                                <td>
+                                                    <div class="action-buttons">
+                                                        <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal" data-bs-target="#sellModal">
+                                                            <i class="bi bi-cash-coin"></i> Vender
+                                                        </button>
+                                                        <button class="btn btn-outline-secondary btn-sm">
+                                                            <i class="bi bi-graph-up"></i> Preço
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            
+                                            <!-- FTCO2 3 -->
+                                            <tr>
+                                                <td>
+                                                    <div class="fw-medium">Mata Atlântica</div>
+                                                    <div class="small text-muted">Conservação - 150ha</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold text-ftco2">300</div>
+                                                    <div class="small text-muted">Disponíveis: 300</div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-warning">Reservado</span>
+                                                    <div class="small text-muted">Oferta em análise</div>
+                                                </td>
+                                                <td>
+                                                    <div class="price-tag">R$ 45,00</div>
+                                                    <div class="small text-muted">Oferta: R$ 43,00</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold">R$ 13.500,00</div>
+                                                    <div class="small text-warning">Oferta: R$ 12.900,00</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-medium">30/04/2026</div>
+                                                    <div class="small text-muted">Aguardando homologação</div>
+                                                </td>
+                                                <td>
+                                                    <div class="action-buttons">
+                                                        <button class="btn btn-outline-success btn-sm">
+                                                            <i class="bi bi-check-circle"></i> Aceitar
+                                                        </button>
+                                                        <button class="btn btn-outline-danger btn-sm">
+                                                            <i class="bi bi-x-circle"></i> Recusar
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ofertas Ativas -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-ipe">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Ofertas de Compra Recebidas</h5>
+                                <span class="badge bg-primary">3 novas ofertas</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Oferta 1 -->
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card border-0 bg-light">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                                    <div>
+                                                        <h6 class="mb-1">Empresa ABC</h6>
+                                                        <div class="small text-muted">Verificado <i class="bi bi-patch-check-fill text-primary"></i></div>
+                                                    </div>
+                                                    <span class="badge bg-warning">Pendente</span>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="small text-muted">FTCO2 Solicitados</div>
+                                                    <div class="fw-bold text-ftco2">100 FTCO2</div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="small text-muted">Oferta por FTCO2</div>
+                                                    <div class="fw-bold text-success">R$ 41,50</div>
+                                                    <div class="small text-muted">Preço de mercado: R$ 42,00</div>
+                                                </div>
+                                                <div class="d-flex gap-2">
+                                                    <button class="btn btn-success btn-sm flex-grow-1">
+                                                        <i class="bi bi-check-lg me-1"></i>Aceitar
+                                                    </button>
+                                                    <button class="btn btn-outline-danger btn-sm">
+                                                        <i class="bi bi-x-lg"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Oferta 2 -->
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card border-0 bg-light">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                                    <div>
+                                                        <h6 class="mb-1">Fundo ESG</h6>
+                                                        <div class="small text-muted">Investidor institucional</div>
+                                                    </div>
+                                                    <span class="badge bg-info">Nova</span>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="small text-muted">FTCO2 Solicitados</div>
+                                                    <div class="fw-bold text-ftco2">250 FTCO2</div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="small text-muted">Oferta por FTCO2</div>
+                                                    <div class="fw-bold text-success">R$ 43,00</div>
+                                                    <div class="small text-success">+2.4% acima do mercado</div>
+                                                </div>
+                                                <div class="d-flex gap-2">
+                                                    <button class="btn btn-success btn-sm flex-grow-1">
+                                                        <i class="bi bi-check-lg me-1"></i>Aceitar
+                                                    </button>
+                                                    <button class="btn btn-outline-danger btn-sm">
+                                                        <i class="bi bi-x-lg"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Oferta 3 -->
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card border-0 bg-light">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                                    <div>
+                                                        <h6 class="mb-1">Companhia XYZ</h6>
+                                                        <div class="small text-muted">Setor industrial</div>
+                                                    </div>
+                                                    <span class="badge bg-success">Aceita</span>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="small text-muted">FTCO2 Solicitados</div>
+                                                    <div class="fw-bold text-ftco2">50 FTCO2</div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="small text-muted">Preço acordado</div>
+                                                    <div class="fw-bold text-success">R$ 42,00</div>
+                                                    <div class="small text-muted">Transação concluída</div>
+                                                </div>
+                                                <div class="d-flex gap-2">
+                                                    <button class="btn btn-outline-ipe btn-sm flex-grow-1" disabled>
+                                                        <i class="bi bi-check-circle me-1"></i>Concluído
+                                                    </button>
+                                                    <button class="btn btn-outline-secondary btn-sm">
+                                                        <i class="bi bi-receipt"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Criar Oferta -->
+    <div class="modal fade" id="createOfferModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Criar Nova Oferta de Venda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createOfferForm">
+                        <div class="mb-3">
+                            <label class="form-label">Selecionar Projeto</label>
+                            <select class="form-select" required>
+                                <option value="">Escolha um projeto</option>
+                                <option value="floresta">Floresta Amazônica (500 FTCO2 disponíveis)</option>
+                                <option value="cerrado">Cerrado Regenerativo (600 FTCO2 disponíveis)</option>
+                                <option value="mata">Mata Atlântica (300 FTCO2 disponíveis)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Quantidade de FTCO2</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" min="1" max="1000" value="100" required>
+                                    <span class="input-group-text">FTCO2</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Preço por FTCO2</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="number" class="form-control" min="1" step="0.01" value="42.00" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Oferta</label>
+                            <select class="form-select" required>
+                                <option value="fixed">Preço Fixo</option>
+                                <option value="auction">Leilão (melhor oferta)</option>
+                                <option value="negotiable">Negociável</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Validade da Oferta</label>
+                            <select class="form-select" required>
+                                <option value="7">7 dias</option>
+                                <option value="15" selected>15 dias</option>
+                                <option value="30">30 dias</option>
+                                <option value="custom">Personalizado</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="acceptTerms" required>
+                            <label class="form-check-label" for="acceptTerms">
+                                Concordo com os termos de negociação da plataforma
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="createOfferForm" class="btn btn-ftco2">Publicar Oferta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Elementos do DOM
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const projectFilter = document.getElementById('projectFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        const refreshData = document.getElementById('refreshData');
+        
+        // Alternar menu mobile
+        function toggleMobileMenu() {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.classList.toggle('show');
+        }
+        
+        // Fechar menu mobile
+        function closeMobileMenu() {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+        }
+        
+        // Filtrar FTCO2
+        function filterFTCO2() {
+            const projectValue = projectFilter.value;
+            const statusValue = statusFilter.value;
+            const rows = document.querySelectorAll('.table-ipe tbody tr');
+            
+            rows.forEach(row => {
+                let showRow = true;
+                
+                // Filtrar por projeto (simulação)
+                if (projectValue) {
+                    const projectText = row.querySelector('td:first-child .fw-medium').textContent;
+                    if (!projectText.toLowerCase().includes(projectValue)) {
+                        showRow = false;
+                    }
+                }
+                
+                // Filtrar por status (simulação)
+                if (statusValue) {
+                    const statusBadge = row.querySelector('td:nth-child(3) .badge').textContent;
+                    const statusMap = {
+                        'available': 'Disponível',
+                        'reserved': 'Reservado',
+                        'sold': 'Vendido'
+                    };
+                    
+                    if (statusValue && statusMap[statusValue] !== statusBadge) {
+                        showRow = false;
+                    }
+                }
+                
+                row.style.display = showRow ? '' : 'none';
+            });
+        }
+        
+        // Simular refresh de dados
+        function simulateDataRefresh() {
+            const refreshBtn = refreshData;
+            const originalHTML = refreshBtn.innerHTML;
+            
+            // Mostrar loading
+            refreshBtn.innerHTML = '<i class="bi bi-arrow-clockwise animate-spin"></i>';
+            refreshBtn.disabled = true;
+            
+            // Simular delay de carregamento
+            setTimeout(() => {
+                // Restaurar botão
+                refreshBtn.innerHTML = originalHTML;
+                refreshBtn.disabled = false;
+                
+                // Mostrar mensagem de sucesso
+                alert('Dados atualizados com sucesso!');
+            }, 1000);
+        }
+        
+        // Aceitar oferta
+        function acceptOffer(button) {
+            const card = button.closest('.card');
+            const badge = card.querySelector('.badge');
+            const buttons = card.querySelectorAll('.btn');
+            
+            badge.className = 'badge bg-success';
+            badge.textContent = 'Aceita';
+            
+            buttons.forEach(btn => {
+                if (btn.classList.contains('btn-success')) {
+                    btn.className = 'btn btn-outline-ipe btn-sm flex-grow-1';
+                    btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Concluído';
+                    btn.disabled = true;
+                } else if (btn.classList.contains('btn-outline-danger')) {
+                    btn.className = 'btn btn-outline-secondary btn-sm';
+                    btn.innerHTML = '<i class="bi bi-receipt"></i>';
+                }
+            });
+            
+            // Atualizar contador de notificações
+            const notificationBadge = document.querySelector('.main-header .badge.bg-danger');
+            if (notificationBadge) {
+                let count = parseInt(notificationBadge.textContent);
+                if (count > 0) {
+                    notificationBadge.textContent = count - 1;
+                }
+            }
+        }
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menu mobile
+            mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            sidebarOverlay.addEventListener('click', closeMobileMenu);
+            
+            // Fechar menu ao redimensionar
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Fechar menu ao clicar em links
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+            
+            // Filtros
+            projectFilter.addEventListener('change', filterFTCO2);
+            statusFilter.addEventListener('change', filterFTCO2);
+            
+            // Refresh de dados
+            refreshData.addEventListener('click', simulateDataRefresh);
+            
+            // Botões de aceitar oferta
+            document.querySelectorAll('.btn-success:not([type="submit"])').forEach(button => {
+                if (button.textContent.includes('Aceitar')) {
+                    button.addEventListener('click', function() {
+                        acceptOffer(this);
+                    });
+                }
+            });
+            
+            // Botões de recusar oferta
+            document.querySelectorAll('.btn-outline-danger').forEach(button => {
+                if (button.innerHTML.includes('bi-x-lg')) {
+                    button.addEventListener('click', function() {
+                        const card = this.closest('.card');
+                        card.style.opacity = '0.5';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                        
+                        // Atualizar contador de notificações
+                        const notificationBadge = document.querySelector('.main-header .badge.bg-danger');
+                        if (notificationBadge) {
+                            let count = parseInt(notificationBadge.textContent);
+                            if (count > 0) {
+                                notificationBadge.textContent = count - 1;
+                            }
+                        }
+                    });
+                }
+            });
+            
+            // Formulário de criar oferta
+            const createOfferForm = document.getElementById('createOfferForm');
+            if (createOfferForm) {
+                createOfferForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Oferta criada com sucesso! Ela estará visível na mesa de negociação em instantes.');
+                    
+                    // Fechar modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('createOfferModal'));
+                    modal.hide();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

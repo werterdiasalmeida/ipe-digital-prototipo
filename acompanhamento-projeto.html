@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acompanhamento de Projetos - Ipê Digital</title>
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Estilos personalizados -->
+    <style>
+        :root {
+            /* Tons de Azul atualizados (mais elegante) */
+            --azul-ipe: #343A40;           /* Azul grafite - mais elegante */
+            --azul-destaque: #2d3748;      /* Azul escuro */
+            --azul-secundario: #4a5568;    /* Azul médio */
+            --azul-claro: #3182ce;         /* Azul claro */
+            --azul-suave: #90cdf4;         /* Azul muito claro */
+            
+            /* Tons de neutros */
+            --cinza-claro: #F8F9FA;
+            --cinza-medio: #6C757D;
+            --cinza-escuro: #212529;
+            
+            /* Cores funcionais */
+            --verde-sucesso: #38a169;
+            --laranja-alerta: #dd6b20;
+            --vermelho-erro: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--cinza-claro);
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--azul-ipe);
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+            transition: all 0.3s;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1030;
+            width: 250px;
+        }
+        
+        .sidebar .navbar-brand {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .navbar-brand img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left-color: var(--azul-claro);
+        }
+        
+        .sidebar .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        
+        /* Header */
+        .main-header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--azul-suave);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--azul-ipe);
+            font-weight: bold;
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--azul-ipe);
+            font-size: 1.5rem;
+            padding: 5px 10px;
+        }
+        
+        /* Cards */
+        .card-ipe {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .btn-ipe {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-ipe:hover {
+            background-color: var(--azul-destaque);
+            color: white;
+        }
+        
+        .btn-outline-ipe {
+            border: 2px solid var(--azul-ipe);
+            color: var(--azul-ipe);
+            background-color: transparent;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-outline-ipe:hover {
+            background-color: var(--azul-ipe);
+            color: white;
+        }
+        
+        .text-ipe {
+            color: var(--azul-ipe);
+        }
+        
+        .border-ipe {
+            border-color: var(--azul-ipe) !important;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background-color: rgba(221, 107, 32, 0.1);
+            color: var(--laranja-alerta);
+            border: 1px solid rgba(221, 107, 32, 0.2);
+        }
+        
+        .status-approved {
+            background-color: rgba(56, 161, 105, 0.1);
+            color: var(--verde-sucesso);
+            border: 1px solid rgba(56, 161, 105, 0.2);
+        }
+        
+        .status-rejected {
+            background-color: rgba(229, 62, 62, 0.1);
+            color: var(--vermelho-erro);
+            border: 1px solid rgba(229, 62, 62, 0.2);
+        }
+        
+        .status-certified {
+            background-color: rgba(49, 130, 206, 0.1);
+            color: var(--azul-claro);
+            border: 1px solid rgba(49, 130, 206, 0.2);
+        }
+        
+        .status-in-analysis {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: var(--cinza-medio);
+            border: 1px solid rgba(108, 117, 125, 0.2);
+        }
+        
+        /* Filter Bar */
+        .filter-bar {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Project Cards */
+        .project-card {
+            border-left: 4px solid transparent;
+            transition: transform 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .project-card.pending {
+            border-left-color: var(--laranja-alerta);
+        }
+        
+        .project-card.approved {
+            border-left-color: var(--verde-sucesso);
+        }
+        
+        .project-card.rejected {
+            border-left-color: var(--vermelho-erro);
+        }
+        
+        .project-card.certified {
+            border-left-color: var(--azul-claro);
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--cinza-claro);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--cinza-medio);
+            border: 2px solid white;
+        }
+        
+        .timeline-item.completed::before {
+            background-color: var(--verde-sucesso);
+        }
+        
+        .timeline-item.current::before {
+            background-color: var(--azul-ipe);
+            box-shadow: 0 0 0 3px rgba(52, 58, 64, 0.2);
+        }
+        
+        /* Progress Bar */
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        .progress-bar-ipe {
+            background-color: var(--azul-ipe);
+        }
+        
+        /* Modal de Detalhes */
+        .modal-ipe .modal-header {
+            background-color: var(--azul-ipe);
+            color: white;
+        }
+        
+        /* Stats Cards */
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: white;
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--azul-ipe);
+        }
+        
+        /* Mobile-first adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1029;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+            }
+            
+            .user-info .d-none.d-md-block {
+                display: none !important;
+            }
+            
+            .btn-ipe, .btn-outline-ipe {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .stats-number {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .main-content {
+                margin-left: 250px;
+            }
+            
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar d-flex flex-column" id="sidebar">
+        <div class="navbar-brand">
+            <img src="logo.png" alt="Ipê Digital" class="d-inline-block">
+            <span class="fw-bold ms-2 text-white">Ipê Digital</span>
+        </div>
+        
+        <div class="flex-grow-1">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-proprietario.html">
+                        <i class="bi bi-house-door"></i>
+                        <span class="nav-text">Painel Principal</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cadastro-projeto.html">
+                        <i class="bi bi-folder-plus"></i>
+                        <span class="nav-text">Cadastrar Projeto</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="acompanhamento-projeto.html">
+                        <i class="bi bi-clipboard-data"></i>
+                        <span class="nav-text">Acompanhar Projetos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-ftco2.html">
+                        <i class="bi bi-tags"></i>
+                        <span class="nav-text">FTCO2 Disponíveis</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="acompanhamento-certificacao.html">
+                        <i class="bi bi-shield-check"></i>
+                        <span class="nav-text">Certificação TCO2</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-tco2.html">
+                        <i class="bi bi-currency-exchange"></i>
+                        <span class="nav-text">TCO2 Disponíveis</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="mesa-negociacao.html">
+                        <i class="bi bi-arrow-left-right"></i>
+                        <span class="nav-text">Mesa de Negociação</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cadastro-anuncio.html">
+                        <i class="bi bi-megaphone"></i>
+                        <span class="nav-text">Criar Anúncio</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-burn.html">
+                        <i class="bi bi-fire"></i>
+                        <span class="nav-text">Aposentar Créditos</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="meu-perfil.html">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="nav-text">Meu Perfil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span class="nav-text">Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="p-3 border-top border-white-10">
+            <div class="text-center small opacity-75">
+                <i class="bi bi-shield-lock"></i> Ambiente Seguro
+                <br>
+                <small>Conectado via Blockchain</small>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-8 col-md-6">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <h1 class="h4 mb-0 d-inline-block ms-2">Acompanhamento de Projetos</h1>
+                    </div>
+                    <div class="col-4 col-md-6">
+                        <div class="d-flex justify-content-end align-items-center gap-3">
+                            <!-- Notificações -->
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm position-relative" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-bell"></i>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        2
+                                    </span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><h6 class="dropdown-header">Notificações</h6></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-check-circle text-success me-2"></i>Projeto "Floresta Amazônica" atualizado</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-clock text-warning me-2"></i>Documentos pendentes para "Cerrado Regenerativo"</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-center" href="#">Ver todas</a></li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Perfil do Usuário -->
+                            <div class="dropdown">
+                                <button class="btn btn-link text-decoration-none text-dark p-0" type="button" data-bs-toggle="dropdown">
+                                    <div class="user-info">
+                                        <div class="user-avatar">JS</div>
+                                        <div class="d-none d-md-block">
+                                            <div class="fw-medium">João Silva</div>
+                                            <div class="small text-muted">Proprietário</div>
+                                        </div>
+                                        <i class="bi bi-chevron-down"></i>
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="meu-perfil.html"><i class="bi bi-person-circle me-2"></i>Meu Perfil</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="index.html"><i class="bi bi-box-arrow-left me-2"></i>Sair</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="py-4">
+            <div class="container-fluid">
+                <!-- Estatísticas Rápidas -->
+                <div class="row mb-4">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-number">5</div>
+                            <div class="text-muted">Projetos Totais</div>
+                            <div class="small mt-2">
+                                <span class="badge bg-success">80% ativos</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-number">2.1K</div>
+                            <div class="text-muted">FTCO2 Gerados</div>
+                            <div class="small mt-2">
+                                <span class="badge bg-info">R$ 84K estimado</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-number">850</div>
+                            <div class="text-muted">TCO2 Certificados</div>
+                            <div class="small mt-2">
+                                <span class="badge bg-info">R$ 34K estimado</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-number">3</div>
+                            <div class="text-muted">Em Análise</div>
+                            <div class="small mt-2">
+                                <span class="badge bg-warning">Aguardando</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de Filtros -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="filter-bar card-ipe">
+                            <div class="row align-items-center">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <h5 class="mb-0">Meus Projetos</h5>
+                                    <p class="text-muted small mb-0">Acompanhe o status de todos os seus projetos</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <select class="form-select form-select-sm" style="width: auto;" id="statusFilter">
+                                            <option value="">Todos os Status</option>
+                                            <option value="pending">Em Análise</option>
+                                            <option value="approved">Homologados</option>
+                                            <option value="certified">Certificados</option>
+                                            <option value="rejected">Rejeitados</option>
+                                        </select>
+                                        <select class="form-select form-select-sm" style="width: auto;" id="typeFilter">
+                                            <option value="">Todos os Tipos</option>
+                                            <option value="reflorestamento">Reflorestamento</option>
+                                            <option value="agrofloresta">Agrofloresta</option>
+                                            <option value="conservacao">Conservação</option>
+                                        </select>
+                                        <button class="btn btn-outline-ipe btn-sm" id="resetFilters">
+                                            <i class="bi bi-arrow-clockwise"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Projetos -->
+                <div class="row" id="projectsContainer">
+                    <!-- Projeto 1 - Em Análise -->
+                    <div class="col-lg-6 mb-4" data-status="pending" data-type="reflorestamento">
+                        <div class="card card-ipe project-card pending">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="card-title mb-1">Mata Atlântica Preservation</h5>
+                                        <p class="text-muted small mb-0">Proteção de área de preservação permanente</p>
+                                    </div>
+                                    <span class="status-badge status-pending">Em Análise</span>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="small text-muted">Área</div>
+                                        <div class="fw-medium">150 ha</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="small text-muted">FTCO2 Estimados</div>
+                                        <div class="fw-medium">600 FTCO2</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                        <span>Progresso da Análise</span>
+                                        <span>40%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-ipe" style="width: 40%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline small mb-3">
+                                    <div class="timeline-item completed">
+                                        <div class="fw-medium">Cadastro Completo</div>
+                                        <div class="text-muted">15/01/2026 - Documentos recebidos</div>
+                                    </div>
+                                    <div class="timeline-item completed">
+                                        <div class="fw-medium">Análise Documental</div>
+                                        <div class="text-muted">20/01/2026 - Em andamento</div>
+                                    </div>
+                                    <div class="timeline-item current">
+                                        <div class="fw-medium">Verificação Técnica</div>
+                                        <div class="text-muted">Prevista: 25/01/2026</div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="text-muted">Homologação Final</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal" data-bs-target="#projectModal" data-project="1">
+                                        <i class="bi bi-eye me-1"></i>Detalhes
+                                    </button>
+                                    <div class="text-end">
+                                        <small class="text-muted">Submetido: 10/01/2026</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Projeto 2 - Homologado -->
+                    <div class="col-lg-6 mb-4" data-status="approved" data-type="agrofloresta">
+                        <div class="card card-ipe project-card approved">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="card-title mb-1">Floresta Amazônica Sustentável</h5>
+                                        <p class="text-muted small mb-0">Reflorestamento de 500 hectares</p>
+                                    </div>
+                                    <span class="status-badge status-approved">Homologado</span>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="small text-muted">Área</div>
+                                        <div class="fw-medium">500 ha</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="small text-muted">FTCO2 Disponíveis</div>
+                                        <div class="fw-medium text-ipe">1.2K FTCO2</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="small text-muted">Créditos Negociados</div>
+                                            <div class="fw-medium">350 FTCO2 (29%)</div>
+                                        </div>
+                                        <a href="painel-ftco2.html" class="btn btn-ipe btn-sm">
+                                            <i class="bi bi-arrow-right"></i> Gerenciar
+                                        </a>
+                                    </div>
+                                    <div class="progress mt-2">
+                                        <div class="progress-bar progress-bar-ipe" style="width: 29%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="small text-muted">Próxima Etapa:</div>
+                                    <div class="fw-medium">Certificação TCO2</div>
+                                    <div class="text-muted small">Disponível em: 15/03/2026</div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <button class="btn btn-outline-ipe btn-sm me-2" data-bs-toggle="modal" data-bs-target="#projectModal" data-project="2">
+                                            <i class="bi bi-eye me-1"></i>Detalhes
+                                        </button>
+                                        <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal" data-bs-target="#ftco2Modal">
+                                            <i class="bi bi-tags me-1"></i>FTCO2
+                                        </button>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-muted">Homologado: 05/01/2026</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Projeto 3 - Certificado -->
+                    <div class="col-lg-6 mb-4" data-status="certified" data-type="reflorestamento">
+                        <div class="card card-ipe project-card certified">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="card-title mb-1">Cerrado Regenerativo</h5>
+                                        <p class="text-muted small mb-0">Recuperação de pastagens degradadas</p>
+                                    </div>
+                                    <span class="status-badge status-certified">Certificado</span>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="small text-muted">Área</div>
+                                        <div class="fw-medium">300 ha</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="small text-muted">TCO2 Certificados</div>
+                                        <div class="fw-medium text-ipe">850 TCO2</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="small text-muted">Créditos Negociados</div>
+                                            <div class="fw-medium">420 TCO2 (49%)</div>
+                                        </div>
+                                        <a href="painel-tco2.html" class="btn btn-ipe btn-sm">
+                                            <i class="bi bi-arrow-right"></i> Gerenciar
+                                        </a>
+                                    </div>
+                                    <div class="progress mt-2">
+                                        <div class="progress-bar progress-bar-ipe" style="width: 49%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="small text-muted">Valor Total Negociado:</div>
+                                    <div class="fw-medium text-ipe">R$ 16.800,00</div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <button class="btn btn-outline-ipe btn-sm me-2" data-bs-toggle="modal" data-bs-target="#projectModal" data-project="3">
+                                            <i class="bi bi-eye me-1"></i>Detalhes
+                                        </button>
+                                        <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal" data-bs-target="#tco2Modal">
+                                            <i class="bi bi-currency-exchange me-1"></i>TCO2
+                                        </button>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-muted">Certificado: 20/12/2025</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Projeto 4 - Aguardando Documentação -->
+                    <div class="col-lg-6 mb-4" data-status="pending" data-type="conservacao">
+                        <div class="card card-ipe project-card pending">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="card-title mb-1">Pantanal Conservation</h5>
+                                        <p class="text-muted small mb-0">Conservação de área úmida</p>
+                                    </div>
+                                    <span class="status-badge status-in-analysis">Documentação Pendente</span>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="small text-muted">Área</div>
+                                        <div class="fw-medium">750 ha</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="small text-muted">FTCO2 Estimados</div>
+                                        <div class="fw-medium">1.5K FTCO2</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-warning small mb-3">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    Documentação adicional requerida: mapas georreferenciados e laudo técnico.
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="small text-muted">Documentos Pendentes:</div>
+                                    <ul class="small text-muted mb-0">
+                                        <li>Mapa georreferenciado atualizado</li>
+                                        <li>Laudo técnico de conservação</li>
+                                        <li>Autorização ambiental</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal" data-bs-target="#docsModal">
+                                        <i class="bi bi-upload me-1"></i>Enviar Documentos
+                                    </button>
+                                    <div class="text-end">
+                                        <small class="text-muted">Prazo: 30/01/2026</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sem Projetos Message (hidden by default) -->
+                <div class="row d-none" id="noProjectsMessage">
+                    <div class="col-12">
+                        <div class="card card-ipe">
+                            <div class="card-body text-center py-5">
+                                <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+                                <h5 class="text-muted">Nenhum projeto encontrado</h5>
+                                <p class="text-muted">Tente ajustar os filtros ou cadastre um novo projeto.</p>
+                                <a href="cadastro-projeto.html" class="btn btn-ipe">
+                                    <i class="bi bi-plus-circle me-2"></i>Cadastrar Novo Projeto
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Paginação -->
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Navegação de projetos">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Detalhes do Projeto -->
+    <div class="modal fade modal-ipe" id="projectModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalProjectTitle">Detalhes do Projeto</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalProjectContent">
+                        <!-- Conteúdo será preenchido via JavaScript -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-ipe">Ações do Projeto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Elementos do DOM
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const statusFilter = document.getElementById('statusFilter');
+        const typeFilter = document.getElementById('typeFilter');
+        const resetFilters = document.getElementById('resetFilters');
+        const projectsContainer = document.getElementById('projectsContainer');
+        const noProjectsMessage = document.getElementById('noProjectsMessage');
+        
+        // Dados dos projetos (simulação)
+        const projectsData = {
+            1: {
+                title: "Mata Atlântica Preservation",
+                type: "Reflorestamento",
+                status: "pending",
+                area: "150 ha",
+                location: "São Paulo, SP",
+                credits: "600 FTCO2",
+                description: "Projeto de proteção de área de preservação permanente na Mata Atlântica, com foco em conservação da biodiversidade e sequestro de carbono.",
+                startDate: "10/01/2026",
+                estimatedCompletion: "15/03/2026",
+                documents: ["PDD Completo", "Mapa Georreferenciado", "Laudo Técnico"],
+                timeline: [
+                    { date: "10/01/2026", event: "Cadastro do Projeto", status: "completed" },
+                    { date: "15/01/2026", event: "Documentação Recebida", status: "completed" },
+                    { date: "20/01/2026", event: "Análise Documental", status: "current" },
+                    { date: "25/01/2026", event: "Verificação Técnica", status: "pending" },
+                    { date: "05/02/2026", event: "Homologação", status: "pending" }
+                ]
+            },
+            2: {
+                title: "Floresta Amazônica Sustentável",
+                type: "Agrofloresta",
+                status: "approved",
+                area: "500 ha",
+                location: "Pará, PA",
+                credits: "1.2K FTCO2",
+                description: "Projeto de reflorestamento com sistema agroflorestal, combinando produção sustentável com sequestro de carbono.",
+                startDate: "05/12/2025",
+                approvalDate: "05/01/2026",
+                ftco2Available: "850 FTCO2",
+                ftco2Sold: "350 FTCO2",
+                revenue: "R$ 14.000,00"
+            },
+            3: {
+                title: "Cerrado Regenerativo",
+                type: "Reflorestamento",
+                status: "certified",
+                area: "300 ha",
+                location: "Goiás, GO",
+                credits: "850 TCO2",
+                description: "Recuperação de pastagens degradadas no Cerrado com espécies nativas e sistema de manejo sustentável.",
+                startDate: "01/08/2025",
+                certificationDate: "20/12/2025",
+                tco2Available: "430 TCO2",
+                tco2Sold: "420 TCO2",
+                revenue: "R$ 16.800,00"
+            }
+        };
+        
+        // Alternar menu mobile
+        function toggleMobileMenu() {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.classList.toggle('show');
+        }
+        
+        // Fechar menu mobile
+        function closeMobileMenu() {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+        }
+        
+        // Filtrar projetos
+        function filterProjects() {
+            const statusValue = statusFilter.value;
+            const typeValue = typeFilter.value;
+            const projectCards = projectsContainer.querySelectorAll('.col-lg-6');
+            let visibleCount = 0;
+            
+            projectCards.forEach(card => {
+                const status = card.dataset.status;
+                const type = card.dataset.type;
+                let shouldShow = true;
+                
+                if (statusValue && status !== statusValue) {
+                    shouldShow = false;
+                }
+                
+                if (typeValue && type !== typeValue) {
+                    shouldShow = false;
+                }
+                
+                if (shouldShow) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Mostrar/ocultar mensagem de nenhum projeto
+            if (visibleCount === 0) {
+                projectsContainer.classList.add('d-none');
+                noProjectsMessage.classList.remove('d-none');
+            } else {
+                projectsContainer.classList.remove('d-none');
+                noProjectsMessage.classList.add('d-none');
+            }
+        }
+        
+        // Preencher modal com dados do projeto
+        function fillProjectModal(projectId) {
+            const project = projectsData[projectId];
+            if (!project) return;
+            
+            const modalTitle = document.getElementById('modalProjectTitle');
+            const modalContent = document.getElementById('modalProjectContent');
+            
+            modalTitle.textContent = project.title;
+            
+            let html = `
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-light border-0">
+                            <div class="card-body">
+                                <h6 class="card-title">Informações Básicas</h6>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td class="text-muted">Tipo:</td>
+                                        <td>${project.type}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Área:</td>
+                                        <td>${project.area}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Localização:</td>
+                                        <td>${project.location}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Créditos:</td>
+                                        <td><strong>${project.credits}</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-light border-0">
+                            <div class="card-body">
+                                <h6 class="card-title">Status</h6>
+                                <div class="d-flex align-items-center mb-2">
+                                    ${getStatusBadge(project.status)}
+                                </div>
+                                ${project.approvalDate ? `<div class="small">Homologado em: ${project.approvalDate}</div>` : ''}
+                                ${project.certificationDate ? `<div class="small">Certificado em: ${project.certificationDate}</div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Descrição</h6>
+                    <p class="text-muted">${project.description}</p>
+                </div>
+            `;
+            
+            // Adicionar timeline se existir
+            if (project.timeline) {
+                html += `
+                    <div class="mb-3">
+                        <h6>Linha do Tempo</h6>
+                        <div class="timeline">
+                            ${project.timeline.map(item => `
+                                <div class="timeline-item ${item.status}">
+                                    <div class="fw-medium">${item.event}</div>
+                                    <div class="text-muted small">${item.date}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Adicionar informações financeiras se existirem
+            if (project.revenue) {
+                html += `
+                    <div class="mb-3">
+                        <h6>Desempenho Financeiro</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-light border-0">
+                                    <div class="card-body">
+                                        <div class="small text-muted">Receita Total</div>
+                                        <div class="h4 text-ipe">${project.revenue}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            ${project.ftco2Sold ? `
+                                <div class="col-md-6">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body">
+                                            <div class="small text-muted">FTCO2 Vendidos</div>
+                                            <div class="h4 text-ipe">${project.ftco2Sold}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            ${project.tco2Sold ? `
+                                <div class="col-md-6">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body">
+                                            <div class="small text-muted">TCO2 Vendidos</div>
+                                            <div class="h4 text-ipe">${project.tco2Sold}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            modalContent.innerHTML = html;
+        }
+        
+        // Gerar badge de status
+        function getStatusBadge(status) {
+            const badges = {
+                pending: '<span class="status-badge status-pending">Em Análise</span>',
+                approved: '<span class="status-badge status-approved">Homologado</span>',
+                certified: '<span class="status-badge status-certified">Certificado</span>',
+                rejected: '<span class="status-badge status-rejected">Rejeitado</span>'
+            };
+            return badges[status] || '<span class="status-badge status-in-analysis">Em Análise</span>';
+        }
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menu mobile
+            mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            sidebarOverlay.addEventListener('click', closeMobileMenu);
+            
+            // Fechar menu ao redimensionar
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Fechar menu ao clicar em links
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+            
+            // Filtros
+            statusFilter.addEventListener('change', filterProjects);
+            typeFilter.addEventListener('change', filterProjects);
+            resetFilters.addEventListener('click', function() {
+                statusFilter.value = '';
+                typeFilter.value = '';
+                filterProjects();
+            });
+            
+            // Modal de detalhes do projeto
+            const projectModal = document.getElementById('projectModal');
+            if (projectModal) {
+                projectModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const projectId = button.getAttribute('data-project');
+                    fillProjectModal(projectId);
+                });
+            }
+            
+            // Modal de FTCO2
+            const ftco2Modal = document.getElementById('ftco2Modal');
+            if (ftco2Modal) {
+                ftco2Modal.addEventListener('show.bs.modal', function() {
+                    // Aqui você pode preencher com dados específicos de FTCO2
+                });
+            }
+            
+            // Modal de TCO2
+            const tco2Modal = document.getElementById('tco2Modal');
+            if (tco2Modal) {
+                tco2Modal.addEventListener('show.bs.modal', function() {
+                    // Aqui você pode preencher com dados específicos de TCO2
+                });
+            }
+            
+            // Modal de documentos
+            const docsModal = document.getElementById('docsModal');
+            if (docsModal) {
+                docsModal.addEventListener('show.bs.modal', function() {
+                    // Aqui você pode adicionar funcionalidade de upload
+                });
+            }
+        });
+    </script>
+</body>
+</html>

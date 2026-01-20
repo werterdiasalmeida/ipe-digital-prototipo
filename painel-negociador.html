@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Negociador - Ipê Digital</title>
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Estilos personalizados -->
+    <style>
+        :root {
+            /* Tons de Azul atualizados (mais elegante) */
+            --azul-ipe: #343A40;           /* Azul grafite - mais elegante */
+            --azul-destaque: #2d3748;      /* Azul escuro */
+            --azul-secundario: #4a5568;    /* Azul médio */
+            --azul-claro: #3182ce;         /* Azul claro */
+            --azul-suave: #90cdf4;         /* Azul muito claro */
+            
+            /* Tons de neutros */
+            --cinza-claro: #F8F9FA;
+            --cinza-medio: #6C757D;
+            --cinza-escuro: #212529;
+            
+            /* Cores funcionais */
+            --verde-sucesso: #38a169;
+            --verde-tco2: #2d9d78;         /* Verde específico para TCO2 */
+            --laranja-alerta: #dd6b20;
+            --laranja-ftco2: #ed8936;      /* Laranja específico para FTCO2 */
+            --roxo-negociador: #805ad5;    /* Roxo específico para negociador */
+            --vermelho-erro: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--cinza-claro);
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--azul-ipe);
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+            transition: all 0.3s;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1030;
+            width: 250px;
+        }
+        
+        .sidebar .navbar-brand {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .navbar-brand img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left-color: var(--roxo-negociador);
+        }
+        
+        .sidebar .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        
+        /* Header de Cotações (Ticker) - Estilo Cripto */
+        .ticker-header {
+            background-color: var(--cinza-escuro);
+            color: white;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1025;
+        }
+        
+        .ticker-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 30px;
+            padding: 0 15px;
+            white-space: nowrap;
+        }
+        
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 15px;
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.05);
+            transition: background-color 0.3s;
+        }
+        
+        .ticker-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .ticker-symbol {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .ticker-symbol.ftco2 {
+            color: var(--laranja-ftco2);
+        }
+        
+        .ticker-symbol.tco2 {
+            color: var(--verde-tco2);
+        }
+        
+        .ticker-price {
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        
+        .ticker-change {
+            font-size: 0.85rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        
+        .ticker-change.positive {
+            background-color: rgba(56, 161, 105, 0.2);
+            color: var(--verde-sucesso);
+        }
+        
+        .ticker-change.negative {
+            background-color: rgba(229, 62, 62, 0.2);
+            color: var(--vermelho-erro);
+        }
+        
+        .ticker-volume {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Main Header */
+        .main-header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 53px; /* Altura do ticker */
+            z-index: 1020;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--azul-suave);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--azul-ipe);
+            font-weight: bold;
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--azul-ipe);
+            font-size: 1.5rem;
+            padding: 5px 10px;
+        }
+        
+        /* Cards */
+        .card-ipe {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .btn-ipe {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-ipe:hover {
+            background-color: var(--azul-destaque);
+            color: white;
+        }
+        
+        .btn-outline-ipe {
+            border: 2px solid var(--azul-ipe);
+            color: var(--azul-ipe);
+            background-color: transparent;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-outline-ipe:hover {
+            background-color: var(--azul-ipe);
+            color: white;
+        }
+        
+        .btn-negociador {
+            background-color: var(--roxo-negociador);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-negociador:hover {
+            background-color: #6b46c1;
+            color: white;
+        }
+        
+        .text-ipe {
+            color: var(--azul-ipe);
+        }
+        
+        .text-negociador {
+            color: var(--roxo-negociador);
+        }
+        
+        /* Market Stats */
+        .market-stats {
+            background: linear-gradient(135deg, var(--azul-ipe) 0%, var(--azul-destaque) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Trading Pairs */
+        .trading-pair {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .trading-pair:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .trading-pair-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .pair-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .pair-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        
+        .pair-change {
+            font-size: 0.9rem;
+            padding: 3px 10px;
+            border-radius: 15px;
+        }
+        
+        .pair-change.up {
+            background-color: rgba(56, 161, 105, 0.1);
+            color: var(--verde-sucesso);
+        }
+        
+        .pair-change.down {
+            background-color: rgba(229, 62, 62, 0.1);
+            color: var(--vermelho-erro);
+        }
+        
+        /* Order Book */
+        .order-book {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .order-book-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--cinza-medio);
+        }
+        
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 0.9rem;
+        }
+        
+        .order-row.bid {
+            background-color: rgba(56, 161, 105, 0.05);
+        }
+        
+        .order-row.ask {
+            background-color: rgba(229, 62, 62, 0.05);
+        }
+        
+        /* Charts */
+        .chart-container {
+            height: 300px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        /* Quick Trade */
+        .quick-trade {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .trade-type-toggle {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .trade-type-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background-color: white;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .trade-type-btn.active {
+            background-color: var(--azul-ipe);
+            color: white;
+        }
+        
+        .trade-type-btn.buy.active {
+            background-color: var(--verde-sucesso);
+        }
+        
+        .trade-type-btn.sell.active {
+            background-color: var(--vermelho-erro);
+        }
+        
+        /* Stats Cards */
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: white;
+            transition: transform 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .stats-number.negociador {
+            color: var(--roxo-negociador);
+        }
+        
+        /* Mobile-first adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1029;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+            }
+            
+            .ticker-container {
+                gap: 15px;
+                padding: 0 10px;
+            }
+            
+            .ticker-item {
+                padding: 5px 10px;
+            }
+            
+            .ticker-price {
+                font-size: 0.85rem;
+            }
+            
+            .main-header {
+                top: 53px;
+            }
+            
+            .stats-number {
+                font-size: 1.5rem;
+            }
+            
+            .btn-ipe, .btn-outline-ipe, .btn-negociador {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .main-content {
+                margin-left: 250px;
+            }
+            
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar d-flex flex-column" id="sidebar">
+        <div class="navbar-brand">
+            <img src="logo.png" alt="Ipê Digital" class="d-inline-block">
+            <span class="fw-bold ms-2 text-white">Ipê Digital</span>
+        </div>
+        
+        <div class="flex-grow-1">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="painel-negociador.html">
+                        <i class="bi bi-house-door"></i>
+                        <span class="nav-text">Trading Desk</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="mesa-negociacao.html">
+                        <i class="bi bi-graph-up"></i>
+                        <span class="nav-text">Mercado Spot</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cadastro-anuncio.html">
+                        <i class="bi bi-megaphone"></i>
+                        <span class="nav-text">Criar Oferta</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-ftco2-negociador.html">
+                        <i class="bi bi-tags"></i>
+                        <span class="nav-text">Meus FTCO2</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-tco2-negociador.html">
+                        <i class="bi bi-currency-exchange"></i>
+                        <span class="nav-text">Meus TCO2</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-burn.html">
+                        <i class="bi bi-fire"></i>
+                        <span class="nav-text">Burn</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-wallet2"></i>
+                        <span class="nav-text">Carteira</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-clock-history"></i>
+                        <span class="nav-text">Histórico</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <span class="nav-text">Analytics</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="meu-perfil.html">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="nav-text">Perfil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span class="nav-text">Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="p-3 border-top border-white-10">
+            <div class="text-center small opacity-75">
+                <i class="bi bi-shield-lock"></i> Trading Seguro
+                <br>
+                <small>Blockchain Verificado</small>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Ticker de Cotações (estilo cripto) -->
+    <div class="ticker-header">
+        <div class="ticker-container">
+            <!-- FTCO2/BRL -->
+            <div class="ticker-item">
+                <div class="ticker-symbol ftco2">FTCO2/BRL</div>
+                <div class="ticker-price">R$ 42,15</div>
+                <div class="ticker-change positive">+2.35%</div>
+                <div class="ticker-volume">Vol: 1.2K</div>
+            </div>
+            
+            <!-- TCO2/BRL -->
+            <div class="ticker-item">
+                <div class="ticker-symbol tco2">TCO2/BRL</div>
+                <div class="ticker-price">R$ 47,82</div>
+                <div class="ticker-change positive">+5.12%</div>
+                <div class="ticker-volume">Vol: 850</div>
+            </div>
+            
+            <!-- FTCO2/USD -->
+            <div class="ticker-item">
+                <div class="ticker-symbol ftco2">FTCO2/USD</div>
+                <div class="ticker-price">$8.42</div>
+                <div class="ticker-change positive">+1.85%</div>
+                <div class="ticker-volume">Vol: 800</div>
+            </div>
+            
+            <!-- TCO2/USD -->
+            <div class="ticker-item">
+                <div class="ticker-symbol tco2">TCO2/USD</div>
+                <div class="ticker-price">$9.56</div>
+                <div class="ticker-change positive">+4.72%</div>
+                <div class="ticker-volume">Vol: 420</div>
+            </div>
+            
+            <!-- FTCO2/EUR -->
+            <div class="ticker-item">
+                <div class="ticker-symbol ftco2">FTCO2/EUR</div>
+                <div class="ticker-price">€7.85</div>
+                <div class="ticker-change negative">-0.45%</div>
+                <div class="ticker-volume">Vol: 320</div>
+            </div>
+            
+            <!-- TCO2/EUR -->
+            <div class="ticker-item">
+                <div class="ticker-symbol tco2">TCO2/EUR</div>
+                <div class="ticker-price">€8.91</div>
+                <div class="ticker-change positive">+3.21%</div>
+                <div class="ticker-volume">Vol: 210</div>
+            </div>
+            
+            <!-- Índice Carbono -->
+            <div class="ticker-item">
+                <div class="ticker-symbol">ICARB</div>
+                <div class="ticker-price">1,245.32</div>
+                <div class="ticker-change positive">+3.85%</div>
+                <div class="ticker-volume">Índice</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-8 col-md-6">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <h1 class="h4 mb-0 d-inline-block ms-2">Trading Desk</h1>
+                        <span class="badge bg-purple ms-2" style="background-color: var(--roxo-negociador);">Pro Trader</span>
+                    </div>
+                    <div class="col-4 col-md-6">
+                        <div class="d-flex justify-content-end align-items-center gap-3">
+                            <!-- Saldo -->
+                            <div class="dropdown">
+                                <button class="btn btn-outline-success btn-sm position-relative" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-wallet2"></i>
+                                    <span class="ms-1">R$ 25.420,00</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><h6 class="dropdown-header">Saldo Disponível</h6></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-plus-circle text-success me-2"></i>Depositar</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-dash-circle text-danger me-2"></i>Sacar</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-left-right text-primary me-2"></i>Histórico</a></li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Perfil do Usuário -->
+                            <div class="dropdown">
+                                <button class="btn btn-link text-decoration-none text-dark p-0" type="button" data-bs-toggle="dropdown">
+                                    <div class="user-info">
+                                        <div class="user-avatar">MA</div>
+                                        <div class="d-none d-md-block">
+                                            <div class="fw-medium">Maria Andrade</div>
+                                            <div class="small text-muted">Tier 3 Trader</div>
+                                        </div>
+                                        <i class="bi bi-chevron-down"></i>
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="meu-perfil.html"><i class="bi bi-person-circle me-2"></i>Meu Perfil</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check me-2"></i>Segurança</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="index.html"><i class="bi bi-box-arrow-left me-2"></i>Sair</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="py-4">
+            <div class="container-fluid">
+                <!-- Market Overview -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="market-stats">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="text-white-80 small">Capitalização de Mercado</div>
+                                    <div class="h4 text-white">R$ 2.4B</div>
+                                    <div class="text-success small">+5.2% 24h</div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="text-white-80 small">Volume 24h</div>
+                                    <div class="h4 text-white">R$ 42.5M</div>
+                                    <div class="text-success small">+18.3% 24h</div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="text-white-80 small">TCO2 Dominância</div>
+                                    <div class="h4 text-white">64.2%</div>
+                                    <div class="text-success small">+2.1% 24h</div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="text-white-80 small">Spread FTCO2/TCO2</div>
+                                    <div class="h4 text-white">13.5%</div>
+                                    <div class="text-success small">Arbitragem Ativa</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico e Trading Pairs -->
+                <div class="row mb-4">
+                    <div class="col-lg-8">
+                        <div class="card card-ipe mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-0">TCO2/BRL - Gráfico</h5>
+                                    <div class="small text-muted">Carbon Credit Token (TCO2) / Real Brasileiro</div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <select class="form-select form-select-sm" style="width: auto;">
+                                        <option>1D</option>
+                                        <option selected>7D</option>
+                                        <option>1M</option>
+                                        <option>3M</option>
+                                        <option>1Y</option>
+                                    </select>
+                                    <button class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-fullscreen"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="priceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="trading-pair">
+                                    <div class="trading-pair-header">
+                                        <div class="pair-name ftco2">FTCO2/BRL</div>
+                                        <div class="pair-price">R$ 42,15</div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted small">Alta 24h</span>
+                                        <span class="fw-medium">R$ 42,85</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted small">Baixa 24h</span>
+                                        <span class="fw-medium">R$ 40,92</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted small">Volume 24h</span>
+                                        <span class="fw-medium text-ftco2">1.2K FTCO2</span>
+                                    </div>
+                                    <div class="mt-3">
+                                        <span class="pair-change up">+2.35%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="trading-pair">
+                                    <div class="trading-pair-header">
+                                        <div class="pair-name tco2">TCO2/BRL</div>
+                                        <div class="pair-price">R$ 47,82</div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted small">Alta 24h</span>
+                                        <span class="fw-medium">R$ 48,15</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted small">Baixa 24h</span>
+                                        <span class="fw-medium">R$ 46,20</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted small">Volume 24h</span>
+                                        <span class="fw-medium text-tco2">850 TCO2</span>
+                                    </div>
+                                    <div class="mt-3">
+                                        <span class="pair-change up">+5.12%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <!-- Order Book -->
+                        <div class="card card-ipe mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Livro de Ofertas - TCO2/BRL</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="order-book">
+                                    <div class="order-book-header">
+                                        <span>Preço (BRL)</span>
+                                        <span>Quantidade</span>
+                                        <span>Total</span>
+                                    </div>
+                                    
+                                    <!-- Vendas (Ask) -->
+                                    <div class="order-row ask">
+                                        <span class="text-danger">R$ 48,15</span>
+                                        <span>12.5</span>
+                                        <span>R$ 601,88</span>
+                                    </div>
+                                    <div class="order-row ask">
+                                        <span class="text-danger">R$ 48,05</span>
+                                        <span>8.2</span>
+                                        <span>R$ 394,01</span>
+                                    </div>
+                                    <div class="order-row ask">
+                                        <span class="text-danger">R$ 47,95</span>
+                                        <span>15.0</span>
+                                        <span>R$ 719,25</span>
+                                    </div>
+                                    <div class="order-row ask">
+                                        <span class="text-danger">R$ 47,90</span>
+                                        <span>22.4</span>
+                                        <span>R$ 1.072,96</span>
+                                    </div>
+                                    <div class="order-row ask">
+                                        <span class="text-danger">R$ 47,85</span>
+                                        <span>18.7</span>
+                                        <span>R$ 894,80</span>
+                                    </div>
+                                    
+                                    <!-- Preço Atual -->
+                                    <div class="text-center my-3">
+                                        <div class="h4 text-tco2">R$ 47,82</div>
+                                        <div class="small text-muted">Preço de Mercado</div>
+                                    </div>
+                                    
+                                    <!-- Compras (Bid) -->
+                                    <div class="order-row bid">
+                                        <span class="text-success">R$ 47,80</span>
+                                        <span>14.3</span>
+                                        <span>R$ 683,54</span>
+                                    </div>
+                                    <div class="order-row bid">
+                                        <span class="text-success">R$ 47,75</span>
+                                        <span>9.8</span>
+                                        <span>R$ 467,95</span>
+                                    </div>
+                                    <div class="order-row bid">
+                                        <span class="text-success">R$ 47,70</span>
+                                        <span>21.5</span>
+                                        <span>R$ 1.025,55</span>
+                                    </div>
+                                    <div class="order-row bid">
+                                        <span class="text-success">R$ 47,65</span>
+                                        <span>7.2</span>
+                                        <span>R$ 343,08</span>
+                                    </div>
+                                    <div class="order-row bid">
+                                        <span class="text-success">R$ 47,60</span>
+                                        <span>16.4</span>
+                                        <span>R$ 780,64</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Trade -->
+                        <div class="card card-ipe">
+                            <div class="card-header">
+                                <h5 class="mb-0">Negociação Rápida</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="quick-trade">
+                                    <div class="trade-type-toggle">
+                                        <button class="trade-type-btn buy active" data-type="buy">COMPRAR</button>
+                                        <button class="trade-type-btn sell" data-type="sell">VENDER</button>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label small">Par de Negociação</label>
+                                        <select class="form-select" id="tradePair">
+                                            <option value="tco2/brl" selected>TCO2/BRL</option>
+                                            <option value="ftco2/brl">FTCO2/BRL</option>
+                                            <option value="tco2/usd">TCO2/USD</option>
+                                            <option value="ftco2/usd">FTCO2/USD</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label small">Tipo de Ordem</label>
+                                        <select class="form-select" id="orderType">
+                                            <option value="market" selected>Ordem a Mercado</option>
+                                            <option value="limit">Ordem Limitada</option>
+                                            <option value="stop">Ordem Stop</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label small">Quantidade</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="tradeQuantity" value="10" min="1" step="1">
+                                            <span class="input-group-text" id="tradeUnit">TCO2</span>
+                                        </div>
+                                        <div class="form-text text-end">
+                                            Disponível: <span id="availableBalance">520 TCO2</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3" id="limitPriceContainer" style="display: none;">
+                                        <label class="form-label small">Preço Limite (R$)</label>
+                                        <input type="number" class="form-control" id="limitPrice" step="0.01">
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-muted small">Preço Estimado</span>
+                                            <span class="fw-bold" id="estimatedPrice">R$ 478,20</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-muted small">Taxas (0.25%)</span>
+                                            <span class="text-muted small" id="tradeFees">R$ 1,20</span>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="fw-medium">Total</span>
+                                            <span class="fw-bold text-success" id="tradeTotal">R$ 479,40</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <button class="btn btn-success w-100" id="executeTrade">
+                                        <i class="bi bi-check-circle me-2"></i>EXECUTAR COMPRA
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Minha Carteira -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card card-ipe">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Minha Carteira</h5>
+                                <div class="small">
+                                    <span class="text-muted">Valor Total: </span>
+                                    <span class="fw-bold text-success">R$ 38.964,00</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-6 mb-3">
+                                        <div class="stats-card">
+                                            <div class="stats-number ftco2">350</div>
+                                            <div class="text-muted">FTCO2</div>
+                                            <div class="small mt-2">
+                                                <span class="badge bg-info">R$ 14.752,50</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 mb-3">
+                                        <div class="stats-card">
+                                            <div class="stats-number tco2">520</div>
+                                            <div class="text-muted">TCO2</div>
+                                            <div class="small mt-2">
+                                                <span class="badge bg-info">R$ 24.866,40</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 mb-3">
+                                        <div class="stats-card">
+                                            <div class="stats-number">R$ 25.420</div>
+                                            <div class="text-muted">Saldo BRL</div>
+                                            <div class="small mt-2">
+                                                <span class="badge bg-success">Disponível</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 mb-3">
+                                        <div class="stats-card">
+                                            <div class="stats-number negociador">8.2%</div>
+                                            <div class="text-muted">ROI 30D</div>
+                                            <div class="small mt-2">
+                                                <span class="badge bg-success">+R$ 2.954,00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h6>Distribuição da Carteira</h6>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar" style="width: 38%; background-color: var(--laranja-ftco2);">FTCO2</div>
+                                        <div class="progress-bar" style="width: 42%; background-color: var(--verde-tco2);">TCO2</div>
+                                        <div class="progress-bar" style="width: 20%; background-color: var(--azul-claro);">BRL</div>
+                                    </div>
+                                    <div class="row mt-2 text-center">
+                                        <div class="col-4">
+                                            <div class="small text-muted">FTCO2</div>
+                                            <div class="fw-bold">38%</div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="small text-muted">TCO2</div>
+                                            <div class="fw-bold">42%</div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="small text-muted">BRL</div>
+                                            <div class="fw-bold">20%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ordens Ativas e Histórico -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card card-ipe">
+                            <div class="card-header">
+                                <h5 class="mb-0">Ordens Ativas</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Par</th>
+                                                <th>Tipo</th>
+                                                <th>Preço</th>
+                                                <th>Quantidade</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="fw-medium">FTCO2/BRL</span></td>
+                                                <td><span class="badge bg-success">Compra</span></td>
+                                                <td>R$ 41,00</td>
+                                                <td>100</td>
+                                                <td>R$ 4.100,00</td>
+                                                <td><span class="badge bg-warning">Ativa</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="fw-medium">TCO2/BRL</span></td>
+                                                <td><span class="badge bg-danger">Venda</span></td>
+                                                <td>R$ 47,50</td>
+                                                <td>50</td>
+                                                <td>R$ 2.375,00</td>
+                                                <td><span class="badge bg-info">Parcial</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="fw-medium">TCO2/USD</span></td>
+                                                <td><span class="badge bg-success">Compra</span></td>
+                                                <td>$9.40</td>
+                                                <td>200</td>
+                                                <td>$1.880,00</td>
+                                                <td><span class="badge bg-warning">Ativa</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <a href="#" class="btn btn-outline-ipe btn-sm">Gerenciar Ordens</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card card-ipe">
+                            <div class="card-header">
+                                <h5 class="mb-0">Histórico Recente</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Hora</th>
+                                                <th>Par</th>
+                                                <th>Tipo</th>
+                                                <th>Preço</th>
+                                                <th>Quantidade</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>14:30</td>
+                                                <td>FTCO2/BRL</td>
+                                                <td><span class="badge bg-success">Compra</span></td>
+                                                <td>R$ 41,00</td>
+                                                <td>50</td>
+                                                <td>R$ 2.050,00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>11:15</td>
+                                                <td>TCO2/BRL</td>
+                                                <td><span class="badge bg-danger">Venda</span></td>
+                                                <td>R$ 47,50</td>
+                                                <td>30</td>
+                                                <td>R$ 1.425,00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>09:20</td>
+                                                <td>TCO2/BRL</td>
+                                                <td><span class="badge bg-success">Compra</span></td>
+                                                <td>R$ 46,80</td>
+                                                <td>100</td>
+                                                <td>R$ 4.680,00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ontem 16:45</td>
+                                                <td>TCO2/BRL</td>
+                                                <td><span class="badge bg-secondary">Burn</span></td>
+                                                <td>-</td>
+                                                <td>10</td>
+                                                <td>-</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <a href="#" class="btn btn-outline-ipe btn-sm">Ver Histórico Completo</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Elementos do DOM
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        
+        // Elementos de trading
+        const tradePairSelect = document.getElementById('tradePair');
+        const tradeUnit = document.getElementById('tradeUnit');
+        const availableBalance = document.getElementById('availableBalance');
+        const tradeQuantity = document.getElementById('tradeQuantity');
+        const orderTypeSelect = document.getElementById('orderType');
+        const limitPriceContainer = document.getElementById('limitPriceContainer');
+        const limitPriceInput = document.getElementById('limitPrice');
+        const estimatedPrice = document.getElementById('estimatedPrice');
+        const tradeFees = document.getElementById('tradeFees');
+        const tradeTotal = document.getElementById('tradeTotal');
+        const executeTradeBtn = document.getElementById('executeTrade');
+        const tradeTypeBtns = document.querySelectorAll('.trade-type-btn');
+        
+        // Dados de mercado
+        const marketData = {
+            'tco2/brl': { price: 47.82, unit: 'TCO2', available: 520, symbol: 'TCO2/BRL' },
+            'ftco2/brl': { price: 42.15, unit: 'FTCO2', available: 350, symbol: 'FTCO2/BRL' },
+            'tco2/usd': { price: 9.56, unit: 'TCO2', available: 520, symbol: 'TCO2/USD' },
+            'ftco2/usd': { price: 8.42, unit: 'FTCO2', available: 350, symbol: 'FTCO2/USD' }
+        };
+        
+        // Inicializar gráfico
+        let priceChart;
+        
+        // Alternar menu mobile
+        function toggleMobileMenu() {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.classList.toggle('show');
+        }
+        
+        // Fechar menu mobile
+        function closeMobileMenu() {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+        }
+        
+        // Atualizar dados de trading
+        function updateTradeData() {
+            const pair = tradePairSelect.value;
+            const data = marketData[pair];
+            const quantity = parseFloat(tradeQuantity.value) || 0;
+            const price = data.price;
+            const total = quantity * price;
+            const fees = total * 0.0025; // 0.25%
+            const finalTotal = total + fees;
+            
+            // Atualizar UI
+            tradeUnit.textContent = data.unit;
+            availableBalance.textContent = `${data.available} ${data.unit}`;
+            estimatedPrice.textContent = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            tradeFees.textContent = `R$ ${fees.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            tradeTotal.textContent = `R$ ${finalTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            
+            // Atualizar botão de execução
+            const isBuy = document.querySelector('.trade-type-btn.buy.active');
+            executeTradeBtn.textContent = isBuy ? 
+                `EXECUTAR COMPRA ${data.symbol}` : 
+                `EXECUTAR VENDA ${data.symbol}`;
+            executeTradeBtn.className = isBuy ? 
+                'btn btn-success w-100' : 
+                'btn btn-danger w-100';
+        }
+        
+        // Toggle tipo de ordem
+        function toggleOrderType() {
+            if (orderTypeSelect.value === 'limit') {
+                limitPriceContainer.style.display = 'block';
+                limitPriceInput.required = true;
+            } else {
+                limitPriceContainer.style.display = 'none';
+                limitPriceInput.required = false;
+            }
+            updateTradeData();
+        }
+        
+        // Executar trade
+        function executeTrade() {
+            const pair = tradePairSelect.value;
+            const data = marketData[pair];
+            const quantity = parseFloat(tradeQuantity.value) || 0;
+            const isBuy = document.querySelector('.trade-type-btn.buy.active');
+            const orderType = orderTypeSelect.options[orderTypeSelect.selectedIndex].text;
+            const price = data.price;
+            
+            if (quantity <= 0) {
+                alert('Por favor, insira uma quantidade válida.');
+                return;
+            }
+            
+            if (isBuy) {
+                if (confirm(`Confirmar compra de ${quantity} ${data.unit} a R$ ${price} cada? Total: R$ ${(quantity * price).toFixed(2)}`)) {
+                    alert(`Ordem de compra executada! ${quantity} ${data.unit} comprados com sucesso.`);
+                    
+                    // Animação de sucesso
+                    executeTradeBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>COMPRA EXECUTADA';
+                    executeTradeBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        executeTradeBtn.innerHTML = isBuy ? 
+                            `<i class="bi bi-check-circle me-2"></i>EXECUTAR COMPRA ${data.symbol}` : 
+                            `<i class="bi bi-check-circle me-2"></i>EXECUTAR VENDA ${data.symbol}`;
+                        executeTradeBtn.disabled = false;
+                    }, 2000);
+                }
+            } else {
+                if (confirm(`Confirmar venda de ${quantity} ${data.unit} a R$ ${price} cada? Total: R$ ${(quantity * price).toFixed(2)}`)) {
+                    alert(`Ordem de venda executada! ${quantity} ${data.unit} vendidos com sucesso.`);
+                    
+                    // Animação de sucesso
+                    executeTradeBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>VENDA EXECUTADA';
+                    executeTradeBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        executeTradeBtn.innerHTML = isBuy ? 
+                            `<i class="bi bi-check-circle me-2"></i>EXECUTAR COMPRA ${data.symbol}` : 
+                            `<i class="bi bi-check-circle me-2"></i>EXECUTAR VENDA ${data.symbol}`;
+                        executeTradeBtn.disabled = false;
+                    }, 2000);
+                }
+            }
+        }
+        
+        // Inicializar gráfico
+        function initChart() {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            
+            // Dados fictícios para o gráfico
+            const labels = [];
+            const data = [];
+            let currentPrice = 46.5;
+            
+            // Gerar dados dos últimos 7 dias
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                labels.push(date.toLocaleDateString('pt-BR', { weekday: 'short' }));
+                
+                // Variação aleatória de preço
+                const change = (Math.random() - 0.5) * 1.5;
+                currentPrice += change;
+                if (currentPrice < 45) currentPrice = 45 + Math.random() * 1;
+                if (currentPrice > 49) currentPrice = 49 - Math.random() * 1;
+                
+                data.push(parseFloat(currentPrice.toFixed(2)));
+            }
+            
+            priceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'TCO2/BRL',
+                        data: data,
+                        borderColor: 'rgba(45, 157, 120, 1)',
+                        backgroundColor: 'rgba(45, 157, 120, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `R$ ${context.parsed.y.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value;
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Simular atualização do ticker
+        function updateTicker() {
+            const tickerItems = document.querySelectorAll('.ticker-item');
+            
+            tickerItems.forEach(item => {
+                const priceElement = item.querySelector('.ticker-price');
+                const changeElement = item.querySelector('.ticker-change');
+                const volumeElement = item.querySelector('.ticker-volume');
+                
+                if (priceElement && changeElement) {
+                    // Pequena variação aleatória
+                    const currentPrice = parseFloat(priceElement.textContent.replace(/[^\d.,]/g, '').replace(',', '.'));
+                    const change = (Math.random() - 0.5) * 0.3;
+                    const newPrice = currentPrice + (currentPrice * change / 100);
+                    
+                    // Atualizar preço
+                    priceElement.textContent = priceElement.textContent.includes('R$') ? 
+                        `R$ ${newPrice.toFixed(2).replace('.', ',')}` :
+                        priceElement.textContent.includes('$') ? 
+                        `$${newPrice.toFixed(2)}` :
+                        `€${newPrice.toFixed(2)}`;
+                    
+                    // Atualizar variação
+                    const isPositive = change >= 0;
+                    changeElement.textContent = `${isPositive ? '+' : ''}${change.toFixed(2)}%`;
+                    changeElement.className = `ticker-change ${isPositive ? 'positive' : 'negative'}`;
+                    
+                    // Atualizar volume (ligeira variação)
+                    if (volumeElement && volumeElement.textContent.includes('Vol:')) {
+                        const currentVol = parseFloat(volumeElement.textContent.replace(/[^\d.]/g, ''));
+                        const volChange = Math.random() * 50 - 25;
+                        const newVol = Math.max(100, currentVol + volChange);
+                        volumeElement.textContent = `Vol: ${Math.round(newVol)}`;
+                    }
+                }
+            });
+        }
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menu mobile
+            mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            sidebarOverlay.addEventListener('click', closeMobileMenu);
+            
+            // Fechar menu ao redimensionar
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Fechar menu ao clicar em links
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+            
+            // Inicializar gráfico
+            initChart();
+            
+            // Configurar trading
+            updateTradeData();
+            
+            // Event listeners para trading
+            tradePairSelect.addEventListener('change', updateTradeData);
+            tradeQuantity.addEventListener('input', updateTradeData);
+            orderTypeSelect.addEventListener('change', toggleOrderType);
+            executeTradeBtn.addEventListener('click', executeTrade);
+            
+            // Toggle buy/sell
+            tradeTypeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    tradeTypeBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    updateTradeData();
+                });
+            });
+            
+            // Inicializar limite de preço
+            toggleOrderType();
+            
+            // Simular atualizações de mercado
+            setInterval(updateTicker, 5000); // Atualizar ticker a cada 5 segundos
+            
+            // Atualizar gráfico periodicamente
+            setInterval(() => {
+                if (priceChart) {
+                    const lastPrice = priceChart.data.datasets[0].data[priceChart.data.datasets[0].data.length - 1];
+                    const change = (Math.random() - 0.5) * 0.5;
+                    const newPrice = lastPrice + (lastPrice * change / 100);
+                    
+                    // Adicionar novo ponto e remover o mais antigo
+                    priceChart.data.labels.push(new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }));
+                    priceChart.data.labels.shift();
+                    priceChart.data.datasets[0].data.push(parseFloat(newPrice.toFixed(2)));
+                    priceChart.data.datasets[0].data.shift();
+                    
+                    priceChart.update('none');
+                }
+            }, 10000); // Atualizar gráfico a cada 10 segundos
+        });
+    </script>
+</body>
+</html>

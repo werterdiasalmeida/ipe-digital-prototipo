@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel TCO2 - Ipê Digital</title>
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Estilos personalizados -->
+    <style>
+        :root {
+            /* Tons de Azul atualizados (mais elegante) */
+            --azul-ipe: #343A40;           /* Azul grafite - mais elegante */
+            --azul-destaque: #2d3748;      /* Azul escuro */
+            --azul-secundario: #4a5568;    /* Azul médio */
+            --azul-claro: #3182ce;         /* Azul claro */
+            --azul-suave: #90cdf4;         /* Azul muito claro */
+            
+            /* Tons de neutros */
+            --cinza-claro: #F8F9FA;
+            --cinza-medio: #6C757D;
+            --cinza-escuro: #212529;
+            
+            /* Cores funcionais */
+            --verde-sucesso: #38a169;
+            --verde-tco2: #2d9d78;         /* Verde específico para TCO2 */
+            --laranja-alerta: #dd6b20;
+            --laranja-ftco2: #ed8936;
+            --vermelho-erro: #e53e3e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--cinza-claro);
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--azul-ipe);
+            color: white;
+            min-height: 100vh;
+            padding: 0;
+            transition: all 0.3s;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1030;
+            width: 250px;
+        }
+        
+        .sidebar .navbar-brand {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .navbar-brand img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left-color: var(--azul-claro);
+        }
+        
+        .sidebar .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        
+        /* Header */
+        .main-header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--azul-suave);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--azul-ipe);
+            font-weight: bold;
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--azul-ipe);
+            font-size: 1.5rem;
+            padding: 5px 10px;
+        }
+        
+        /* Cards */
+        .card-ipe {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .btn-ipe {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-ipe:hover {
+            background-color: var(--azul-destaque);
+            color: white;
+        }
+        
+        .btn-outline-ipe {
+            border: 2px solid var(--azul-ipe);
+            color: var(--azul-ipe);
+            background-color: transparent;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-outline-ipe:hover {
+            background-color: var(--azul-ipe);
+            color: white;
+        }
+        
+        .btn-tco2 {
+            background-color: var(--verde-tco2);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-tco2:hover {
+            background-color: #2a8b6d;
+            color: white;
+        }
+        
+        .text-ipe {
+            color: var(--azul-ipe);
+        }
+        
+        .text-tco2 {
+            color: var(--verde-tco2);
+        }
+        
+        /* TCO2 Badge */
+        .badge-tco2 {
+            background-color: rgba(45, 157, 120, 0.1);
+            color: var(--verde-tco2);
+            border: 1px solid rgba(45, 157, 120, 0.2);
+        }
+        
+        /* Stats Cards */
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: white;
+            transition: transform 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--verde-tco2);
+        }
+        
+        /* TCO2 Cards */
+        .tco2-card {
+            border-left: 4px solid var(--verde-tco2);
+            transition: transform 0.3s ease;
+        }
+        
+        .tco2-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Progress Bar */
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        .progress-bar-tco2 {
+            background-color: var(--verde-tco2);
+        }
+        
+        /* Price Tag */
+        .price-tag {
+            display: inline-block;
+            background-color: rgba(45, 157, 120, 0.1);
+            color: var(--verde-tco2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        /* Table Styles */
+        .table-ipe {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .table-ipe thead th {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+            font-weight: 500;
+        }
+        
+        .table-ipe tbody tr:hover {
+            background-color: rgba(52, 58, 64, 0.05);
+        }
+        
+        /* Filter Bar */
+        .filter-bar {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        /* Burn Button */
+        .btn-burn {
+            background-color: var(--laranja-alerta);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-burn:hover {
+            background-color: #c05621;
+            color: white;
+        }
+        
+        /* Certificate Badge */
+        .certificate-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(56, 161, 105, 0.1);
+            color: var(--verde-sucesso);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        /* Market Price */
+        .market-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--verde-tco2);
+        }
+        
+        .price-change {
+            font-size: 0.85rem;
+        }
+        
+        .price-change.positive {
+            color: var(--verde-sucesso);
+        }
+        
+        .price-change.negative {
+            color: var(--vermelho-erro);
+        }
+        
+        /* Mobile-first adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1029;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+            }
+            
+            .user-info .d-none.d-md-block {
+                display: none !important;
+            }
+            
+            .stats-number {
+                font-size: 1.5rem;
+            }
+            
+            .btn-ipe, .btn-outline-ipe, .btn-tco2 {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .main-content {
+                margin-left: 250px;
+            }
+            
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar d-flex flex-column" id="sidebar">
+        <div class="navbar-brand">
+            <img src="logo.png" alt="Ipê Digital" class="d-inline-block">
+            <span class="fw-bold ms-2 text-white">Ipê Digital</span>
+        </div>
+        
+        <div class="flex-grow-1">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-proprietario.html">
+                        <i class="bi bi-house-door"></i>
+                        <span class="nav-text">Painel Principal</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cadastro-projeto.html">
+                        <i class="bi bi-folder-plus"></i>
+                        <span class="nav-text">Cadastrar Projeto</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="acompanhamento-projeto.html">
+                        <i class="bi bi-clipboard-data"></i>
+                        <span class="nav-text">Acompanhar Projetos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-ftco2.html">
+                        <i class="bi bi-tags"></i>
+                        <span class="nav-text">FTCO2 Disponíveis</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="acompanhamento-certificacao.html">
+                        <i class="bi bi-shield-check"></i>
+                        <span class="nav-text">Certificação TCO2</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="painel-tco2.html">
+                        <i class="bi bi-currency-exchange"></i>
+                        <span class="nav-text">TCO2 Disponíveis</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="mesa-negociacao.html">
+                        <i class="bi bi-arrow-left-right"></i>
+                        <span class="nav-text">Mesa de Negociação</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="cadastro-anuncio.html">
+                        <i class="bi bi-megaphone"></i>
+                        <span class="nav-text">Criar Anúncio</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="painel-burn.html">
+                        <i class="bi bi-fire"></i>
+                        <span class="nav-text">Aposentar Créditos</span>
+                    </a>
+                </li>
+                <hr class="text-white-50 mx-3 my-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="meu-perfil.html">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="nav-text">Meu Perfil</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span class="nav-text">Sair</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="p-3 border-top border-white-10">
+            <div class="text-center small opacity-75">
+                <i class="bi bi-shield-lock"></i> Ambiente Seguro
+                <br>
+                <small>Conectado via Blockchain</small>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-8 col-md-6">
+                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <h1 class="h4 mb-0 d-inline-block ms-2">Painel TCO2</h1>
+                        <span class="badge badge-tco2 ms-2">Créditos Certificados</span>
+                    </div>
+                    <div class="col-4 col-md-6">
+                        <div class="d-flex justify-content-end align-items-center gap-3">
+                            <!-- Notificações -->
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm position-relative" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-bell"></i>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        4
+                                    </span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><h6 class="dropdown-header">Notificações TCO2</h6></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-cash-coin text-success me-2"></i>Venda de 100 TCO2 realizada</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-up-right text-primary me-2"></i>Preço de mercado subiu 5%</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check text-success me-2"></i>Novo lote certificado</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-clock text-warning me-2"></i>Oferta de compra expirando</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-center" href="#">Ver todas</a></li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Perfil do Usuário -->
+                            <div class="dropdown">
+                                <button class="btn btn-link text-decoration-none text-dark p-0" type="button" data-bs-toggle="dropdown">
+                                    <div class="user-info">
+                                        <div class="user-avatar">JS</div>
+                                        <div class="d-none d-md-block">
+                                            <div class="fw-medium">João Silva</div>
+                                            <div class="small text-muted">Proprietário</div>
+                                        </div>
+                                        <i class="bi bi-chevron-down"></i>
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="meu-perfil.html"><i class="bi bi-person-circle me-2"></i>Meu Perfil</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="index.html"><i class="bi bi-box-arrow-left me-2"></i>Sair</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="py-4">
+            <div class="container-fluid">
+                <!-- Estatísticas TCO2 -->
+                <div class="row mb-4">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-number">1.23K</div>
+                            <div class="text-muted">TCO2 Totais</div>
+                            <div class="small mt-2">
+                                <span class="badge bg-info">R$ 49.2K valor total</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-number">420</div>
+                            <div class="text-muted">TCO2 Vendidos</div>
+                            <div class="small mt-2">
+                                <span class="badge bg-success">+22% este mês</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="stats-number">R$ 16.8K</div>
+                            <div class="text-muted">Receita Total</div>
+                            <div class="small mt-2">
+                                <span class="badge bg-success">R$ 4.2K este mês</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card">
+                            <div class="market-price">R$ 47,20</div>
+                            <div class="text-muted">Preço Médio/TCO2</div>
+                            <div class="small mt-2">
+                                <span class="price-change positive">+8.2% vs. FTCO2</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de Ações e Filtros -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="filter-bar card-ipe">
+                            <div class="row align-items-center">
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <h5 class="mb-0">Meus TCO2 Certificados</h5>
+                                    <p class="text-muted small mb-0">Gerencie e negocie seus créditos de carbono certificados</p>
+                                </div>
+                                <div class="col-md-5 mb-3 mb-md-0">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <select class="form-select form-select-sm" id="projectFilter">
+                                            <option value="">Todos os Projetos</option>
+                                            <option value="cerrado">Cerrado Regenerativo</option>
+                                            <option value="mata">Mata Atlântica</option>
+                                            <option value="floresta">Floresta Amazônica</option>
+                                        </select>
+                                        <select class="form-select form-select-sm" id="statusFilter">
+                                            <option value="">Todos os Status</option>
+                                            <option value="available">Disponíveis</option>
+                                            <option value="reserved">Reservados</option>
+                                            <option value="sold">Vendidos</option>
+                                            <option value="burned">Aposentados</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <button class="btn btn-tco2 btn-sm" data-bs-toggle="modal" data-bs-target="#createSaleModal">
+                                            <i class="bi bi-megaphone me-1"></i>Criar Anúncio
+                                        </button>
+                                        <button class="btn btn-burn btn-sm" data-bs-toggle="modal" data-bs-target="#burnModal">
+                                            <i class="bi bi-fire me-1"></i>Aposentar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações do Mercado -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card card-ipe">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Mercado TCO2</h5>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        Últimos 30 dias
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Últimos 7 dias</a></li>
+                                        <li><a class="dropdown-item" href="#">Últimos 30 dias</a></li>
+                                        <li><a class="dropdown-item" href="#">Últimos 90 dias</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card bg-light border-0 mb-3">
+                                            <div class="card-body">
+                                                <h6>Preço de Mercado</h6>
+                                                <div class="market-price mb-2">R$ 47,20</div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="text-muted small">Mínimo: R$ 45,80</span>
+                                                    <span class="text-muted small">Máximo: R$ 48,50</span>
+                                                </div>
+                                                <div class="price-change positive mt-2">
+                                                    <i class="bi bi-arrow-up-right me-1"></i>+5.2% este mês
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card bg-light border-0 mb-3">
+                                            <div class="card-body">
+                                                <h6>Volume Negociado</h6>
+                                                <div class="h4 text-tco2 mb-2">850 TCO2</div>
+                                                <div class="text-muted small">Total na plataforma Ipê Digital</div>
+                                                <div class="price-change positive mt-2">
+                                                    <i class="bi bi-graph-up-arrow me-1"></i>+18% vs. mês anterior
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <h6>Comparativo FTCO2 vs TCO2</h6>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="text-center">
+                                                <div class="text-ftco2 fw-bold">R$ 42,00</div>
+                                                <div class="small text-muted">Preço médio FTCO2</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center">
+                                                <div class="text-tco2 fw-bold">R$ 47,20</div>
+                                                <div class="small text-muted">Preço médio TCO2</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="progress mt-2" style="height: 20px;">
+                                        <div class="progress-bar" style="width: 47%; background-color: var(--laranja-ftco2);">FTCO2</div>
+                                        <div class="progress-bar" style="width: 53%; background-color: var(--verde-tco2);">TCO2</div>
+                                    </div>
+                                    <div class="text-center small text-muted mt-1">
+                                        Valorização: <span class="text-success fw-bold">+12.4%</span> na conversão
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-ipe h-100">
+                            <div class="card-header">
+                                <h5 class="mb-0">Certificações e Verificações</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center mb-4">
+                                    <i class="bi bi-shield-check fs-1 text-tco2 mb-3"></i>
+                                    <h6>Créditos Verificados</h6>
+                                    <p class="text-muted small">Todos os TCO2 possuem certificação independente</p>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="certificate-badge mb-2">
+                                        <i class="bi bi-patch-check-fill me-2"></i>
+                                        VCS Verified Carbon Standard
+                                    </div>
+                                    <div class="certificate-badge mb-2">
+                                        <i class="bi bi-patch-check-fill me-2"></i>
+                                        ART - Architecture for REDD+
+                                    </div>
+                                    <div class="certificate-badge">
+                                        <i class="bi bi-patch-check-fill me-2"></i>
+                                        SBCE - Lei 15.042/2024
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h6>Registro Blockchain</h6>
+                                    <div class="small text-muted">
+                                        <i class="bi bi-link-45deg me-1"></i>
+                                        Hash: 0x8a3b...c4d2
+                                    </div>
+                                    <div class="small text-muted">
+                                        <i class="bi bi-calendar me-1"></i>
+                                        Certificado em: 20/12/2025
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-outline-ipe w-100 mt-3">
+                                    <i class="bi bi-qr-code me-2"></i>Verificar no Blockchain
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de TCO2 -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card card-ipe">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Meus TCO2</h5>
+                                <div class="small text-muted">
+                                    Total: <span class="fw-bold text-tco2">1.230 TCO2</span> certificados
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-ipe table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Projeto / Certificado</th>
+                                                <th>TCO2</th>
+                                                <th>Status</th>
+                                                <th>Preço Unitário</th>
+                                                <th>Valor Total</th>
+                                                <th>Data Certificação</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- TCO2 1 -->
+                                            <tr>
+                                                <td>
+                                                    <div class="fw-medium">Cerrado Regenerativo</div>
+                                                    <div class="small text-muted">Certificado #TCO2-2025-001</div>
+                                                    <div class="certificate-badge small">
+                                                        <i class="bi bi-patch-check-fill me-1"></i>VCS
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold text-tco2">850</div>
+                                                    <div class="small text-muted">Disponíveis: 430</div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-success">Disponível</span>
+                                                    <div class="small text-muted">420 vendidos</div>
+                                                </td>
+                                                <td>
+                                                    <div class="price-tag">R$ 47,20</div>
+                                                    <div class="small text-muted">Mercado: R$ 46-48</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold">R$ 40.120,00</div>
+                                                    <div class="small text-success">R$ 19.824,00 vendido</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-medium">20/12/2025</div>
+                                                    <div class="small text-muted">Válido até: 20/12/2030</div>
+                                                </td>
+                                                <td>
+                                                    <div class="action-buttons">
+                                                        <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal" data-bs-target="#sellModal">
+                                                            <i class="bi bi-cash-coin"></i> Vender
+                                                        </button>
+                                                        <button class="btn btn-burn btn-sm" data-bs-toggle="modal" data-bs-target="#burnModal">
+                                                            <i class="bi bi-fire"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            
+                                            <!-- TCO2 2 -->
+                                            <tr>
+                                                <td>
+                                                    <div class="fw-medium">Mata Atlântica Certificada</div>
+                                                    <div class="small text-muted">Certificado #TCO2-2025-002</div>
+                                                    <div class="certificate-badge small">
+                                                        <i class="bi bi-patch-check-fill me-1"></i>ART
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold text-tco2">380</div>
+                                                    <div class="small text-muted">Disponíveis: 380</div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-success">Disponível</span>
+                                                    <div class="small text-muted">0 vendidos</div>
+                                                </td>
+                                                <td>
+                                                    <div class="price-tag">R$ 48,50</div>
+                                                    <div class="small text-muted">Mercado: R$ 47-49</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold">R$ 18.430,00</div>
+                                                    <div class="small text-muted">Ainda não vendido</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-medium">15/01/2026</div>
+                                                    <div class="small text-muted">Válido até: 15/01/2031</div>
+                                                </td>
+                                                <td>
+                                                    <div class="action-buttons">
+                                                        <button class="btn btn-outline-ipe btn-sm" data-bs-toggle="modal" data-bs-target="#sellModal">
+                                                            <i class="bi bi-cash-coin"></i> Vender
+                                                        </button>
+                                                        <button class="btn btn-outline-secondary btn-sm">
+                                                            <i class="bi bi-graph-up"></i> Preço
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            
+                                            <!-- TCO2 3 (Aposentado) -->
+                                            <tr class="table-secondary">
+                                                <td>
+                                                    <div class="fw-medium">Floresta Amazônica</div>
+                                                    <div class="small text-muted">Certificado #TCO2-2024-005</div>
+                                                    <div class="certificate-badge small">
+                                                        <i class="bi bi-patch-check-fill me-1"></i>VCS
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold text-muted">100</div>
+                                                    <div class="small text-muted">Aposentados: 100</div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-secondary">Aposentado</span>
+                                                    <div class="small text-muted">Compensação realizada</div>
+                                                </td>
+                                                <td>
+                                                    <div class="text-muted">R$ 45,00</div>
+                                                    <div class="small text-muted">Preço na venda</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold text-muted">R$ 4.500,00</div>
+                                                    <div class="small text-success">Compensação concluída</div>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-medium">10/11/2025</div>
+                                                    <div class="small text-muted">Aposentado: 15/01/2026</div>
+                                                </td>
+                                                <td>
+                                                    <div class="action-buttons">
+                                                        <button class="btn btn-outline-secondary btn-sm" disabled>
+                                                            <i class="bi bi-check-circle"></i> Finalizado
+                                                        </button>
+                                                        <button class="btn btn-outline-ipe btn-sm">
+                                                            <i class="bi bi-receipt"></i> Certificado
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ofertas e Transações Recentes -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card card-ipe">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Ofertas de Compra Recebidas</h5>
+                                <span class="badge bg-primary">2 novas ofertas</span>
+                            </div>
+                            <div class="card-body">
+                                <!-- Oferta 1 -->
+                                <div class="card border-0 bg-light mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <div>
+                                                <h6 class="mb-1">Empresa XYZ Industrial</h6>
+                                                <div class="small text-muted">Compensação regulatória SBCE</div>
+                                            </div>
+                                            <span class="badge bg-warning">48h restantes</span>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <div class="small text-muted">TCO2 Solicitados</div>
+                                                <div class="fw-bold text-tco2">200 TCO2</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="small text-muted">Oferta por TCO2</div>
+                                                <div class="fw-bold text-success">R$ 47,50</div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1">
+                                                <i class="bi bi-check-lg me-1"></i>Aceitar
+                                            </button>
+                                            <button class="btn btn-outline-danger btn-sm">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                            <button class="btn btn-outline-ipe btn-sm">
+                                                <i class="bi bi-chat"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Oferta 2 -->
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <div>
+                                                <h6 class="mb-1">Fundo de Investimento Verde</h6>
+                                                <div class="small text-muted">Portfólio ESG de longo prazo</div>
+                                            </div>
+                                            <span class="badge bg-info">Nova</span>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <div class="small text-muted">TCO2 Solicitados</div>
+                                                <div class="fw-bold text-tco2">500 TCO2</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="small text-muted">Oferta por TCO2</div>
+                                                <div class="fw-bold text-success">R$ 46,80</div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-success btn-sm flex-grow-1">
+                                                <i class="bi bi-check-lg me-1"></i>Aceitar
+                                            </button>
+                                            <button class="btn btn-outline-danger btn-sm">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                            <button class="btn btn-outline-ipe btn-sm">
+                                                <i class="bi bi-chat"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card card-ipe">
+                            <div class="card-header">
+                                <h5 class="mb-0">Transações Recentes</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group list-group-flush">
+                                    <!-- Transação 1 -->
+                                    <div class="list-group-item px-0 py-3">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-1">Venda de TCO2</h6>
+                                                <p class="text-muted small mb-0">100 TCO2 - Cerrado Regenerativo</p>
+                                                <div class="small">
+                                                    <i class="bi bi-building me-1"></i>Empresa ABC
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <div class="fw-bold text-success">R$ 4.720,00</div>
+                                                <div class="small text-muted">R$ 47,20/TCO2</div>
+                                                <div class="small text-muted">15/01/2026</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Transação 2 -->
+                                    <div class="list-group-item px-0 py-3">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-1">Aposentadoria (Burn)</h6>
+                                                <p class="text-muted small mb-0">50 TCO2 - Mata Atlântica</p>
+                                                <div class="small">
+                                                    <i class="bi bi-fire text-warning me-1"></i>Compensação corporativa
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <div class="fw-bold text-tco2">50 TCO2</div>
+                                                <div class="small text-muted">Removidos do mercado</div>
+                                                <div class="small text-muted">10/01/2026</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Transação 3 -->
+                                    <div class="list-group-item px-0 py-3">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-1">Venda em Lote</h6>
+                                                <p class="text-muted small mb-0">320 TCO2 - Cerrado Regenerativo</p>
+                                                <div class="small">
+                                                    <i class="bi bi-building me-1"></i>Companhia Energética
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <div class="fw-bold text-success">R$ 15.104,00</div>
+                                                <div class="small text-muted">R$ 47,20/TCO2</div>
+                                                <div class="small text-muted">05/01/2026</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center mt-3">
+                                    <a href="#" class="btn btn-outline-ipe btn-sm">
+                                        <i class="bi bi-clock-history me-1"></i>Ver Histórico Completo
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Criar Anúncio de Venda -->
+    <div class="modal fade" id="createSaleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Criar Anúncio de Venda TCO2</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createSaleForm">
+                        <div class="mb-3">
+                            <label class="form-label">Selecionar Certificado TCO2</label>
+                            <select class="form-select" required>
+                                <option value="">Escolha um certificado</option>
+                                <option value="cerrado">Cerrado Regenerativo (430 TCO2 disponíveis)</option>
+                                <option value="mata">Mata Atlântica Certificada (380 TCO2 disponíveis)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Quantidade de TCO2</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" min="1" max="500" value="100" required>
+                                    <span class="input-group-text">TCO2</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Preço por TCO2</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="number" class="form-control" min="1" step="0.01" value="47.20" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Venda</label>
+                            <select class="form-select" required>
+                                <option value="fixed">Preço Fixo</option>
+                                <option value="negotiable">Negociável</option>
+                                <option value="auction">Leilão (melhor oferta em 7 dias)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Destino dos Créditos</label>
+                            <select class="form-select" required>
+                                <option value="any">Qualquer finalidade</option>
+                                <option value="compliance">Conformidade Regulatória (SBCE)</option>
+                                <option value="voluntary">Mercado Voluntário</option>
+                                <option value="esg">ESG Corporativo</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="saleTerms" required>
+                            <label class="form-check-label" for="saleTerms">
+                                Declaro que estou vendendo créditos de carbono certificados legítimos
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="createSaleForm" class="btn btn-tco2">Publicar Anúncio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Aposentar TCO2 -->
+    <div class="modal fade" id="burnModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Aposentar TCO2 (Burn)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Atenção:</strong> A aposentadoria (burn) remove permanentemente os créditos do mercado para compensação de emissões.
+                    </div>
+                    
+                    <form id="burnForm">
+                        <div class="mb-3">
+                            <label class="form-label">Selecionar Certificado para Aposentadoria</label>
+                            <select class="form-select" required>
+                                <option value="">Escolha um certificado</option>
+                                <option value="cerrado">Cerrado Regenerativo (430 TCO2 disponíveis)</option>
+                                <option value="mata">Mata Atlântica Certificada (380 TCO2 disponíveis)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Quantidade de TCO2 para Aposentar</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" min="1" max="100" value="10" required>
+                                <span class="input-group-text">TCO2</span>
+                            </div>
+                            <div class="form-text">Equivalente a 10 toneladas de CO₂ removidas/evitadas</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Motivo da Aposentadoria</label>
+                            <select class="form-select" required>
+                                <option value="">Selecione o motivo</option>
+                                <option value="corporate">Compensação Corporativa</option>
+                                <option value="event">Compensação de Evento</option>
+                                <option value="product">Neutralização de Produto</option>
+                                <option value="voluntary">Ação Voluntária de Clima</option>
+                                <option value="other">Outro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Certificado de Aposentadoria</label>
+                            <input type="text" class="form-control" placeholder="Nome para o certificado (ex: 'Compensação Corporativa 2026')" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Informações Adicionais (Opcional)</label>
+                            <textarea class="form-control" rows="2" placeholder="Detalhes sobre a compensação..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="burnConfirm" required>
+                            <label class="form-check-label" for="burnConfirm">
+                                Confirmo que desejo aposentar permanentemente estes créditos de carbono para compensação de emissões
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="burnForm" class="btn btn-burn">Confirmar Aposentadoria</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Elementos do DOM
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const projectFilter = document.getElementById('projectFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        
+        // Alternar menu mobile
+        function toggleMobileMenu() {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.classList.toggle('show');
+        }
+        
+        // Fechar menu mobile
+        function closeMobileMenu() {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+        }
+        
+        // Filtrar TCO2
+        function filterTCO2() {
+            const projectValue = projectFilter.value;
+            const statusValue = statusFilter.value;
+            const rows = document.querySelectorAll('.table-ipe tbody tr');
+            
+            rows.forEach(row => {
+                let showRow = true;
+                
+                // Filtrar por projeto (simulação)
+                if (projectValue) {
+                    const projectText = row.querySelector('td:first-child .fw-medium').textContent;
+                    if (!projectText.toLowerCase().includes(projectValue)) {
+                        showRow = false;
+                    }
+                }
+                
+                // Filtrar por status (simulação)
+                if (statusValue) {
+                    const statusBadge = row.querySelector('td:nth-child(3) .badge').textContent;
+                    const statusMap = {
+                        'available': 'Disponível',
+                        'reserved': 'Reservado',
+                        'sold': 'Vendido',
+                        'burned': 'Aposentado'
+                    };
+                    
+                    if (statusValue && statusMap[statusValue] !== statusBadge) {
+                        showRow = false;
+                    }
+                }
+                
+                row.style.display = showRow ? '' : 'none';
+            });
+        }
+        
+        // Aceitar oferta
+        function acceptOffer(button) {
+            const card = button.closest('.card');
+            const badge = card.querySelector('.badge');
+            const buttons = card.querySelectorAll('.btn');
+            
+            badge.className = 'badge bg-success';
+            badge.textContent = 'Aceita';
+            
+            buttons.forEach(btn => {
+                if (btn.classList.contains('btn-success')) {
+                    btn.className = 'btn btn-outline-secondary btn-sm flex-grow-1';
+                    btn.innerHTML = '<i class="bi bi-check-circle me-1"></i>Aceito';
+                    btn.disabled = true;
+                } else if (btn.classList.contains('btn-outline-danger')) {
+                    btn.className = 'btn btn-outline-secondary btn-sm';
+                    btn.innerHTML = '<i class="bi bi-receipt"></i>';
+                }
+            });
+            
+            // Atualizar contador de notificações
+            const notificationBadge = document.querySelector('.main-header .badge.bg-danger');
+            if (notificationBadge) {
+                let count = parseInt(notificationBadge.textContent);
+                if (count > 0) {
+                    notificationBadge.textContent = count - 1;
+                }
+            }
+            
+            // Mostrar mensagem de sucesso
+            alert('Oferta aceita! A transação será processada em breve.');
+        }
+        
+        // Rejeitar oferta
+        function rejectOffer(button) {
+            const card = button.closest('.card');
+            card.style.opacity = '0.5';
+            setTimeout(() => {
+                card.style.display = 'none';
+            }, 300);
+            
+            // Atualizar contador de notificações
+            const notificationBadge = document.querySelector('.main-header .badge.bg-danger');
+            if (notificationBadge) {
+                let count = parseInt(notificationBadge.textContent);
+                if (count > 0) {
+                    notificationBadge.textContent = count - 1;
+                }
+            }
+            
+            alert('Oferta rejeitada.');
+        }
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menu mobile
+            mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            sidebarOverlay.addEventListener('click', closeMobileMenu);
+            
+            // Fechar menu ao redimensionar
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Fechar menu ao clicar em links
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+            
+            // Filtros
+            projectFilter.addEventListener('change', filterTCO2);
+            statusFilter.addEventListener('change', filterTCO2);
+            
+            // Botões de aceitar oferta
+            document.querySelectorAll('.btn-success:not([type="submit"])').forEach(button => {
+                if (button.textContent.includes('Aceitar')) {
+                    button.addEventListener('click', function() {
+                        acceptOffer(this);
+                    });
+                }
+            });
+            
+            // Botões de rejeitar oferta
+            document.querySelectorAll('.btn-outline-danger').forEach(button => {
+                if (button.innerHTML.includes('bi-x-lg')) {
+                    button.addEventListener('click', function() {
+                        rejectOffer(this);
+                    });
+                }
+            });
+            
+            // Formulário de criar anúncio
+            const createSaleForm = document.getElementById('createSaleForm');
+            if (createSaleForm) {
+                createSaleForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Anúncio de venda publicado com sucesso! Seus TCO2 estarão visíveis na mesa de negociação.');
+                    
+                    // Fechar modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('createSaleModal'));
+                    modal.hide();
+                });
+            }
+            
+            // Formulário de aposentadoria (burn)
+            const burnForm = document.getElementById('burnForm');
+            if (burnForm) {
+                burnForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (confirm('Tem certeza que deseja aposentar estes créditos permanentemente? Esta ação não pode ser desfeita.')) {
+                        alert('TCO2 aposentados com sucesso! Um certificado de compensação será emitido.');
+                        
+                        // Fechar modal
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('burnModal'));
+                        modal.hide();
+                        
+                        // Redirecionar para certificado de aposentadoria
+                        setTimeout(() => {
+                            window.location.href = 'painel-burn.html';
+                        }, 1000);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
