@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ipê Digital - Painel Público de Transparência</title>
+
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Estilos personalizados -->
+    <style>
+        :root {
+            /* Tons de Azul (baseado na logomarca) */
+            --azul-ipe: #1a365d;
+            --azul-destaque: #2d3748;
+            --azul-secundario: #4a5568;
+            --azul-claro: #3182ce;
+            --azul-suave: #90cdf4;
+
+            /* Tons de neutros */
+            --cinza-claro: #F8F9FA;
+            --cinza-medio: #6C757D;
+            --cinza-escuro: #343A40;
+
+            /* Cores funcionais */
+            --verde-sucesso: #38a169;
+            --laranja-alerta: #dd6b20;
+            --vermelho-erro: #e53e3e;
+            --roxo-projeto: #805ad5;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--cinza-escuro);
+            background-color: var(--cinza-claro);
+        }
+
+        .navbar-brand img {
+            height: 40px;
+            width: auto;
+        }
+
+        .btn-ipe {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-ipe:hover {
+            background-color: var(--azul-destaque);
+            color: white;
+        }
+
+        .card-ipe {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+
+        .card-ipe:hover {
+            transform: translateY(-5px);
+        }
+
+        .bg-ipe {
+            background-color: var(--azul-ipe);
+            color: white;
+        }
+
+        .text-ipe {
+            color: var(--azul-ipe);
+        }
+
+        /* Status badges */
+        .badge-em-analise {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: var(--cinza-medio);
+            border: 1px solid var(--cinza-medio);
+        }
+
+        .badge-homologado {
+            background-color: rgba(56, 161, 105, 0.1);
+            color: var(--verde-sucesso);
+            border: 1px solid var(--verde-sucesso);
+        }
+
+        .badge-em-certificacao {
+            background-color: rgba(49, 130, 206, 0.1);
+            color: var(--azul-claro);
+            border: 1px solid var(--azul-claro);
+        }
+
+        .badge-suspenso {
+            background-color: rgba(229, 62, 62, 0.1);
+            color: var(--vermelho-erro);
+            border: 1px solid var(--vermelho-erro);
+        }
+
+        .badge-ftco2 {
+            background-color: rgba(221, 107, 32, 0.1);
+            color: var(--laranja-alerta);
+            border: 1px solid var(--laranja-alerta);
+        }
+
+        .badge-tco2 {
+            background-color: rgba(56, 161, 105, 0.1);
+            color: var(--verde-sucesso);
+            border: 1px solid var(--verde-sucesso);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: white;
+            height: 100%;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--azul-claro);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--cinza-medio);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table-transparent {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-transparent th {
+            background-color: var(--azul-ipe);
+            color: white;
+            border: none;
+        }
+
+        .table-transparent td {
+            border-color: #f0f0f0;
+        }
+
+        .hero-painel {
+            background: linear-gradient(135deg, rgba(26, 54, 93, 0.9) 0%, rgba(45, 55, 72, 0.8) 100%);
+            padding: 40px 0;
+            border-radius: 0 0 20px 20px;
+            color: white;
+        }
+
+        .search-box {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background-color: var(--cinza-escuro);
+            color: white;
+        }
+
+        .progress-bar-ipe {
+            background-color: var(--azul-ipe);
+        }
+
+        /* Tabs personalizadas */
+        .nav-pills .nav-link {
+            color: var(--azul-ipe);
+            border: 1px solid var(--azul-ipe);
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: var(--azul-ipe);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Cabeçalho (mesmo da página principal) -->
+    <header>
+        <nav class="navbar navbar-expand-lg bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img src="logo.png" alt="Ipê Digital" class="d-inline-block align-text-top">
+                    <span class="fw-bold ms-2">Ipê Digital</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Início</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html#sobre">Sobre</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="painel-publico.html">Painel Público</a>
+                        </li>
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <a class="btn btn-outline-ipe" href="cadastro-usuario.html">Entrar / Cadastrar</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Seção Hero do Painel Público -->
+        <section class="hero-painel">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="d-flex align-items-center mb-4">
+                            <img src="logo.png" alt="Ipê Digital" style="height: 150px; width: auto; margin-right: 15px;">
+                            <div>
+                                <h1 class="display-5 fw-bold mb-1">Painel Público de Transparência</h1>
+                                <p class="mb-0">Dados abertos e auditáveis do mercado de carbono</p>
+                            </div>
+                        </div>
+                        <p class="lead">
+                            Explore dados em tempo real sobre projetos ambientais, créditos de carbono negociados,
+                            empresas participantes e compensações realizadas. Todas as informações são registradas em
+                            blockchain para garantia de integridade e conformidade com o SBCE.
+                        </p>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="search-box">
+                            <h5 class="text-ipe mb-3">
+                                <i class="bi bi-search me-2"></i>Buscar no Painel
+                            </h5>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Projeto, empresa ou ativo..."
+                                    id="searchInput">
+                                <button class="btn btn-ipe" type="button">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="autoRefresh" checked>
+                                <label class="form-check-label" for="autoRefresh">
+                                    Atualização automática (10s)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Estatísticas Gerais -->
+        <section class="py-5">
+            <div class="container">
+                <h2 class="fw-bold mb-4 text-center">Visão Geral da Plataforma</h2>
+                <div class="row g-4">
+                    <!-- Estatísticas em cards -->
+                    <div class="col-md-3 col-6">
+                        <div class="stat-card">
+                            <div class="stat-number">2,847,315</div>
+                            <div class="stat-label">TCO2 Tokenizados</div>
+                            <small class="text-muted">Créditos certificados</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-card">
+                            <div class="stat-number">1,542,890</div>
+                            <div class="stat-label">TCO2 Aposentados</div>
+                            <small class="text-muted">Compensações realizadas</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-card">
+                            <div class="stat-number">187</div>
+                            <div class="stat-label">Projetos Ativos</div>
+                            <small class="text-muted">Em operação</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-card">
+                            <div class="stat-number">94</div>
+                            <div class="stat-label">Empresas</div>
+                            <small class="text-muted">Participantes ativas</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico de distribuição -->
+                <div class="row mt-5">
+                    <div class="col-lg-6">
+                        <div class="card card-ipe">
+                            <div class="card-body">
+                                <h5 class="card-title text-ipe">
+                                    <i class="bi bi-pie-chart me-2"></i>Distribuição por Tipo de Projeto
+                                </h5>
+                                <canvas id="projectTypeChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card card-ipe">
+                            <div class="card-body">
+                                <h5 class="card-title text-ipe">
+                                    <i class="bi bi-arrow-up-right me-2"></i>Evolução Mensal de TCO2 Aposentados
+                                </h5>
+                                <canvas id="monthlyRetiredChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navegação por Tabs -->
+        <section class="py-5 bg-light">
+            <div class="container">
+                <ul class="nav nav-pills mb-4 justify-content-center" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-projetos-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-projetos" type="button" role="tab">
+                            <i class="bi bi-tree me-2"></i>Projetos em Análise
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-empresas-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-empresas" type="button" role="tab">
+                            <i class="bi bi-building me-2"></i>Empresas Participantes
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-ativos-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-ativos" type="button" role="tab">
+                            <i class="bi bi-coin me-2"></i>Portfólios de Ativos
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-compensacoes-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-compensacoes" type="button" role="tab">
+                            <i class="bi bi-fire me-2"></i>Compensações Realizadas
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="pills-tabContent">
+                    <!-- TAB 1: Projetos em Análise -->
+                    <div class="tab-pane fade show active" id="pills-projetos" role="tabpanel">
+                        <div class="card card-ipe">
+                            <div class="card-body">
+                                <h4 class="card-title text-ipe mb-4">
+                                    <i class="bi bi-tree me-2"></i>Projetos Ambientais - Status de Análise
+                                </h4>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-transparent">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Projeto</th>
+                                                <th>Nome do Projeto</th>
+                                                <th>Tipo</th>
+                                                <th>Localização</th>
+                                                <th>FTCO2 Emitidos</th>
+                                                <th>TCO2 Esperados</th>
+                                                <th>Status</th>
+                                                <th>Última Atualização</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Projeto 1 -->
+                                            <tr>
+                                                <td><code>PRJ-2024-00123</code></td>
+                                                <td>
+                                                    <strong>Floresta Viva - Amazônia Legal</strong><br>
+                                                    <small>Proprietário: Cooperativa Agroextrativista do Xingu</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-success">REDD+</span><br>
+                                                    <small>Conservação Florestal</small>
+                                                </td>
+                                                <td>Pará (PA)</td>
+                                                <td>
+                                                    <strong>250,000</strong> FTCO2<br>
+                                                    <small class="text-muted">Valor: R$ 3.75M</small>
+                                                </td>
+                                                <td>300,000 TCO2</td>
+                                                <td>
+                                                    <span class="badge badge-homologado">
+                                                        <i class="bi bi-check-circle me-1"></i>Homologado
+                                                    </span><br>
+                                                    <small>Em fase de MRV</small>
+                                                </td>
+                                                <td>15/03/2024</td>
+                                            </tr>
+                                            <!-- Projeto 2 -->
+                                            <tr>
+                                                <td><code>PRJ-2024-00087</code></td>
+                                                <td>
+                                                    <strong>Biogás de Resíduos Sólidos - São Paulo</strong><br>
+                                                    <small>Proprietário: Bioenergia Sustentável Ltda.</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-warning">Energia Renovável</span><br>
+                                                    <small>Biogás de Aterro</small>
+                                                </td>
+                                                <td>São Paulo (SP)</td>
+                                                <td>
+                                                    <strong>180,000</strong> FTCO2<br>
+                                                    <small class="text-muted">Valor: R$ 2.70M</small>
+                                                </td>
+                                                <td>200,000 TCO2</td>
+                                                <td>
+                                                    <span class="badge badge-em-certificacao">
+                                                        <i class="bi bi-hourglass-split me-1"></i>Em Certificação
+                                                    </span><br>
+                                                    <small>Verificação em andamento</small>
+                                                </td>
+                                                <td>10/03/2024</td>
+                                            </tr>
+                                            <!-- Projeto 3 -->
+                                            <tr>
+                                                <td><code>PRJ-2024-00145</code></td>
+                                                <td>
+                                                    <strong>Recuperação de Pastagens - Cerrado</strong><br>
+                                                    <small>Proprietário: Fazenda Verde Vida</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-info">Agricultura Sustentável</span><br>
+                                                    <small>ILPF</small>
+                                                </td>
+                                                <td>Mato Grosso (MT)</td>
+                                                <td>
+                                                    <strong>150,000</strong> FTCO2<br>
+                                                    <small class="text-muted">Valor: R$ 2.25M</small>
+                                                </td>
+                                                <td>175,000 TCO2</td>
+                                                <td>
+                                                    <span class="badge badge-em-analise">
+                                                        <i class="bi bi-clipboard-check me-1"></i>Em Análise Técnica
+                                                    </span><br>
+                                                    <small>Aguardando documentação</small>
+                                                </td>
+                                                <td>05/03/2024</td>
+                                            </tr>
+                                            <!-- Projeto 4 -->
+                                            <tr>
+                                                <td><code>PRJ-2024-00092</code></td>
+                                                <td>
+                                                    <strong>Restauração de Manguezais - Costa Nordestina</strong><br>
+                                                    <small>Proprietário: Associação de Pescadores Artesanais</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-primary">Blue Carbon</span><br>
+                                                    <small>Restauração Costeira</small>
+                                                </td>
+                                                <td>Pernambuco (PE)</td>
+                                                <td>
+                                                    <strong>95,000</strong> FTCO2<br>
+                                                    <small class="text-muted">Valor: R$ 1.42M</small>
+                                                </td>
+                                                <td>120,000 TCO2</td>
+                                                <td>
+                                                    <span class="badge badge-suspenso">
+                                                        <i class="bi bi-exclamation-triangle me-1"></i>Suspenso
+                                                    </span><br>
+                                                    <small>Pendência ambiental</small>
+                                                </td>
+                                                <td>28/02/2024</td>
+                                            </tr>
+                                            <!-- Projeto 5 -->
+                                            <tr>
+                                                <td><code>PRJ-2024-00167</code></td>
+                                                <td>
+                                                    <strong>Eficiência Energética - Indústria Têxtil</strong><br>
+                                                    <small>Proprietário: Têxtil Sustentável S.A.</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-secondary">Eficiência Energética</span><br>
+                                                    <small>Troca de Caldeiras</small>
+                                                </td>
+                                                <td>Santa Catarina (SC)</td>
+                                                <td>
+                                                    <strong>75,000</strong> FTCO2<br>
+                                                    <small class="text-muted">Valor: R$ 1.12M</small>
+                                                </td>
+                                                <td>85,000 TCO2</td>
+                                                <td>
+                                                    <span class="badge badge-homologado">
+                                                        <i class="bi bi-check-circle me-1"></i>Homologado
+                                                    </span><br>
+                                                    <small>Pronto para certificação</small>
+                                                </td>
+                                                <td>01/03/2024</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h6 class="text-ipe">Legenda dos Status:</h6>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <span class="badge badge-em-analise">Em Análise Técnica</span>
+                                        <span class="badge badge-homologado">Homologado</span>
+                                        <span class="badge badge-em-certificacao">Em Certificação</span>
+                                        <span class="badge badge-suspenso">Suspenso</span>
+                                        <span class="badge bg-success">Certificado</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: Empresas Participantes -->
+                    <div class="tab-pane fade" id="pills-empresas" role="tabpanel">
+                        <div class="card card-ipe">
+                            <div class="card-body">
+                                <h4 class="card-title text-ipe mb-4">
+                                    <i class="bi bi-building me-2"></i>Empresas Reguladas pelo SBCE
+                                </h4>
+                                
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
+                                        <div class="card bg-light border-0">
+                                            <div class="card-body text-center">
+                                                <h3 class="text-ipe">94</h3>
+                                                <p class="mb-0">Empresas Cadastradas</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card bg-light border-0">
+                                            <div class="card-body text-center">
+                                                <h3 class="text-ipe">42</h3>
+                                                <p class="mb-0">Com Metas de Redução</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card bg-light border-0">
+                                            <div class="card-body text-center">
+                                                <h3 class="text-ipe">1.54M</h3>
+                                                <p class="mb-0">TCO2 Compensados</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-transparent">
+                                        <thead>
+                                            <tr>
+                                                <th>Empresa</th>
+                                                <th>Setor</th>
+                                                <th>Limite SBCE (tCO2e/ano)</th>
+                                                <th>Emissões 2023</th>
+                                                <th>TCO2 em Carteira</th>
+                                                <th>TCO2 Aposentados</th>
+                                                <th>Status SBCE</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Empresa 1 -->
+                                            <tr>
+                                                <td>
+                                                    <strong>VALE S.A.</strong><br>
+                                                    <small>CNPJ: 33.592.510/0001-54</small>
+                                                </td>
+                                                <td>Mineração</td>
+                                                <td>15,000,000</td>
+                                                <td>
+                                                    <strong>14,250,000</strong><br>
+                                                    <div class="progress" style="height: 5px;">
+                                                        <div class="progress-bar bg-warning" style="width: 95%"></div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-tco2">750,000 TCO2</span><br>
+                                                    <span class="badge badge-ftco2">150,000 FTCO2</span>
+                                                </td>
+                                                <td>
+                                                    <strong>500,000</strong> TCO2<br>
+                                                    <small>Última: 10/03/2024</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-check-circle me-1"></i>Em Conformidade
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <!-- Empresa 2 -->
+                                            <tr>
+                                                <td>
+                                                    <strong>PETROBRAS</strong><br>
+                                                    <small>CNPJ: 33.000.167/0001-01</small>
+                                                </td>
+                                                <td>Petróleo e Gás</td>
+                                                <td>25,000,000</td>
+                                                <td>
+                                                    <strong>23,750,000</strong><br>
+                                                    <div class="progress" style="height: 5px;">
+                                                        <div class="progress-bar bg-warning" style="width: 95%"></div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-tco2">1,250,000 TCO2</span><br>
+                                                    <span class="badge badge-ftco2">300,000 FTCO2</span>
+                                                </td>
+                                                <td>
+                                                    <strong>850,000</strong> TCO2<br>
+                                                    <small>Última: 12/03/2024</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-check-circle me-1"></i>Em Conformidade
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <!-- Empresa 3 -->
+                                            <tr>
+                                                <td>
+                                                    <strong>GERDAU S.A.</strong><br>
+                                                    <small>CNPJ: 33.611.500/0001-19</small>
+                                                </td>
+                                                <td>Siderurgia</td>
+                                                <td>8,500,000</td>
+                                                <td>
+                                                    <strong>8,245,000</strong><br>
+                                                    <div class="progress" style="height: 5px;">
+                                                        <div class="progress-bar bg-success" style="width: 97%"></div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-tco2">255,000 TCO2</span><br>
+                                                    <span class="badge badge-ftco2">75,000 FTCO2</span>
+                                                </td>
+                                                <td>
+                                                    <strong>180,000</strong> TCO2<br>
+                                                    <small>Última: 08/03/2024</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-warning">
+                                                        <i class="bi bi-exclamation-triangle me-1"></i>Pendente MRV
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <!-- Empresa 4 -->
+                                            <tr>
+                                                <td>
+                                                    <strong>BRASKEM</strong><br>
+                                                    <small>CNPJ: 42.150.391/0001-70</small>
+                                                </td>
+                                                <td>Química</td>
+                                                <td>6,200,000</td>
+                                                <td>
+                                                    <strong>5,890,000</strong><br>
+                                                    <div class="progress" style="height: 5px;">
+                                                        <div class="progress-bar bg-success" style="width: 95%"></div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-tco2">310,000 TCO2</span><br>
+                                                    <span class="badge badge-ftco2">90,000 FTCO2</span>
+                                                </td>
+                                                <td>
+                                                    <strong>210,000</strong> TCO2<br>
+                                                    <small>Última: 14/03/2024</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-check-circle me-1"></i>Em Conformidade
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <!-- Empresa 5 -->
+                                            <tr>
+                                                <td>
+                                                    <strong>AMBEV</strong><br>
+                                                    <small>CNPJ: 07.526.557/0001-00</small>
+                                                </td>
+                                                <td>Bebidas</td>
+                                                <td>3,500,000</td>
+                                                <td>
+                                                    <strong>3,325,000</strong><br>
+                                                    <div class="progress" style="height: 5px;">
+                                                        <div class="progress-bar bg-success" style="width: 95%"></div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-tco2">175,000 TCO2</span><br>
+                                                    <span class="badge badge-ftco2">45,000 FTCO2</span>
+                                                </td>
+                                                <td>
+                                                    <strong>120,000</strong> TCO2<br>
+                                                    <small>Última: 11/03/2024</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-check-circle me-1"></i>Em Conformidade
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: Portfólios de Ativos -->
+                    <div class="tab-pane fade" id="pills-ativos" role="tabpanel">
+                        <div class="card card-ipe">
+                            <div class="card-body">
+                                <h4 class="card-title text-ipe mb-4">
+                                    <i class="bi bi-coin me-2"></i>Distribuição de Ativos por Empresa
+                                </h4>
+                                
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="card bg-light border-0">
+                                            <div class="card-body">
+                                                <h5 class="text-ipe">Total de Ativos Circulando</h5>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h2 class="text-ipe mb-0">2.85M</h2>
+                                                        <p class="text-muted mb-0">TCO2 Tokenizados</p>
+                                                    </div>
+                                                    <div>
+                                                        <h2 class="text-warning mb-0">1.12M</h2>
+                                                        <p class="text-muted mb-0">FTCO2 em Negociação</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card bg-light border-0">
+                                            <div class="card-body">
+                                                <h5 class="text-ipe">Valor de Mercado Estimado</h5>
+                                                <h2 class="text-success mb-0">R$ 42.75M</h2>
+                                                <p class="text-muted mb-0">Baseado em cotação média de R$ 15/TCO2</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-transparent">
+                                        <thead>
+                                            <tr>
+                                                <th>Empresa</th>
+                                                <th>FTCO2 em Carteira</th>
+                                                <th>TCO2 em Carteira</th>
+                                                <th>Valor Total (R$)</th>
+                                                <th>Origem dos Ativos</th>
+                                                <th>Data de Aquisição</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Portfólio 1 -->
+                                            <tr>
+                                                <td>
+                                                    <strong>VALE S.A.</strong><br>
+                                                    <small>Setor: Mineração</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-ftco2">150,000 FTCO2</span><br>
+                                                    <small>4 projetos diferentes</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-tco2">750,000 TCO2</span><br>
+                                                    <small>15 projetos certificados</small>
+                                                </td>
+                                                <td>
+                                                    <strong>R$ 11.25M</strong><br>
+                                                    <small>Média: R$ 15/TCO2</small>
+                                                </td>
+                                                <td>
+                                                    <ul class="list-unstyled mb-0">
+                                                        <li>• Floresta Viva - 200,000 TCO2</li>
+                                                        <li>• Biogás SP - 150,000 TCO2</li>
+                                                        <li>• Cerrado Sustentável - 400,000 TCO2</li>
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    <small>Primeira: 15/01/2024</small><br>
+                                                    <small>Última: 10/03/2024</small>
+                                                </td>
+                                            </tr>
+                                            <!-- Portfólio 2 -->
+                                            <tr>
+                                                <td>
+                                                    <strong>PETROBRAS</strong><br>
+                                                    <small>Setor: Petróleo e Gás</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-ftco2">300,000 FTCO2</span><br>
+                                                    <small>8 projetos diferentes</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-tco2">1,250,000 TCO2</span><br>
+                                                    <small>22 projetos certificados</small>
+                                                </td>
+                                                <td>
+                                                    <strong>R$ 18.75M</strong><br>
+                                                    <small>Média: R$ 15/TCO2</small>
+                                                </td>
+                                                <td>
+                                                    <ul class="list-unstyled mb-0">
+                                                        <li>• Manguezais PE - 95,000 TCO2</li>
+                                                        <li>• Reflorestamento MT - 500,000 TCO2</li>
+                                                        <li>• Eólica BA - 655,000 TCO2</li>
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    <small>Primeira: 10/01/2024</small><br>
+                                                    <small>Última: 12/03/2024</small>
+                                                </td>
+                                            </tr>
+                                            <!-- Portfólio 3 -->
+                                            <tr>
+                                                <td>
+                                                    <strong>GERDAU S.A.</strong><br>
+                                                    <small>Setor: Siderurgia</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-ftco2">75,000 FTCO2</span><br>
+                                                    <small>3 projetos diferentes</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-tco2">255,000 TCO2</span><br>
+                                                    <small>7 projetos certificados</small>
+                                                </td>
+                                                <td>
+                                                    <strong>R$ 3.82M</strong><br>
+                                                    <small>Média: R$ 15/TCO2</small>
+                                                </td>
+                                                <td>
+                                                    <ul class="list-unstyled mb-0">
+                                                        <li>• Agrofloresta PR - 120,000 TCO2</li>
+                                                        <li>• Solar MG - 135,000 TCO2</li>
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    <small>Primeira: 20/01/2024</small><br>
+                                                    <small>Última: 08/03/2024</small>
+                                                </td>
+                                            </tr>
+                                            <!-- Portfólio 4 -->
+                                            <tr>
+                                                <td>
+                                                    <strong>BRASKEM</strong><br>
+                                                    <small>Setor: Química</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-ftco2">90,000 FTCO2</span><br>
+                                                    <small>4 projetos diferentes</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-tco2">310,000 TCO2</span><br>
+                                                    <small>9 projetos certificados</small>
+                                                </td>
+                                                <td>
+                                                    <strong>R$ 4.65M</strong><br>
+                                                    <small>Média: R$ 15/TCO2</small>
+                                                </td>
+                                                <td>
+                                                    <ul class="list-unstyled mb-0">
+                                                        <li>• Conservação AM - 150,000 TCO2</li>
+                                                        <li>• Biogás RS - 160,000 TCO2</li>
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    <small>Primeira: 25/01/2024</small><br>
+                                                    <small>Última: 14/03/2024</small>
+                                                </td>
+                                            </tr>
+                                            <!-- Portfólio 5 -->
+                                            <tr>
+                                                <td>
+                                                    <strong>AMBEV</strong><br>
+                                                    <small>Setor: Bebidas</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-ftco2">45,000 FTCO2</span><br>
+                                                    <small>2 projetos diferentes</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-tco2">175,000 TCO2</span><br>
+                                                    <small>5 projetos certificados</small>
+                                                </td>
+                                                <td>
+                                                    <strong>R$ 2.62M</strong><br>
+                                                    <small>Média: R$ 15/TCO2</small>
+                                                </td>
+                                                <td>
+                                                    <ul class="list-unstyled mb-0">
+                                                        <li>• Restauração SP - 100,000 TCO2</li>
+                                                        <li>• Eficiência SC - 75,000 TCO2</li>
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    <small>Primeira: 05/02/2024</small><br>
+                                                    <small>Última: 11/03/2024</small>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: Compensações Realizadas -->
+                    <div class="tab-pane fade" id="pills-compensacoes" role="tabpanel">
+                        <div class="card card-ipe">
+                            <div class="card-body">
+                                <h4 class="card-title text-ipe mb-4">
+                                    <i class="bi bi-fire me-2"></i>Histórico de Aposentadoria (Burn) de Créditos
+                                </h4>
+                                
+                                <div class="row mb-4">
+                                    <div class="col-md-3 col-6">
+                                        <div class="stat-card">
+                                            <div class="stat-number">1,542,890</div>
+                                            <div class="stat-label">TCO2 Aposentados</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <div class="stat-card">
+                                            <div class="stat-number">R$ 23.14M</div>
+                                            <div class="stat-label">Valor Compensado</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <div class="stat-card">
+                                            <div class="stat-number">427</div>
+                                            <div class="stat-label">Transações de Burn</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <div class="stat-card">
+                                            <div class="stat-number">94</div>
+                                            <div class="stat-label">Empresas Compensando</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-transparent">
+                                        <thead>
+                                            <tr>
+                                                <th>Transação Hash</th>
+                                                <th>Empresa</th>
+                                                <th>Projeto Origem</th>
+                                                <th>Quantidade (TCO2)</th>
+                                                <th>Data Aposentadoria</th>
+                                                <th>Propósito</th>
+                                                <th>Certificado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Compensação 1 -->
+                                            <tr>
+                                                <td>
+                                                    <code>0x8a3f...c7d2</code><br>
+                                                    <small><i class="bi bi-link-45deg"></i> Verificar no blockchain</small>
+                                                </td>
+                                                <td>
+                                                    <strong>VALE S.A.</strong><br>
+                                                    <small>Mineração</small>
+                                                </td>
+                                                <td>
+                                                    Floresta Viva - Amazônia<br>
+                                                    <small>PRJ-2024-00123</small>
+                                                </td>
+                                                <td>
+                                                    <strong class="text-success">50,000</strong> TCO2<br>
+                                                    <small>Valor: R$ 750,000</small>
+                                                </td>
+                                                <td>10/03/2024 14:32</td>
+                                                <td>
+                                                    <span class="badge bg-info">Compensação Anual SBCE</span><br>
+                                                    <small>Relatório 2023</small>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-ipe">
+                                                        <i class="bi bi-download me-1"></i>Certificado
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <!-- Compensação 2 -->
+                                            <tr>
+                                                <td>
+                                                    <code>0x5b2e...f9a1</code><br>
+                                                    <small><i class="bi bi-link-45deg"></i> Verificar no blockchain</small>
+                                                </td>
+                                                <td>
+                                                    <strong>PETROBRAS</strong><br>
+                                                    <small>Petróleo e Gás</small>
+                                                </td>
+                                                <td>
+                                                    Eólica Bahia<br>
+                                                    <small>PRJ-2024-00056</small>
+                                                </td>
+                                                <td>
+                                                    <strong class="text-success">100,000</strong> TCO2<br>
+                                                    <small>Valor: R$ 1.5M</small>
+                                                </td>
+                                                <td>12/03/2024 11:15</td>
+                                                <td>
+                                                    <span class="badge bg-warning">Neutralização Operações</span><br>
+                                                    <small>Plataforma P-70</small>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-ipe">
+                                                        <i class="bi bi-download me-1"></i>Certificado
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <!-- Compensação 3 -->
+                                            <tr>
+                                                <td>
+                                                    <code>0x9c4d...e3b8</code><br>
+                                                    <small><i class="bi bi-link-45deg"></i> Verificar no blockchain</small>
+                                                </td>
+                                                <td>
+                                                    <strong>GERDAU S.A.</strong><br>
+                                                    <small>Siderurgia</small>
+                                                </td>
+                                                <td>
+                                                    Agrofloresta Paraná<br>
+                                                    <small>PRJ-2024-00089</small>
+                                                </td>
+                                                <td>
+                                                    <strong class="text-success">25,000</strong> TCO2<br>
+                                                    <small>Valor: R$ 375,000</small>
+                                                </td>
+                                                <td>08/03/2024 09:45</td>
+                                                <td>
+                                                    <span class="badge bg-success">Evento Carbono Neutro</span><br>
+                                                    <small>Lançamento Produto</small>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-ipe">
+                                                        <i class="bi bi-download me-1"></i>Certificado
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <!-- Compensação 4 -->
+                                            <tr>
+                                                <td>
+                                                    <code>0x3f7a...d5c9</code><br>
+                                                    <small><i class="bi bi-link-45deg"></i> Verificar no blockchain</small>
+                                                </td>
+                                                <td>
+                                                    <strong>BRASKEM</strong><br>
+                                                    <small>Química</small>
+                                                </td>
+                                                <td>
+                                                    Conservação Amazônia<br>
+                                                    <small>PRJ-2024-00134</small>
+                                                </td>
+                                                <td>
+                                                    <strong class="text-success">40,000</strong> TCO2<br>
+                                                    <small>Valor: R$ 600,000</small>
+                                                </td>
+                                                <td>14/03/2024 16:20</td>
+                                                <td>
+                                                    <span class="badge bg-info">Compensação Anual SBCE</span><br>
+                                                    <small>Relatório 2023</small>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-ipe">
+                                                        <i class="bi bi-download me-1"></i>Certificado
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <!-- Compensação 5 -->
+                                            <tr>
+                                                <td>
+                                                    <code>0x6e2b...a7f4</code><br>
+                                                    <small><i class="bi bi-link-45deg"></i> Verificar no blockchain</small>
+                                                </td>
+                                                <td>
+                                                    <strong>AMBEV</strong><br>
+                                                    <small>Bebidas</small>
+                                                </td>
+                                                <td>
+                                                    Restauração São Paulo<br>
+                                                    <small>PRJ-2024-00102</small>
+                                                </td>
+                                                <td>
+                                                    <strong class="text-success">15,000</strong> TCO2<br>
+                                                    <small>Valor: R$ 225,000</small>
+                                                </td>
+                                                <td>11/03/2024 13:10</td>
+                                                <td>
+                                                    <span class="badge bg-primary">Marketing Sustentável</span><br>
+                                                    <small>Cervejaria Carbono Zero</small>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-ipe">
+                                                        <i class="bi bi-download me-1"></i>Certificado
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <div class="alert alert-info mt-4">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>Nota:</strong> Todas as transações de aposentadoria (burn) são registradas permanentemente no blockchain 
+                                    e os créditos são removidos definitivamente do mercado, garantindo a integridade ambiental e evitando dupla contagem.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Transparência Blockchain -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center">
+                        <div class="card card-ipe border-ipe">
+                            <div class="card-body">
+                                <h3 class="text-ipe mb-4">
+                                    <i class="bi bi-shield-check me-2"></i>Transparência Auditável em Blockchain
+                                </h3>
+                                <p class="lead">
+                                    Todas as informações deste painel são registradas em blockchain, garantindo:
+                                </p>
+                                <div class="row text-start mt-4">
+                                    <div class="col-md-4 mb-3">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        <strong>Imutabilidade</strong>
+                                        <p class="text-muted small">Dados não podem ser alterados</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <i class="bi bi-eye-fill text-ipe me-2"></i>
+                                        <strong>Transparência</strong>
+                                        <p class="text-muted small">Acesso público a todas as transações</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <i class="bi bi-graph-up text-warning me-2"></i>
+                                        <strong>Rastreabilidade</strong>
+                                        <p class="text-muted small">Origem ao destino de cada crédito</p>
+                                    </div>
+                                </div>
+                                <a href="#" class="btn btn-ipe mt-3">
+                                    <i class="bi bi-box-arrow-up-right me-2"></i>Acessar Explorer Blockchain
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé (mesmo da página principal) -->
+    <footer class="pt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <center>
+                        <a class="navbar-brand mb-3" href="#">
+                            <img src="logo.png" alt="Ipê Digital" style="width: 150px; height: 150px;">                        
+                        </a>
+                    </center>
+                    <p class="text-light">
+                        Infraestrutura blockchain para o mercado de carbono brasileiro.
+                        Transparência, rastreabilidade e conformidade com o SBCE.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="text-white mb-3">Painel Público</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#pills-projetos" class="text-light text-decoration-none">Projetos em Análise</a></li>
+                        <li><a href="#pills-empresas" class="text-light text-decoration-none">Empresas Participantes</a></li>
+                        <li><a href="#pills-ativos" class="text-light text-decoration-none">Portfólios de Ativos</a></li>
+                        <li><a href="#pills-compensacoes" class="text-light text-decoration-none">Compensações Realizadas</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="text-white mb-3">Acesso Rápido</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-light text-decoration-none">Página Inicial</a></li>
+                        <li><a href="cadastro-usuario.html" class="text-light text-decoration-none">Entrar / Cadastrar</a></li>
+                        <li><a href="index.html#como-funciona" class="text-light text-decoration-none">Como Funciona</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Documentação Técnica</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="border-light">
+
+            <div class="row py-4">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="text-light mb-0">
+                        &copy; 2026 Ipê Digital. Todos os direitos reservados.
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="text-light mb-0">
+                        Alinhado com a Lei 15.042/2024 (SBCE) | Dados atualizados em tempo real
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Gráfico de distribuição por tipo de projeto
+        const projectTypeCtx = document.getElementById('projectTypeChart').getContext('2d');
+        const projectTypeChart = new Chart(projectTypeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['REDD+', 'Energia Renovável', 'Agricultura Sustentável', 'Blue Carbon', 'Eficiência Energética'],
+                datasets: [{
+                    data: [35, 28, 22, 10, 5],
+                    backgroundColor: [
+                        '#38a169',
+                        '#dd6b20',
+                        '#3182ce',
+                        '#805ad5',
+                        '#6C757D'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Gráfico de evolução mensal
+        const monthlyRetiredCtx = document.getElementById('monthlyRetiredChart').getContext('2d');
+        const monthlyRetiredChart = new Chart(monthlyRetiredCtx, {
+            type: 'line',
+            data: {
+                labels: ['Out/23', 'Nov/23', 'Dez/23', 'Jan/24', 'Fev/24', 'Mar/24'],
+                datasets: [{
+                    label: 'TCO2 Aposentados',
+                    data: [120000, 145000, 180000, 220000, 285000, 320000],
+                    borderColor: '#3182ce',
+                    backgroundColor: 'rgba(49, 130, 206, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'TCO2 Aposentados'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Busca no painel
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                const searchTerm = this.value.toLowerCase();
+                alert(`Buscando por: ${searchTerm}\n\nEsta funcionalidade integraria com o backend para busca real.`);
+            }
+        });
+
+        // Atualização automática
+        let autoRefreshInterval;
+        const autoRefreshCheckbox = document.getElementById('autoRefresh');
+        
+        function refreshData() {
+            console.log('Atualizando dados do painel...');
+            // Em produção, aqui seria uma chamada AJAX para atualizar os dados
+        }
+        
+        autoRefreshCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                autoRefreshInterval = setInterval(refreshData, 10000);
+                console.log('Atualização automática ativada (10s)');
+            } else {
+                clearInterval(autoRefreshInterval);
+                console.log('Atualização automática desativada');
+            }
+        });
+
+        // Iniciar atualização automática
+        autoRefreshInterval = setInterval(refreshData, 10000);
+
+        // Ativar tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Smooth scroll para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
